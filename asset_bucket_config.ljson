@@ -1,0 +1,39 @@
+{
+    version: 1
+    rootDirectory: asset_bucket
+
+    excludeAllPaths: [
+        *.md
+    ]
+    
+    blobs: [
+        {
+            name: blobBackgrounds
+            macroScript: __blobBackgrounds
+        }
+        {
+            name: blobLevel1
+            macroScript: __blobLevel1
+        }
+        {
+            name: blobLevel2
+            macroScript: __blobLevel2
+        }
+    ]
+    
+    datafiles: []
+    
+    sprites: [
+        {
+            include: {
+                path: *.png
+                width: >100
+            }
+            action: {
+                addToBlob: blobBackgrounds
+            }
+        }
+    ]
+    
+    sounds: []
+}

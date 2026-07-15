@@ -1,0 +1,4 @@
+function __BucketClassBlob() constructor
+{
+    
+}

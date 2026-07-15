@@ -1,0 +1,11 @@
+{
+  "$GMNotes":"v1",
+  "%Name":"Note1",
+  "name":"Note1",
+  "parent":{
+    "name":"AssetBucket",
+    "path":"AssetBucket.yyp",
+  },
+  "resourceType":"GMNotes",
+  "resourceVersion":"2.0",
+}

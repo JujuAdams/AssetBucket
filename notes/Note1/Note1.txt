@@ -1,0 +1,88 @@
+{
+    excludeAll: {
+        path: *.psd
+    }
+    
+    blobs: [
+        {
+            name: blobBackgrounds
+            macroScript: __blobBackgrounds
+        }
+        {
+            name: blobLevel1
+            macroScript: __blobLevel1
+        }
+        {
+            name: blobLevel2
+            macroScript: __blobLevel2
+        }
+    ]
+    
+    datafiles: [
+        {
+            include: {
+                path: localization/*
+            }
+            action: {
+                importToFolder: ""
+            }
+        }
+        {
+            include: {
+                path: models/shared/*
+            }
+            action: {
+                addToBlob: [blobLevel1, blobLevel2]
+            }
+        }
+        {
+            include: {
+                path: models/level1/*
+            }
+            action: {
+                addToBlob: blobLevel1
+            }
+        }
+        {
+            include: {
+                path: models/level2/*
+            }
+            action: {
+                addToBlob: blobLevel2
+            }
+        }
+    ]
+    
+    sprites: [
+        {
+            include: {
+                path: backgrounds/*
+                width: >100
+                height: >100
+            }
+            exclude: {
+                path: *.jpg
+            }
+            action: {
+                addToBlob: blobBackgrounds
+                prefix: bg
+                style: PascalCase
+            }
+        }
+    ]
+    
+    sounds: [
+        {
+            include: {
+                path: music/*
+                length: >3  //Longer than 3 seconds
+            }
+            action: {
+                importToFolder: audio/music
+                prefix: mus
+                style: PascalCase
+                compression: 2
+            }
+        }
+    ]
+}
