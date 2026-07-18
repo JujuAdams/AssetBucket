@@ -3,49 +3,53 @@ function __BucketClassProcess(_configStruct) constructor
     __configStruct = variable_clone(_configStruct);
     
     __fileArray = [];
-    __blobArray = [];
+    __bucketArray = [];
     
-    __actionToBlobArray    = [];
+    __actionToBucketArray    = [];
     __actionToProjectArray = [];
     
     
     
     static __Process = function()
     {
-        var _blobDict = {};
+        var _bucketDict = {};
         
         //Build a quick access dictionary
-        var _blobArray = __blobArray;
+        var _bucketArray = __bucketArray;
         var _i = 0;
-        repeat(array_length(_blobArray))
+        repeat(array_length(_bucketArray))
         {
-            var _blob = _blobArray[_i];
-            _blobDict[$ _blob.__name] = _blob;
+            var _bucket = _bucketArray[_i];
+            _bucketDict[$ _bucket.__name] = _bucket;
             ++_i;
         }
         
-        //Store file paths per blob
-        var _actionToBlobArray = __actionToBlobArray;
+        var _filePathToBucketDict = {};
+        
+        //Store file paths per bucket
+        var _actionToBucketArray = __actionToBucketArray;
         var _i = 0;
-        repeat(array_length(_actionToBlobArray))
+        repeat(array_length(_actionToBucketArray))
         {
-            var _actionStruct = _actionToBlobArray[_i];
-            var _filePath      = _actionStruct.__filePath;
-            var _blobNameArray = _actionStruct.__blobNameArray;
+            var _actionStruct = _actionToBucketArray[_i];
+            var _filePath      = _actionStruct.__sourcePath;
+            var _bucketNameArray = _actionStruct.__bucketNameArray;
+            
+            _filePathToBucketDict[$ _filePath] = _bucketNameArray;
             
             var _j = 0;
-            repeat(array_length(_blobNameArray))
+            repeat(array_length(_bucketNameArray))
             {
-                var _blobName = _blobNameArray[_j];
+                var _bucketName = _bucketNameArray[_j];
                 
-                var _blobStruct = _blobDict[$ _blobName];
-                if (is_struct(_blobStruct))
+                var _bucketStruct = _bucketDict[$ _bucketName];
+                if (is_struct(_bucketStruct))
                 {
-                    _blobStruct.__AddFile(_filePath);
+                    _bucketStruct.__AddFile(_filePath);
                 }
                 else
                 {
-                    __BucketError($"Couldn't find blob with name \"{_filePath}\"");
+                    __BucketError($"Couldn't find bucket with name \"{_filePath}\"");
                 }
                 
                 ++_j;
@@ -54,13 +58,13 @@ function __BucketClassProcess(_configStruct) constructor
             ++_i;
         }
         
-        //Compile all the blobs
+        //Compile all the buckets
         var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{__configStruct.__rootDirectory}";
-        var _blobArray = __blobArray;
+        var _bucketArray = __bucketArray;
         var _i = 0;
-        repeat(array_length(_blobArray))
+        repeat(array_length(_bucketArray))
         {
-            _blobArray[_i].__Compile(_rootDirectory);
+            _bucketArray[_i].__Compile(_rootDirectory);
             ++_i;
         }
         

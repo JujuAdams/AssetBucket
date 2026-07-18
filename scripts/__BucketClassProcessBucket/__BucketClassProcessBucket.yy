@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketClassProcessBlob",
+  "%Name":"__BucketClassProcessBucket",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketClassProcessBlob",
+  "name":"__BucketClassProcessBucket",
   "parent":{
     "name":"Process",
-    "path":"folders/Asset Bucket/(System)/Classes/Ingestion/Process.yy",
+    "path":"folders/Asset Bucket/(System)/Compiler/Classes/Process.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

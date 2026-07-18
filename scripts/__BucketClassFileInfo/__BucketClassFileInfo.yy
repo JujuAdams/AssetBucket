@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__BucketClassFileInfo",
   "parent":{
-    "name":"Ingestion",
-    "path":"folders/Asset Bucket/(System)/Classes/Ingestion.yy",
+    "name":"Classes",
+    "path":"folders/Asset Bucket/(System)/Compiler/Classes.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,9 +1,13 @@
-function __BucketClassProcessBlob(_name, _macroScript) constructor
+function __BucketClassProcessBucket(_name, _macroScript) constructor
 {
     __name        = _name;
     __macroScript = _macroScript;
     
     __assetArray = [];
+    
+    
+    
+    
     
     static __AddFile = function(_filePath)
     {
@@ -15,7 +19,7 @@ function __BucketClassProcessBlob(_name, _macroScript) constructor
         var _assetArray = __assetArray;
         
         var _buffer = buffer_create(1024*1024, buffer_grow, 1);
-        buffer_write(_buffer, buffer_text, "blob");
+        buffer_write(_buffer, buffer_text, "bucket");
         buffer_write(_buffer, buffer_u16, array_length(_assetArray));
         
         var _length = array_length(_assetArray);

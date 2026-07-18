@@ -3,18 +3,18 @@
         path: *.psd
     }
     
-    blobs: [
+    buckets: [
         {
-            name: blobBackgrounds
-            macroScript: __blobBackgrounds
+            name: bucketBackgrounds
+            macroScript: __bucketBackgrounds
         }
         {
-            name: blobLevel1
-            macroScript: __blobLevel1
+            name: bucketLevel1
+            macroScript: __bucketLevel1
         }
         {
-            name: blobLevel2
-            macroScript: __blobLevel2
+            name: bucketLevel2
+            macroScript: __bucketLevel2
         }
     ]
     
@@ -32,7 +32,7 @@
                 path: models/shared/*
             }
             action: {
-                addToBlob: [blobLevel1, blobLevel2]
+                addToBucket: [bucketLevel1, bucketLevel2]
             }
         }
         {
@@ -40,7 +40,7 @@
                 path: models/level1/*
             }
             action: {
-                addToBlob: blobLevel1
+                addToBucket: bucketLevel1
             }
         }
         {
@@ -48,7 +48,7 @@
                 path: models/level2/*
             }
             action: {
-                addToBlob: blobLevel2
+                addToBucket: bucketLevel2
             }
         }
     ]
@@ -64,7 +64,7 @@
                 path: *.jpg
             }
             action: {
-                addToBlob: blobBackgrounds
+                addToBucket: bucketBackgrounds
                 prefix: bg
                 style: PascalCase
             }

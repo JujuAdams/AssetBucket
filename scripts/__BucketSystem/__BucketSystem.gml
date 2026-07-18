@@ -8,6 +8,8 @@ function __BucketSystem()
             
             __fileInfoDict = {};
             
+            __bucketMap = ds_map_create();
+            
             return self;
         }
     })();

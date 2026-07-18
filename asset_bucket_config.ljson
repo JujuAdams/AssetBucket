@@ -6,18 +6,18 @@
         *.md
     ]
     
-    blobs: [
+    buckets: [
         {
-            name: blobBackgrounds
-            macroScript: __blobBackgrounds
+            name: bucketBackgrounds
+            macroScript: __bucketBackgrounds
         }
         {
-            name: blobLevel1
-            macroScript: __blobLevel1
+            name: bucketLevel1
+            macroScript: __bucketLevel1
         }
         {
-            name: blobLevel2
-            macroScript: __blobLevel2
+            name: bucketLevel2
+            macroScript: __bucketLevel2
         }
     ]
     
@@ -30,7 +30,7 @@
                 width: >100
             }
             action: {
-                addToBlob: blobBackgrounds
+                addToBucket: [bucketLevel1, bucketLevel2]
             }
         }
     ]

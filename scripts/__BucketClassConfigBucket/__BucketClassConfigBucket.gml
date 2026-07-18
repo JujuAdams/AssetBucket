@@ -1,4 +1,4 @@
-function __BucketClassConfigBlob() constructor
+function __BucketClassConfigBucket() constructor
 {
     static __Deserialize = function(_parent, _struct)
     {
@@ -14,6 +14,6 @@ function __BucketClassConfigBlob() constructor
     
     static __Collect = function(_processStruct)
     {
-        array_push(_processStruct.__blobArray, new __BucketClassProcessBlob(__name, __macroScript));
+        array_push(_processStruct.__bucketArray, new __BucketClassProcessBucket(__name, __macroScript));
     }
 }

@@ -1,0 +1,4 @@
+function __BucketClassBucket() constructor
+{
+    
+}

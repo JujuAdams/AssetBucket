@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketClassConfigBlob",
+  "%Name":"__BucketClassConfigBucket",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketClassConfigBlob",
+  "name":"__BucketClassConfigBucket",
   "parent":{
     "name":"Configuration",
-    "path":"folders/Asset Bucket/(System)/Classes/Ingestion/Configuration.yy",
+    "path":"folders/Asset Bucket/(System)/Compiler/Classes/Configuration.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

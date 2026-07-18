@@ -143,7 +143,7 @@ function __BucketLooseJSONReadStruct(_buffer, _bufferSize)
                 {
                     break;
                 }
-                else if (_byte > 0x20)
+                else if ((_byte > 0x20) || (_byte == 0x0A) || (_byte == 0x0D))
                 {
                     show_error("Found unexpected character " + chr(_byte) + " (decimal=" + string(_byte) + ")\nWas expecting a colon\n ", true);
                 }

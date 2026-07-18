@@ -1,8 +1,8 @@
 function __BucketClassFileInfo(_processStruct, _filePath) constructor
 {
-    __filePath = _filePath;
+    __sourcePath = _filePath;
     
-    __absolutePath = $"{BUCKET_PROJECT_DIRECTORY}{_processStruct.__configStruct.__rootDirectory}{__filePath}";
+    __absolutePath = $"{BUCKET_PROJECT_DIRECTORY}{_processStruct.__configStruct.__rootDirectory}{__sourcePath}";
     if (not file_exists(__absolutePath))
     {
         __BucketError($"Could not find \"{__absolutePath}\"");

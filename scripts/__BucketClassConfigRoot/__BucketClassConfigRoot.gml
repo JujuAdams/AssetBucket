@@ -4,7 +4,7 @@ function __BucketClassConfigRoot() constructor
     
     static __Deserialize = function(_struct)
     {
-        __BucketVariableAssertOnly(_struct, ["version", "rootDirectory", "includeAllPaths", "excludeAllPaths", "blobs", "datafiles", "sprites", "sounds"]);
+        __BucketVariableAssertOnly(_struct, ["version", "rootDirectory", "includeAllPaths", "excludeAllPaths", "buckets", "datafiles", "sprites", "sounds"]);
         
         __version = __BucketVariableAssertNumber(_struct, "version");
         if (__version != 1)
@@ -15,7 +15,7 @@ function __BucketClassConfigRoot() constructor
         __rootDirectory   = __BucketEnsureDirectory(__BucketVariableAssertString(_struct, "rootDirectory"));
         __includeAllPaths = __BucketVariableAssertStringOrArray(_struct, "includeAllPaths");
         __excludeAllPaths = __BucketVariableAssertStringOrArray(_struct, "excludeAllPaths");
-        __blobsArray      = __BucketDeserializeArrayOf(self, _struct[$ "blobs"    ], __BucketClassConfigBlob);
+        __bucketsArray      = __BucketDeserializeArrayOf(self, _struct[$ "buckets"    ], __BucketClassConfigBucket);
         __datafilesArray  = __BucketDeserializeArrayOf(self, _struct[$ "datafiles"], __BucketClassConfigDatafiles);
         __spritesArray    = __BucketDeserializeArrayOf(self, _struct[$ "sprites"  ], __BucketClassConfigSprites);
         __soundsArray     = __BucketDeserializeArrayOf(self, _struct[$ "sounds"   ], __BucketClassConfigSounds);
@@ -73,12 +73,12 @@ function __BucketClassConfigRoot() constructor
             ++_i;
         }
         
-        //Collect blobs
-        var _blobsArray = __blobsArray;
+        //Collect buckets
+        var _bucketsArray = __bucketsArray;
         var _i = 0;
-        repeat(array_length(_blobsArray))
+        repeat(array_length(_bucketsArray))
         {
-            _blobsArray[_i].__Collect(_processStruct);
+            _bucketsArray[_i].__Collect(_processStruct);
             ++_i;
         }
         
