@@ -1,4 +1,8 @@
-function __BucketClassOGGDescriptor(_path) constructor
+/// @param orignalPath
+/// @param datafileName
+
+function __BucketClassOGGDescriptor(_originalPath, _datafileName) constructor
 {
-    __path = _path;
+    __originalPath = _originalPath;
+    __datafileName = _datafileName;
 }

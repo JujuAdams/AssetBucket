@@ -4,10 +4,10 @@ function __BucketClassConfigAction() constructor
     {
         __parent = _parent;
         
-        __BucketVariableAssertMutuallyExclusive(_struct, "addToBucket", "importToFolder");
+        __BucketVariableAssertMutuallyExclusive(_struct, "importBucket", "projectImportFolder");
         
-        __addToBucket = undefined;
-        __importToFolder = undefined;
+        __importBucket = undefined;
+        __projectImportFolder = undefined;
         
         if (is_instanceof(_parent, __BucketClassConfigDatafiles))
         {
@@ -22,23 +22,23 @@ function __BucketClassConfigAction() constructor
             __parentConstructor = __BucketClassConfigSounds;
         }
         
-        if (struct_exists(_struct, "addToBucket"))
+        if (struct_exists(_struct, "importBucket"))
         {
-            __addToBucket = __BucketVariableAssertStringOrArray(_struct, "addToBucket");
+            __importBucket = __BucketVariableAssertStringOrArray(_struct, "importBucket");
         }
-        else if (struct_exists(_struct, "importToFolder"))
+        else if (struct_exists(_struct, "projectImportFolder"))
         {
-            __importToFolder = __BucketEnsureDirectory(__BucketVariableAssertString(_struct, "importToFolder"));
+            __projectImportFolder = __BucketEnsureDirectory(__BucketVariableAssertString(_struct, "projectImportFolder"));
         }
         
         if (is_instanceof(_parent, __BucketClassConfigSounds))
         {
-            __BucketVariableAssertOnly(_struct, ["addToBucket", "importToFolder", "compression", "folderOrigin"]);
+            __BucketVariableAssertOnly(_struct, ["importBucket", "projectImportFolder", "compression", "folderOrigin"]);
             __BucketVariableDefaultUndefined(_struct, "compression");
         }
         else
         {
-            __BucketVariableAssertOnly(_struct, ["addToBucket", "importToFolder", "folderOrigin"]);
+            __BucketVariableAssertOnly(_struct, ["importBucket", "projectImportFolder", "folderOrigin"]);
         }
         
         __folderOrigin = __BucketVariableDefaultUndefined(_struct, "folderOrigin");
@@ -49,40 +49,5 @@ function __BucketClassConfigAction() constructor
         }
         
         return self;
-    }
-    
-    static __Collect = function(_processStruct, _sourcePath)
-    {
-        if (__addToBucket != undefined)
-        {
-            var _processAction = new __BucketClassProcessAction(_sourcePath, undefined, __addToBucket);
-            array_push(_processStruct.__actionToBucketArray, _processAction);
-        }
-        
-        if (__importToFolder != undefined)
-        {
-            var _assetName = filename_change_ext(filename_name(_sourcePath), "");
-            
-            if (is_string(__folderOrigin))
-            {
-                var _length = string_length(__folderOrigin);
-                if (string_copy(_sourcePath, 1, _length) == __folderOrigin)
-                {
-                    var _destinationPath = __importToFolder + string_delete(filename_dir(_sourcePath), 1, _length) + "/" + _assetName;
-                }
-                else
-                {
-                    __BucketWarning($"Could not find folder origin \"{__folderOrigin}\" in source file path \"{_sourcePath}\"");
-                    var _destinationPath = __importToFolder + _assetName;
-                }
-            }
-            else
-            {
-                var _destinationPath = __importToFolder + _assetName;
-            }
-            
-            var _processAction = new __BucketClassProcessAction(_sourcePath, _destinationPath, __addToBucket);
-            array_push(_processStruct.__actionToProjectArray, _processAction);
-        }
     }
 }

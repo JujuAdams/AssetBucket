@@ -14,6 +14,8 @@ function __BucketClassConfigBucket() constructor
     
     static __Collect = function(_processStruct)
     {
-        array_push(_processStruct.__bucketArray, new __BucketClassProcessBucket(__name, __macroScript));
+        var _bucketStruct = new __BucketClassProcessBucket(__name, __macroScript);
+        array_push(_processStruct.__bucketArray, _bucketStruct);
+        _processStruct.__bucketDict[$ __name] = _bucketStruct;
     }
 }

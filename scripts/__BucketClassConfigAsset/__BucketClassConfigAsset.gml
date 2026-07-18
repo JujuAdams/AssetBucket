@@ -57,12 +57,6 @@ function __BucketClassConfigAsset() constructor
             }
         }
         
-        var _actionStruct = __action;
-        var _i = 0;
-        repeat(array_length(_fileArray))
-        {
-            _actionStruct.__Collect(_processStruct, _fileArray[_i]);
-            ++_i;
-        }
+        __ExecuteAction(_processStruct, _fileArray);
     }
 }

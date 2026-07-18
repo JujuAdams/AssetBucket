@@ -24,7 +24,7 @@
                 path: localization/*
             }
             action: {
-                importToFolder: ""
+                projectImportFolder: ""
             }
         }
         {
@@ -32,7 +32,7 @@
                 path: models/shared/*
             }
             action: {
-                addToBucket: [bucketLevel1, bucketLevel2]
+                importBucket: [bucketLevel1, bucketLevel2]
             }
         }
         {
@@ -40,7 +40,7 @@
                 path: models/level1/*
             }
             action: {
-                addToBucket: bucketLevel1
+                importBucket: bucketLevel1
             }
         }
         {
@@ -48,7 +48,7 @@
                 path: models/level2/*
             }
             action: {
-                addToBucket: bucketLevel2
+                importBucket: bucketLevel2
             }
         }
     ]
@@ -64,7 +64,7 @@
                 path: *.jpg
             }
             action: {
-                addToBucket: bucketBackgrounds
+                importBucket: bucketBackgrounds
                 prefix: bg
                 style: PascalCase
             }
@@ -78,7 +78,7 @@
                 length: >3  //Longer than 3 seconds
             }
             action: {
-                importToFolder: audio/music
+                projectImportFolder: audio/music
                 prefix: mus
                 style: PascalCase
                 compression: 2

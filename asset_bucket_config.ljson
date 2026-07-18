@@ -11,14 +11,6 @@
             name: bucketBackgrounds
             macroScript: __bucketBackgrounds
         }
-        {
-            name: bucketLevel1
-            macroScript: __bucketLevel1
-        }
-        {
-            name: bucketLevel2
-            macroScript: __bucketLevel2
-        }
     ]
     
     datafiles: []
@@ -30,7 +22,7 @@
                 width: >100
             }
             action: {
-                addToBucket: [bucketLevel1, bucketLevel2]
+                importBucket: bucketBackgrounds
             }
         }
     ]

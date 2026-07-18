@@ -15,7 +15,7 @@ function __BucketClassConfigRoot() constructor
         __rootDirectory   = __BucketEnsureDirectory(__BucketVariableAssertString(_struct, "rootDirectory"));
         __includeAllPaths = __BucketVariableAssertStringOrArray(_struct, "includeAllPaths");
         __excludeAllPaths = __BucketVariableAssertStringOrArray(_struct, "excludeAllPaths");
-        __bucketsArray      = __BucketDeserializeArrayOf(self, _struct[$ "buckets"    ], __BucketClassConfigBucket);
+        __bucketsArray    = __BucketDeserializeArrayOf(self, _struct[$ "buckets"  ], __BucketClassConfigBucket);
         __datafilesArray  = __BucketDeserializeArrayOf(self, _struct[$ "datafiles"], __BucketClassConfigDatafiles);
         __spritesArray    = __BucketDeserializeArrayOf(self, _struct[$ "sprites"  ], __BucketClassConfigSprites);
         __soundsArray     = __BucketDeserializeArrayOf(self, _struct[$ "sounds"   ], __BucketClassConfigSounds);
