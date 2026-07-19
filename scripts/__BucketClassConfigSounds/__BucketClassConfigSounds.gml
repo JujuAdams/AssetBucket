@@ -1,8 +1,8 @@
 function __BucketClassConfigSounds() : __BucketClassConfigAsset() constructor
 {
-    static __ExecuteImport = function(_processStruct, _fileArray)
+    static __ExecuteImport = function(_injestStruct, _fileArray)
     {
-        var _bucketDict = _processStruct.__bucketDict;
+        var _bucketDict = _injestStruct.__bucketDict;
         
         with(__import)
         {
@@ -14,7 +14,7 @@ function __BucketClassConfigSounds() : __BucketClassConfigAsset() constructor
                 var _fileExtension = filename_ext(_sourcePath);
                 if ((_fileExtension == "wav") || (_fileExtension == "ogg"))
                 {
-                    _processStruct.__RegisterProjectSound(_sourcePath);
+                    _injestStruct.__RegisterProjectSound(_sourcePath);
                 }
                 else
                 {

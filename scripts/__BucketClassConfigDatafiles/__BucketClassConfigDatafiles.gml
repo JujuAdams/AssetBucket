@@ -1,8 +1,8 @@
 function __BucketClassConfigDatafiles() : __BucketClassConfigAsset() constructor
 {
-    static __ExecuteImport = function(_processStruct, _fileArray)
+    static __ExecuteImport = function(_injestStruct, _fileArray)
     {
-        var _bucketDict = _processStruct.__bucketDict;
+        var _bucketDict = _injestStruct.__bucketDict;
         
         with(__import)
         {
@@ -13,7 +13,7 @@ function __BucketClassConfigDatafiles() : __BucketClassConfigAsset() constructor
                 
                 if (__importBucket != undefined)
                 {
-                    _processStruct.__RegisterBucketDatafile(_sourcePath, __importBucket);
+                    _injestStruct.__RegisterBucketDatafile(_sourcePath, __importBucket);
                     
                     var _bucketStruct = _bucketDict[$ __importBucket];
                     if (_bucketStruct == undefined)
@@ -22,15 +22,15 @@ function __BucketClassConfigDatafiles() : __BucketClassConfigAsset() constructor
                     }
                     else
                     {
-                        _bucketStruct.__AddFile(_processStruct, _sourcePath);
+                        _bucketStruct.__AddFile(_injestStruct, _sourcePath);
                     }
                 }
                 
                 if (__projectImportFolder != undefined)
                 {
-                    _processStruct.__RegisterProjectDatafile(_sourcePath);
+                    _injestStruct.__RegisterProjectDatafile(_sourcePath);
                     
-                    file_copy($"{BUCKET_PROJECT_DIRECTORY}{_processStruct.__configStruct.__rootDirectory}{_sourcePath}",
+                    file_copy($"{BUCKET_PROJECT_DIRECTORY}{_injestStruct.__configStruct.__rootDirectory}{_sourcePath}",
                               $"{BUCKET_PROJECT_DIRECTORY}datafiles/{__projectImportFolder}ab_{md5_string_utf8(_sourcePath)}");
                 }
                 

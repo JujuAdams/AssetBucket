@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketCreateYYSound",
+  "%Name":"__BucketYYPInject",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketCreateYYSound",
+  "name":"__BucketYYPInject",
   "parent":{
     "name":"YY",
     "path":"folders/Asset Bucket/(System)/Injest/YY.yy",

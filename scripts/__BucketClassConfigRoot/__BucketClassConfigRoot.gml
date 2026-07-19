@@ -23,10 +23,10 @@ function __BucketClassConfigRoot() constructor
         return self;
     }
     
-    static __Collect = function(_processStruct)
+    static __Collect = function(_injestStruct)
     {
         var _fileArray = __BucketDirectoryFileArray($"{BUCKET_PROJECT_DIRECTORY}{__rootDirectory}");
-        _processStruct.__workingFileArray = _fileArray;
+        _injestStruct.__workingFileArray = _fileArray;
         
         //Remove anything that doesn't fit the global include mask
         if (array_length(__includeAllPaths) > 0)
@@ -78,7 +78,7 @@ function __BucketClassConfigRoot() constructor
         var _i = 0;
         repeat(array_length(_bucketsArray))
         {
-            _bucketsArray[_i].__Collect(_processStruct);
+            _bucketsArray[_i].__Collect(_injestStruct);
             ++_i;
         }
         
@@ -87,7 +87,7 @@ function __BucketClassConfigRoot() constructor
         var _i = 0;
         repeat(array_length(_datafilesArray))
         {
-            _datafilesArray[_i].__Collect(_processStruct);
+            _datafilesArray[_i].__Collect(_injestStruct);
             ++_i;
         }
         
@@ -96,7 +96,7 @@ function __BucketClassConfigRoot() constructor
         var _i = 0;
         repeat(array_length(_spritesArray))
         {
-            _spritesArray[_i].__Collect(_processStruct);
+            _spritesArray[_i].__Collect(_injestStruct);
             ++_i;
         }
         
@@ -105,7 +105,7 @@ function __BucketClassConfigRoot() constructor
         var _i = 0;
         repeat(array_length(_soundsArray))
         {
-            _soundsArray[_i].__Collect(_processStruct);
+            _soundsArray[_i].__Collect(_injestStruct);
             ++_i;
         }
     }

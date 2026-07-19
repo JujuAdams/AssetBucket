@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketEnsureProcessFileInfo",
+  "%Name":"__BucketEnsureInjestFileInfo",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketEnsureProcessFileInfo",
+  "name":"__BucketEnsureInjestFileInfo",
   "parent":{
     "name":"Helper",
     "path":"folders/Asset Bucket/(System)/Helper.yy",

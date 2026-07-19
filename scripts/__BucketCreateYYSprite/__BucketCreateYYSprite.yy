@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__BucketCreateYYSprite",
   "parent":{
-    "name":"Import",
-    "path":"folders/Asset Bucket/(System)/Import.yy",
+    "name":"YY",
+    "path":"folders/Asset Bucket/(System)/Injest/YY.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

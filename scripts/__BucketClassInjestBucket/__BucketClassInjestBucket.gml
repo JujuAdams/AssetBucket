@@ -1,4 +1,4 @@
-function __BucketClassProcessBucket(_name) constructor
+function __BucketClassInjestBucket(_name) constructor
 {
     __name = _name;
     
@@ -6,11 +6,11 @@ function __BucketClassProcessBucket(_name) constructor
     
     
     
-    static __AddFile = function(_processStruct, _sourcePath)
+    static __AddFile = function(_injestStruct, _sourcePath)
     {
         var _accumulationBuffer = __accumulationBuffer;
         
-        var _absolutePath = $"{BUCKET_PROJECT_DIRECTORY}{_processStruct.__configStruct.__rootDirectory}{_sourcePath}";
+        var _absolutePath = $"{BUCKET_PROJECT_DIRECTORY}{_injestStruct.__configStruct.__rootDirectory}{_sourcePath}";
         if (not file_exists(_absolutePath))
         {
             __BucketError($"Can't find \"{_absolutePath}\"");

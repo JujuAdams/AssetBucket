@@ -3,6 +3,7 @@
   "%Name":"AssetBucket",
   "AudioGroups":[
     {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMAudioGroup":"v1","%Name":"TestAudioGroup","exportDir":"","name":"TestAudioGroup","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
   "configs":{
     "children":[],
@@ -21,9 +22,12 @@
     {"$GMFolder":"","%Name":"Classes","folderPath":"folders/Asset Bucket/(System)/Runtime/Classes.yy","name":"Classes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Variables","folderPath":"folders/Asset Bucket/(System)/Variables.yy","name":"Variables","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Buckets","folderPath":"folders/Asset Bucket/Buckets.yy","name":"Buckets","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"TestFolder","folderPath":"folders/TestFolder.yy","name":"TestFolder","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
-  "IncludedFiles":[],
+  "IncludedFiles":[
+    {"$GMIncludedFile":"","%Name":"TestDatafile","CopyToMask":-1,"filePath":"datafiles","name":"TestDatafile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+  ],
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
@@ -93,6 +97,7 @@
     {"id":{"name":"BucketInitialize","path":"scripts/BucketInitialize/BucketInitialize.yy",},},
     {"id":{"name":"BucketLoad","path":"scripts/BucketLoad/BucketLoad.yy",},},
     {"id":{"name":"BucketUnload","path":"scripts/BucketUnload/BucketUnload.yy",},},
+    {"id":{"name":"TestResource","path":"notes/TestResource/TestResource.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
@@ -102,5 +107,6 @@
   "templateType":"game",
   "TextureGroups":[
     {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"TestTextureGroup","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"TestTextureGroup","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
   ],
 }

@@ -1,8 +1,8 @@
 function __BucketClassConfigSprites() : __BucketClassConfigAsset() constructor
 {
-    static __ExecuteImport = function(_processStruct, _fileArray)
+    static __ExecuteImport = function(_injestStruct, _fileArray)
     {
-        var _bucketDict = _processStruct.__bucketDict;
+        var _bucketDict = _injestStruct.__bucketDict;
         
         with(__import)
         {
@@ -11,7 +11,7 @@ function __BucketClassConfigSprites() : __BucketClassConfigAsset() constructor
             {
                 var _sourcePath = _fileArray[_i];
                 
-                _processStruct.__RegisterProjectSprite(_sourcePath);
+                _injestStruct.__RegisterProjectSprite(_sourcePath);
                 
                 //if (is_string(_folderOrigin))
                 //{

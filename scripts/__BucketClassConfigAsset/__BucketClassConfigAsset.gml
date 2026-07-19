@@ -23,9 +23,9 @@ function __BucketClassConfigAsset() constructor
         return self;
     }
     
-    static __Collect = function(_processStruct)
+    static __Collect = function(_injestStruct)
     {
-        var _fileArray = variable_clone(_processStruct.__workingFileArray);
+        var _fileArray = variable_clone(_injestStruct.__workingFileArray);
         
         var _includeStruct = __include;
         if (is_struct(_includeStruct))
@@ -33,7 +33,7 @@ function __BucketClassConfigAsset() constructor
             var _i = array_length(_fileArray)-1;
             repeat(array_length(_fileArray))
             {
-                if (not _includeStruct.__TestFilter(_processStruct, _fileArray[_i]))
+                if (not _includeStruct.__TestFilter(_injestStruct, _fileArray[_i]))
                 {
                     array_delete(_fileArray, _i, 1);
                 }
@@ -48,7 +48,7 @@ function __BucketClassConfigAsset() constructor
             var _i = array_length(_fileArray)-1;
             repeat(array_length(_fileArray))
             {
-                if (_excludeStruct.__TestFilter(_processStruct, _fileArray[_i]))
+                if (_excludeStruct.__TestFilter(_injestStruct, _fileArray[_i]))
                 {
                     array_delete(_fileArray, _i, 1);
                 }
@@ -57,6 +57,6 @@ function __BucketClassConfigAsset() constructor
             }
         }
         
-        __ExecuteImport(_processStruct, _fileArray);
+        __ExecuteImport(_injestStruct, _fileArray);
     }
 }

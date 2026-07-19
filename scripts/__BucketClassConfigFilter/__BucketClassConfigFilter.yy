@@ -6,7 +6,7 @@
   "name":"__BucketClassConfigFilter",
   "parent":{
     "name":"Configuration",
-    "path":"folders/Asset Bucket/(System)/Compiler/Classes/Configuration.yy",
+    "path":"folders/Asset Bucket/(System)/Injest/Classes/Configuration.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

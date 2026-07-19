@@ -30,7 +30,7 @@ function __BucketClassConfigFilter() constructor
         return self;
     }
     
-    static __TestFilter = function(_processStruct, _filePath)
+    static __TestFilter = function(_injestStruct, _filePath)
     {
         if (not __BucketTestStringMaskAny(_filePath, __pathMask))
         {
@@ -39,25 +39,25 @@ function __BucketClassConfigFilter() constructor
         
         if (__bytes != undefined)
         {
-            var _fileBytes = __BucketEnsureProcessFileInfo(_processStruct, _filePath).__GetBytes();
+            var _fileBytes = __BucketEnsureInjestFileInfo(_injestStruct, _filePath).__GetBytes();
             if (not __BucketTestNumber(_fileBytes, __bytes)) return false;
         }
         
         if (__width != undefined)
         {
-            var _fileWidth = __BucketEnsureProcessFileInfo(_processStruct, _filePath).__GetWidth();
+            var _fileWidth = __BucketEnsureInjestFileInfo(_injestStruct, _filePath).__GetWidth();
             if (not __BucketTestNumber(_fileWidth, __width)) return false;
         }
         
         if (__height != undefined)
         {
-            var _fileHeight = __BucketEnsureProcessFileInfo(_processStruct, _filePath).__GetWidth();
+            var _fileHeight = __BucketEnsureInjestFileInfo(_injestStruct, _filePath).__GetWidth();
             if (not __BucketTestNumber(_fileHeight, __height)) return false;
         }
         
         if (__length != undefined)
         {
-            var _fileLength = __BucketEnsureProcessFileInfo(_processStruct, _filePath).__GetLength();
+            var _fileLength = __BucketEnsureInjestFileInfo(_injestStruct, _filePath).__GetLength();
             if (not __BucketTestNumber(_fileLength, __length)) return false;
         }
         

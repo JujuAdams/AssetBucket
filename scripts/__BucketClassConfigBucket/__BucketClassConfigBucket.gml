@@ -11,10 +11,10 @@ function __BucketClassConfigBucket() constructor
         return self;
     }
     
-    static __Collect = function(_processStruct)
+    static __Collect = function(_injestStruct)
     {
-        var _bucketStruct = new __BucketClassProcessBucket(__name);
-        array_push(_processStruct.__bucketArray, _bucketStruct);
-        _processStruct.__bucketDict[$ __name] = _bucketStruct;
+        var _bucketStruct = new __BucketClassInjestBucket(__name);
+        array_push(_injestStruct.__bucketArray, _bucketStruct);
+        _injestStruct.__bucketDict[$ __name] = _bucketStruct;
     }
 }
