@@ -6,7 +6,7 @@
   "name":"__BucketClassBucket",
   "parent":{
     "name":"Classes",
-    "path":"folders/Asset Bucket/(System)/Classes.yy",
+    "path":"folders/Asset Bucket/(System)/Runtime/Classes.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

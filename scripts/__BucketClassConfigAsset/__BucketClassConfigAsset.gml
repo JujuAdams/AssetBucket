@@ -2,22 +2,22 @@ function __BucketClassConfigAsset() constructor
 {
     static __Deserialize = function(_parent, _struct)
     {
-        __BucketVariableAssertOnly(_struct, ["include", "exclude", "action"]);
+        __BucketVariableAssertOnly(_struct, ["include", "exclude", "import"]);
         
         __parent = _parent;
         
         __include = __BucketDeserializeStruct(self, _struct[$ "include"], __BucketClassConfigFilter);
         __exclude = __BucketDeserializeStruct(self, _struct[$ "exclude"], __BucketClassConfigFilter);
-        __action  = __BucketDeserializeStruct(self, _struct[$ "action" ], __BucketClassConfigAction);
+        __import  = __BucketDeserializeStruct(self, _struct[$ "import" ], __BucketClassConfigImport);
         
         if ((__include == undefined) && (__exclude == undefined))
         {
             __BucketError("Must have either an `.include` or `.exclude` struct");
         }
         
-        if (__action == undefined)
+        if (__import == undefined)
         {
-            __BucketError("Must have an `.action` struct");
+            __BucketError("Must have an `.import` struct");
         }
         
         return self;
@@ -25,7 +25,7 @@ function __BucketClassConfigAsset() constructor
     
     static __Collect = function(_processStruct)
     {
-        var _fileArray = variable_clone(_processStruct.__fileArray);
+        var _fileArray = variable_clone(_processStruct.__workingFileArray);
         
         var _includeStruct = __include;
         if (is_struct(_includeStruct))
@@ -57,6 +57,6 @@ function __BucketClassConfigAsset() constructor
             }
         }
         
-        __ExecuteAction(_processStruct, _fileArray);
+        __ExecuteImport(_processStruct, _fileArray);
     }
 }

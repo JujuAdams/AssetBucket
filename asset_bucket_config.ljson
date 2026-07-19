@@ -5,27 +5,37 @@
     excludeAllPaths: [
         *.md
     ]
-    
+
     buckets: [
         {
             name: bucketBackgrounds
-            macroScript: __bucketBackgrounds
         }
     ]
-    
-    datafiles: []
-    
-    sprites: [
+
+    datafiles: [
         {
             include: {
-                path: *.png
-                width: >100
+                path: *.txt
             }
-            action: {
-                importBucket: bucketBackgrounds
+
+            import: {
+                bucket: bucketBackgrounds
             }
         }
     ]
+    
+    //sprites: [
+    //    {
+    //        include: {
+    //            path: *.png
+    //            width: >100
+    //        }
+    //        import: {
+    //            folder: sprites
+    //            textureGroup: tgBackground
+    //        }
+    //    }
+    //]
     
     sounds: []
 }
