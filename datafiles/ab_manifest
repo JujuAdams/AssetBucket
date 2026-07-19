@@ -1,1 +1,1 @@
-{"sounds":[],"buckets":["bucketBackgrounds"],"bucketLookup":{"localization\/english.txt":"bucketBackgrounds"},"datafiles":["localization\/english.txt"],"sprites":[]}
+{"sounds":[],"buckets":["bucketBackgrounds"],"datafiles":["localization\/english.txt"],"bucketLookup":{"localization\/english.txt":null},"sprites":["sprites\/docs\/DocsAnchor.png","sprites\/docs\/DocsDeflate.png","sprites\/docs\/DocsInflate.png","sprites\/docs\/DocsListX.png","sprites\/docs\/DocsListY.png","sprites\/docs\/DocsRectangle.png"]}

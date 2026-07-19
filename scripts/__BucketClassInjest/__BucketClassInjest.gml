@@ -7,12 +7,10 @@ function __BucketClassInjest(_configStruct) constructor
     __bucketDict = {};
     
     __ensureAudioGroupDict   = {};
-    __ensureFolderDict       = {};
+    __ensureFolderDict       = {}; //N.B. Must not include trailing backslash
     __ensureDatafileDict     = {};
     __ensureResourceDict     = {};
     __ensureTextureGroupDict = {};
-    
-    __projectImportAssetArray = [];
     
     __assetToBucketDict    = {};
     __projectDatafileArray = [];
@@ -21,25 +19,52 @@ function __BucketClassInjest(_configStruct) constructor
     
     
     
-    static __RegisterBucketDatafile = function(_originalPath, _bucketNameArray)
+    static __RegisterBucketDatafile = function(_originalPath, _filename, _bucketName)
     {
         array_push(__projectDatafileArray, _originalPath);
-        __assetToBucketDict[$ _originalPath] = _bucketNameArray;
+        __assetToBucketDict[$ _originalPath] = _bucketName;
     }
     
-    static __RegisterProjectDatafile = function(_originalPath)
+    static __RegisterProjectDatafile = function(_originalPath, _filename)
     {
         array_push(__projectDatafileArray, _originalPath);
+        __ensureDatafileDict[$ _filename] = true;
     }
     
-    static __RegisterProjectSprite = function(_originalPath)
+    static __RegisterProjectSprite = function(_originalPath, _spriteName, _projectPath, _textureGroupName)
     {
+        var _lastChar = string_char_at(_projectPath, string_length(_projectPath));
+        if ((_lastChar == "/") || (_lastChar == "\\"))
+        {
+            string_copy(_projectPath, 1, string_length(_projectPath)-1);
+        }
+        
         array_push(__projectSpriteArray, _originalPath);
+        __ensureResourceDict[$ _spriteName] = "sprites";
+        __ensureTextureGroupDict[$ _textureGroupName] = true;
+        
+        if (_projectPath != "")
+        {
+            __ensureFolderDict[$ filename_name(_projectPath)] = _projectPath;
+        }
     }
     
-    static __RegisterProjectSound = function(_originalPath)
+    static __RegisterProjectSound = function(_originalPath, _audioName, _projectPath, _audioGroupName)
     {
+        var _lastChar = string_char_at(_projectPath, string_length(_projectPath));
+        if ((_lastChar == "/") || (_lastChar == "\\"))
+        {
+            string_copy(_projectPath, 1, string_length(_projectPath)-1);
+        }
+        
         array_push(__projectSoundArray, _originalPath);
+        __ensureResourceDict[$ _audioName] = "sounds";
+        __ensureAudioGroupDict[$ _audioGroupName] = true;
+        
+        if (_projectPath != "")
+        {
+            __ensureFolderDict[$ filename_name(_projectPath)] = _projectPath;
+        }
     }
     
     static __Injest = function()
@@ -145,8 +170,6 @@ function __BucketClassInjest(_configStruct) constructor
         }
         
         //Expand folder paths
-        __ensureFolderDict[$ "D"] = "A/B/C/D";
-        
         var _ensureFolderDict = __ensureFolderDict;
         var _ensureFolderArray = struct_get_names(__ensureFolderDict);
         
@@ -254,7 +277,7 @@ function __BucketClassInjest(_configStruct) constructor
         _yypString = __BucketYYPInject(_yypString, _audioGroupsContent,   _newAudioGroupsString);
         
         //Save the .yyp
-        __BucketSaveString(_yypString, GM_project_filename + ".new");
+        __BucketSaveString(_yypString, GM_project_filename);
     }
     
     static _audioGroupTemplate = "    {\"$GMAudioGroup\":\"v1\",\"%Name\":\"%name%\",\"exportDir\":\"\",\"name\":\"%name%\",\"resourceType\":\"GMAudioGroup\",\"resourceVersion\":\"2.0\",\"targets\":-1,},\n";

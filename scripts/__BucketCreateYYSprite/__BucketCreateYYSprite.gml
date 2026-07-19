@@ -1,11 +1,13 @@
 /// @param framePathArray
 /// @param spriteName
+/// @param width
+/// @param height
 /// @param folderInProject
 /// @param textureGroupName
 /// @param projectName
 /// @param projectDirectory
 
-function __BucketCreateYYSprite(_framePathArray, _spriteName, _folderInProject, _textureGroupName, _projectName, _projectDirectory)
+function __BucketCreateYYSprite(_framePathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName, _projectName, _projectDirectory)
 {
     var _directory = $"{_projectDirectory}sprites/{_spriteName}/";
     
@@ -21,6 +23,8 @@ function __BucketCreateYYSprite(_framePathArray, _spriteName, _folderInProject, 
     _yyString = string_replace_all(_yyString, "%textureGroupName%", _textureGroupName);
     _yyString = string_replace_all(_yyString, "%layerUUID%", _layerUUID);
     _yyString = string_replace_all(_yyString, "%seqFrameUUID%", _seqFrameUUID);
+    _yyString = string_replace_all(_yyString, "%width%", _width);
+    _yyString = string_replace_all(_yyString, "%height%", _height);
     
     //Set the in-project folder path
     if (_folderInProject == "")
@@ -75,9 +79,11 @@ function __BucketCreateYYSprite(_framePathArray, _spriteName, _folderInProject, 
     
     
     
-    static _templateFrame = @'    {"$GMSpriteFrame":"v1","%Name":"%frameUUID%","name":"%frameUUID%","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},\n';
+    static _templateFrame = @'    {"$GMSpriteFrame":"v1","%Name":"%frameUUID%","name":"%frameUUID%","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+';
     
-    static _templateSeqFrame = @'                "%frameIndex%":{"$SpriteFrameKeyframe":"","Id":{"name":"%frameUUID%","path":"sprites/%resourceName%/%resourceName%.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},\n';
+    static _templateSeqFrame = @'                "%frameIndex%":{"$SpriteFrameKeyframe":"","Id":{"name":"%frameUUID%","path":"sprites/%resourceName%/%resourceName%.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+';
     
     static _templateYY = @'{
   "$GMSprite":"v2",
@@ -97,7 +103,7 @@ function __BucketCreateYYSprite(_framePathArray, _spriteName, _folderInProject, 
   ],
   "gridX":0,
   "gridY":0,
-  "height":64,
+  "height":%height%,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"%layerUUID%","blendMode":0,"displayName":"default","isLocked":false,"name":"%layerUUID%","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -167,6 +173,6 @@ function __BucketCreateYYSprite(_framePathArray, _spriteName, _folderInProject, 
   },
   "type":0,
   "VTile":false,
-  "width":64,
+  "width":%width%,
 }';
 }

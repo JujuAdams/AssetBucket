@@ -20,9 +20,9 @@ function __BucketClassConfigImport() constructor
             __parentConstructor = __BucketClassConfigSounds;
         }
         
-        if (struct_exists(_struct, "import"))
+        if (struct_exists(_struct, "folder"))
         {
-            __projectImportFolder = __BucketEnsureDirectory(__BucketVariableAssertString(_struct, "import"));
+            __projectImportFolder = __BucketEnsureDirectory(__BucketVariableAssertString(_struct, "folder"));
         }
         else if (struct_exists(_struct, "bucket"))
         {
@@ -31,18 +31,18 @@ function __BucketClassConfigImport() constructor
         
         if (is_instanceof(_parent, __BucketClassConfigDatafiles))
         {
-            __BucketVariableAssertOnly(_struct, ["bucket", "import", "folderOrigin"]);
-            __BucketVariableAssertMutuallyExclusive(_struct, "import", "bucket");
+            __BucketVariableAssertOnly(_struct, ["bucket", "folder", "folderOrigin"]);
+            __BucketVariableAssertMutuallyExclusive(_struct, "folder", "bucket");
         }
         else if (is_instanceof(_parent, __BucketClassConfigSounds))
         {
-            __BucketVariableAssertOnly(_struct, ["import", "compression", "audioGroup", "folderOrigin"]);
+            __BucketVariableAssertOnly(_struct, ["folder", "compression", "audioGroup", "folderOrigin"]);
             __BucketVariableDefaultUndefined(_struct, "compression");
             __BucketVariableDefaultUndefined(_struct, "audioGroup");
         }
         else if (is_instanceof(_parent, __BucketClassConfigSprites))
         {
-            __BucketVariableAssertOnly(_struct, ["import", "textureGroup", "folderOrigin"]);
+            __BucketVariableAssertOnly(_struct, ["folder", "textureGroup", "folderOrigin"]);
             __BucketVariableDefaultUndefined(_struct, "textureGroup");
         }
         

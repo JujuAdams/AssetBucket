@@ -24,18 +24,18 @@
         }
     ]
     
-    //sprites: [
-    //    {
-    //        include: {
-    //            path: *.png
-    //            width: >100
-    //        }
-    //        import: {
-    //            folder: sprites
-    //            textureGroup: tgBackground
-    //        }
-    //    }
-    //]
+    sprites: [
+        {
+            include: {
+                path: *.png
+                width: >100
+            }
+            import: {
+                folder: sprites
+                textureGroup: tgBackground
+            }
+        }
+    ]
     
     sounds: []
 }

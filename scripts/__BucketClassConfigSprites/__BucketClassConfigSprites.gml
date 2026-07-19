@@ -2,6 +2,10 @@ function __BucketClassConfigSprites() : __BucketClassConfigAsset() constructor
 {
     static __ExecuteImport = function(_injestStruct, _fileArray)
     {
+        var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_injestStruct.__configStruct.__rootDirectory}";
+        var _projectName = filename_change_ext(filename_name(GM_project_filename), "");
+        var _projectDirectory = BUCKET_PROJECT_DIRECTORY;
+        
         var _bucketDict = _injestStruct.__bucketDict;
         
         with(__import)
@@ -11,7 +15,15 @@ function __BucketClassConfigSprites() : __BucketClassConfigAsset() constructor
             {
                 var _sourcePath = _fileArray[_i];
                 
-                _injestStruct.__RegisterProjectSprite(_sourcePath);
+                var _spriteName = filename_change_ext(filename_name(_sourcePath), "");
+                
+                _injestStruct.__RegisterProjectSprite(_sourcePath, _spriteName, "", "Default");
+                
+                var _fileInfo = __BucketEnsureInjestFileInfo(_injestStruct, _sourcePath);
+                __BucketCreateYYSprite([_rootDirectory + _sourcePath],
+                                       _spriteName, _fileInfo.__GetWidth(), _fileInfo.__GetHeight(),
+                                       "", "Default",
+                                       _projectName, _projectDirectory);
                 
                 //if (is_string(_folderOrigin))
                 //{
