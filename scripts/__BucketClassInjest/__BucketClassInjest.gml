@@ -6,7 +6,12 @@ function __BucketClassInjest(_configStruct) constructor
     __bucketArray = [];
     __bucketDict = {};
     
-    __ensureFolderArray = {};
+    __ensureAudioGroupDict   = {};
+    __ensureFolderDict       = {};
+    __ensureDatafileDict     = {};
+    __ensureResourceDict     = {};
+    __ensureTextureGroupDict = {};
+    
     __projectImportAssetArray = [];
     
     __assetToBucketDict    = {};
@@ -39,8 +44,29 @@ function __BucketClassInjest(_configStruct) constructor
     
     static __Injest = function()
     {
+        var _i = 0;
+        repeat(array_length(__bucketArray))
+        {
+            __bucketArray[_i].__Save(__ensureDatafileDict);
+            ++_i;
+        }
+        
+        var _json = json_stringify({
+            buckets:      struct_get_names(__bucketDict),
+            bucketLookup: __assetToBucketDict,
+            datafiles:    __projectDatafileArray,
+            sprites:      __projectSpriteArray,
+            sounds:       __projectSoundArray,
+        });
+        
+        __BucketSaveString(_json, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{BUCKET_MANIFEST_FILENAME}");
+        __ensureDatafileDict[$ BUCKET_MANIFEST_FILENAME] = true;
+        
+        //Load the base project .yy
+        file_copy(GM_project_filename, $"{GM_project_filename}.old");
         var _yypString = __BucketLoadString(GM_project_filename);
         
+        //Extract arrays as strings from the .yyp
         var _audioGroupsContent   = __BucketYYPExtract(_yypString, "AudioGroups");
         var _foldersContent       = __BucketYYPExtract(_yypString, "Folders");
         var _datafilesContent     = __BucketYYPExtract(_yypString, "IncludedFiles");
@@ -72,6 +98,7 @@ function __BucketClassInjest(_configStruct) constructor
             __BucketError($"Failed to extract texture groups from \"{GM_project_filename}\"");
         }
         
+        //Unpack arrays into dictionaries for faster lookups
         var _yypAudioGroupsDict = {};
         var _yypAudioGroupsArray = _audioGroupsContent.__array;
         var _i = 0;
@@ -117,56 +144,117 @@ function __BucketClassInjest(_configStruct) constructor
             ++_i;
         }
         
+        //Expand folder paths
+        __ensureFolderDict[$ "D"] = "A/B/C/D";
+        
+        var _ensureFolderDict = __ensureFolderDict;
+        var _ensureFolderArray = struct_get_names(__ensureFolderDict);
+        
+        var _foundPathDict = {};
+        var _i = 0;
+        repeat(array_length(_ensureFolderArray))
+        {
+            _foundPathDict[$ _ensureFolderDict[$ _ensureFolderArray[_i]]] = true;
+            ++_i;
+        }
+        
+        var _i = 0;
+        repeat(array_length(_ensureFolderArray))
+        {
+            var _path = _ensureFolderDict[$ _ensureFolderArray[_i]];
+            while(_path != "")
+            {
+                if (not struct_exists(_foundPathDict, _path))
+                {
+                    _foundPathDict[$ _path] = true;
+                    _ensureFolderDict[$ filename_name(_path)] = _path;
+                }
+                
+                _path = filename_dir(_path);
+            }
+            
+            ++_i;
+        }
+        
+        //Add new entries to each array-string
         var _newAudioGroupsString   = _audioGroupsContent.__string;
         var _newFoldersString       = _foldersContent.__string;
         var _newDatafilesString     = _datafilesContent.__string;
         var _newResourcesString     = _resourcesContent.__string;
         var _newTextureGroupsString = _textureGroupsContent.__string;
         
-        if (_audioGroupsContent.__emptyArray) _newAudioGroupsString += "\n";
-        _newAudioGroupsString += string_replace_all(_audioGroupTemplate, "%name%", "TestAudioGroup");
-        if (_audioGroupsContent.__emptyArray) _newAudioGroupsString += "  ";
+        _newAudioGroupsString   = _funcContentBuild(   _newAudioGroupsString,   _audioGroupsContent.__emptyArray,   __ensureAudioGroupDict,   _yypAudioGroupsDict,   _audioGroupTemplate                 );
+        _newFoldersString       = _funcContentBuildExt(_newFoldersString,       _foldersContent.__emptyArray,       __ensureFolderDict,       _yypFoldersDict,       _folderTemplate,      "path"        );
+        _newDatafilesString     = _funcContentBuild(   _newDatafilesString,     _datafilesContent.__emptyArray,     __ensureDatafileDict,     _yypDatafilesDict,     _datafileTemplate                   );
+        _newResourcesString     = _funcContentBuildExt(_newResourcesString,     _resourcesContent.__emptyArray,     __ensureResourceDict,     _yypResourcesDict,     _resourceTemplate,    "resourceType");
+        _newTextureGroupsString = _funcContentBuild(   _newTextureGroupsString, _textureGroupsContent.__emptyArray, __ensureTextureGroupDict, _yypTextureGroupsDict, _textureGroupTemplate               );
         
-        if (_foldersContent.__emptyArray) _newFoldersString += "\n";
-        _newFoldersString += string_replace_all(string_replace_all(_folderTemplate, "%name%", "TestFolder"), "%path%", "TestFolder");
-        if (_foldersContent.__emptyArray) _newFoldersString += "  ";
+        static _funcContentBuild = function(_string, _isEmptyArray, _ensureDict, _existingDict, _templateString)
+        {
+            var _ensureArray = struct_get_names(_ensureDict);
+            var _addedContent = false;
+            var _i = 0;
+            repeat(array_length(_ensureArray))
+            {
+                var _newName = _ensureArray[_i];
+                if (not struct_exists(_existingDict, _newName))
+                {
+                    if ((not _addedContent) && _isEmptyArray)
+                    {
+                        _string += "\n";
+                    }
+                    
+                    _addedContent = true;
+                    _string += string_replace_all(_templateString, "%name%", _newName);
+                }
+                
+                ++_i;
+            }
+            if (_addedContent && _isEmptyArray) _string += "  ";
+            
+            return _string;
+        }
         
-        if (_datafilesContent.__emptyArray) _newDatafilesString += "\n";
-        _newDatafilesString += string_replace_all(_datafileTemplate, "%name%", "TestDatafile");
-        if (_datafilesContent.__emptyArray) _newDatafilesString += "  ";
+        static _funcContentBuildExt = function(_string, _isEmptyArray, _ensureDict, _existingDict, _templateString, _replaceExt)
+        {
+            var _replaceExtSubstring = $"%{_replaceExt}%";
+            
+            var _ensureArray = struct_get_names(_ensureDict);
+            var _addedContent = false;
+            var _i = 0;
+            repeat(array_length(_ensureArray))
+            {
+                var _newName = _ensureArray[_i];
+                var _newExt  = _ensureDict[$ _newName];
+                
+                if (not struct_exists(_existingDict, _newName))
+                {
+                    if ((not _addedContent) && _isEmptyArray)
+                    {
+                        _string += "\n";
+                    }
+                    
+                    _addedContent = true;
+                    _string += string_replace_all(string_replace_all(_templateString, "%name%", _newName), _replaceExtSubstring, _newExt);
+                }
+                
+                ++_i;
+            }
+            if (_addedContent && _isEmptyArray) _string += "  ";
+            
+            return _string;
+        }
         
-        if (_resourcesContent.__emptyArray) _newResourcesString += "\n";
-        _newResourcesString += string_replace_all(string_replace_all(_resourceTemplate, "%name%", "TestResource"), "%resourceType%", "notes");
-        if (_resourcesContent.__emptyArray) _newResourcesString += "  ";
-        
-        if (_textureGroupsContent.__emptyArray) _newTextureGroupsString += "\n";
-        _newTextureGroupsString += string_replace_all(_textureGroupTemplate, "%name%", "TestTextureGroup");
-        if (_textureGroupsContent.__emptyArray) _newTextureGroupsString += "  ";
-        
+        //Inject strings back into the .yyp
+        // N.B. Order is important here!
         _yypString = __BucketYYPInject(_yypString, _textureGroupsContent, _newTextureGroupsString);
         _yypString = __BucketYYPInject(_yypString, _resourcesContent,     _newResourcesString);
         _yypString = __BucketYYPInject(_yypString, _datafilesContent,     _newDatafilesString);
         _yypString = __BucketYYPInject(_yypString, _foldersContent,       _newFoldersString);
         _yypString = __BucketYYPInject(_yypString, _audioGroupsContent,   _newAudioGroupsString);
         
-        __BucketSaveString(_yypString, GM_project_filename + "new");
-        
-        var _i = 0;
-        repeat(array_length(__bucketArray))
-        {
-            __bucketArray[_i].__Save();
-            ++_i;
-        }
-        
-        var _json = json_stringify({
-            buckets:      struct_get_names(__bucketDict),
-            bucketLookup: __assetToBucketDict,
-            datafiles:    __projectDatafileArray,
-            sprites:      __projectSpriteArray,
-            sounds:       __projectSoundArray,
-        });
-        
-        __BucketSaveString(_json, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{BUCKET_MANIFEST_FILENAME}");
+        //Save the .yyp
+        __BucketSaveString(_yypString, GM_project_filename + ".new");
     }
     
     static _audioGroupTemplate = "    {\"$GMAudioGroup\":\"v1\",\"%Name\":\"%name%\",\"exportDir\":\"\",\"name\":\"%name%\",\"resourceType\":\"GMAudioGroup\",\"resourceVersion\":\"2.0\",\"targets\":-1,},\n";

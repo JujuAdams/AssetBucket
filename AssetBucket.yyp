@@ -23,7 +23,10 @@
     {"$GMFolder":"","%Name":"Buckets","folderPath":"folders/Asset Bucket/Buckets.yy","name":"Buckets","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
-  "IncludedFiles":[],
+  "IncludedFiles":[
+    {"$GMIncludedFile":"","%Name":"ab_17f2fb86a1420e2d03fb4ff1c2ccd265","CopyToMask":-1,"filePath":"datafiles","name":"ab_17f2fb86a1420e2d03fb4ff1c2ccd265","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"ab_manifest","CopyToMask":-1,"filePath":"datafiles","name":"ab_manifest","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+  ],
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{

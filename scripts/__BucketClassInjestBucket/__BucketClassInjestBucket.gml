@@ -32,9 +32,11 @@ function __BucketClassInjestBucket(_name) constructor
         buffer_delete(_fileBuffer);
     }
     
-    static __Save = function()
+    static __Save = function(_ensureDatafileDict)
     {
-        buffer_save(__accumulationBuffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{__BucketGetDatafilesName(__name)}");
+        var _filename = __BucketGetDatafilesName(__name);
+        _ensureDatafileDict[$ _filename] = true;
+        buffer_save(__accumulationBuffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_filename}");
         buffer_delete(__accumulationBuffer);
     }
 }
