@@ -1,4 +1,4 @@
-function BucketGetDatafileRef(_originalPath)
+function BucketDatafileGetRef(_originalPath)
 {
     static _system = __BucketSystem();
     static _runtimeBucketMap = _system.__runtimeBucketMap;

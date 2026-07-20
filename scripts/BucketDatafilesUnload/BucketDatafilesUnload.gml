@@ -1,4 +1,4 @@
-function BucketLoad(_bucketName)
+function BucketDatafilesUnload(_bucketName)
 {
     static _runtimeBucketMap = __BucketSystem().__runtimeBucketMap;
     
@@ -9,5 +9,5 @@ function BucketLoad(_bucketName)
         __BucketError($"Bucket \"{_bucketName}\" not found");
     }
     
-    _bucket.__Load();
+    _bucket.__Unload();
 }

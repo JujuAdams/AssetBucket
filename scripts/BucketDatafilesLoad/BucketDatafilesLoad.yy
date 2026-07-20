@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BucketGetDatafileCopy",
+  "%Name":"BucketDatafilesLoad",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BucketGetDatafileCopy",
+  "name":"BucketDatafilesLoad",
   "parent":{
     "name":"Buckets",
     "path":"folders/Asset Bucket/Buckets.yy",

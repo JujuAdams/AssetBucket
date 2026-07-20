@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BucketUnload",
+  "%Name":"BucketDatafilesGetLoaded",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BucketUnload",
+  "name":"BucketDatafilesGetLoaded",
   "parent":{
     "name":"Buckets",
     "path":"folders/Asset Bucket/Buckets.yy",
