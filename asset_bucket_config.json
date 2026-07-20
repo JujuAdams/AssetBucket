@@ -1,0 +1,45 @@
+{
+    "version": 1,
+    "rootDirectory": "asset_bucket",
+
+    "buckets": [
+        {
+            "name": "bucketDefault",
+        },
+    ],
+
+    "datafiles": [
+        {
+            "include": {
+                "path": "datafiles/*",
+            },
+            "import": {
+                "bucket": "bucketDefault"
+            },
+        },
+    ],
+    
+    "sprites": [
+        {
+            "include": {
+                "path": "sprites/*",
+            },
+            "import": {
+                "folder": "Sprites/Asset Bucket/",
+                "textureGroup": "Default",
+            },
+        },
+    ],
+    
+    "sounds": [
+        {
+            "include": {
+                "path": ["sounds/*.wav", "sounds/*.ogg"]
+            },
+            "import": {
+                "folder": "Sounds/Asset Bucket/",
+                "audioGroup": "audiogroup_default",
+            },
+        },
+    ],
+}

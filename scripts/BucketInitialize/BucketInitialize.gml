@@ -1,7 +1,6 @@
 function BucketInitialize()
 {
     static _system = __BucketSystem();
-    
     with(_system)
     {
         if (file_exists(BUCKET_MANIFEST_PATH))
@@ -27,12 +26,10 @@ function BucketInitialize()
             __runtimeAllAssetsArray = array_concat(__manifest.datafiles, __manifest.sprites, __manifest.sounds);
             
             var _loadedBucketDict = {};
-            
             var _i = 0;
             repeat(array_length(__runtimeBucketArray))
             {
                 var _bucket = __runtimeBucketArray[_i];
-                
                 if (_bucket.__loaded)
                 {
                     _loadedBucketDict[$ _bucket.__name] = true;

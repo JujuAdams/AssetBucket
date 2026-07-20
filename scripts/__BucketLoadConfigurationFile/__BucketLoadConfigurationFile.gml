@@ -8,24 +8,25 @@ function __BucketLoadConfigurationFile()
         return false;
     }
     
-    var _configPath = $"{filename_dir(GM_project_filename)}/{BUCKET_CONFIG_FILENAME}";
+    var _configPath = $"{BUCKET_PROJECT_DIRECTORY}{BUCKET_CONFIG_FILENAME}";
     if (not file_exists(_configPath))
     {
         __BucketTrace($"Could not find configuration file at \"{_configPath}\"");
         
         if (show_question($"Could not find configuration file at \"{_configPath}\".\n \nWould you like to make it now?"))
         {
-            var _string = json_stringify(new __BucketClassConfigRoot(), true);
-            var _buffer = buffer_create(string_byte_length(_string), buffer_fixed, 1);
-            buffer_write(_buffer, buffer_text, _string);
-            buffer_save(_buffer, _configPath);
-            buffer_delete(_buffer);
+            __BucketSaveString(_templateConfig, _configPath);
             
             if (not file_exists(_configPath))
             {
                 __BucketError($"Failed to save \"{_configPath}\"");
                 return false;
             }
+            
+            var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}asset_bucket/";
+            directory_create($"{_rootDirectory}datafiles");
+            directory_create($"{_rootDirectory}sprites");
+            directory_create($"{_rootDirectory}sounds");
         }
         else
         {
@@ -81,4 +82,50 @@ function __BucketLoadConfigurationFile()
     _system.__config = new __BucketClassConfigRoot().__Deserialize(_config);
     
     return true;
+    
+    static _templateConfig = @'{
+    "version": 1,
+    "rootDirectory": "asset_bucket",
+
+    "buckets": [
+        {
+            "name": "bucketDefault",
+        },
+    ],
+
+    "datafiles": [
+        {
+            "include": {
+                "path": "datafiles/*",
+            },
+            "import": {
+                "bucket": "bucketDefault"
+            },
+        },
+    ],
+    
+    "sprites": [
+        {
+            "include": {
+                "path": "sprites/*",
+            },
+            "import": {
+                "folder": "Sprites/Asset Bucket/",
+                "textureGroup": "Default",
+            },
+        },
+    ],
+    
+    "sounds": [
+        {
+            "include": {
+                "path": ["sounds/*.wav", "sounds/*.ogg"]
+            },
+            "import": {
+                "folder": "Sounds/Asset Bucket/",
+                "audioGroup": "audiogroup_default",
+            },
+        },
+    ],
+}';
 }
