@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketClassConfigRoot",
+  "%Name":"__BucketClassConfigWorker",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketClassConfigRoot",
+  "name":"__BucketClassConfigWorker",
   "parent":{
     "name":"Configuration",
     "path":"folders/Asset Bucket/(System)/Ingest/Classes/Configuration.yy",

@@ -24,6 +24,8 @@ function __BucketSystem()
             __config = undefined;
             
             __fileInfoDict = {};
+            __workerFunctionDict = {};
+            __currentIngestStruct = undefined;
             
             __runtimeAllAssetsArray = [];
             __runtimeBucketArray    = [];

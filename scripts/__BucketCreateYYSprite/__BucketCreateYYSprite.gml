@@ -1,15 +1,14 @@
+/// @param rootDirectory
 /// @param framePathArray
 /// @param spriteName
 /// @param width
 /// @param height
 /// @param folderInProject
 /// @param textureGroupName
-/// @param projectName
-/// @param projectDirectory
 
-function __BucketCreateYYSprite(_framePathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName, _projectName, _projectDirectory)
+function __BucketCreateYYSprite(_rootDirectory, _framePathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)
 {
-    var _directory = $"{_projectDirectory}sprites/{_spriteName}/";
+    var _directory = $"{BUCKET_PROJECT_DIRECTORY}sprites/{_spriteName}/";
     
     //Generate UUIDs
     var _frameCount = array_length(_framePathArray);
@@ -29,8 +28,8 @@ function __BucketCreateYYSprite(_framePathArray, _spriteName, _width, _height, _
     //Set the in-project folder path
     if (_folderInProject == "")
     {
-        var _parentName = _projectName;
-        var _parentPath = $"{_projectName}.yyp";
+        var _parentName = BUCKET_PROJECT_NAME;
+        var _parentPath = $"{BUCKET_PROJECT_NAME}.yyp";
     }
     else
     {
@@ -62,7 +61,7 @@ function __BucketCreateYYSprite(_framePathArray, _spriteName, _width, _height, _
         _seqFrameArrayString += _seqFrameArraySubtring;
         
         //Copy the source file over
-        var _sourcePath = _framePathArray[_i];
+        var _sourcePath = _rootDirectory + _framePathArray[_i];
         file_copy(_sourcePath, $"{_directory}/{_frameUUID}.png");
         file_copy(_sourcePath, $"{_directory}/layers/{_frameUUID}/{_layerUUID}.png");
         

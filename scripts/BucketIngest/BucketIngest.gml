@@ -1,10 +1,66 @@
 function BucketIngest()
 {
     static _system = __BucketSystem();
+    static _once = (function()
+    {
+        BucketSetWorkerFunction("defaultToBucket", function(_filePath, _workerInfo)
+        {
+            __BucketVariableAssertString(_workerInfo, "name");
+            __BucketVariableAssertString(_workerInfo, "type");
+            __BucketVariableAssertString(_workerInfo, "bucket");
+            
+            var _type = _workerInfo.type;
+            if (_type == "datafile")
+            {
+                BucketIngestDatafileToBucket(_filePath, _workerInfo.bucket);
+            }
+            else if (_type == "sprite")
+            {
+                //BucketIngestSpriteToBucket(_workerInfo.bucket);
+            }
+            else if (_type == "sound")
+            {
+                //BucketIngestSoundToBucket(_workerInfo.bucket);
+            }
+            else
+            {
+                __BucketError($"Type \"{_type}\" unhandled");
+            }
+        });
+        
+        BucketSetWorkerFunction("defaultToProject", function(_filePath, _workerInfo)
+        {
+            __BucketVariableAssertString(_workerInfo, "name");
+            __BucketVariableAssertString(_workerInfo, "type");
+            __BucketVariableAssertString(_workerInfo, "folder");
+            
+            var _type = _workerInfo.type;
+            if (_type == "datafile")
+            {
+                //BucketIngestDatafileToProject(_workerInfo.folder);
+            }
+            else if (_type == "sprite")
+            {
+                var _spriteName = filename_change_ext(filename_name(_filePath), "");
+                BucketIngestSpriteToProject(_spriteName, _filePath, _workerInfo.folder, _workerInfo[$ "textureGroup"]);
+            }
+            else if (_type == "sound")
+            {
+                var _soundName = filename_change_ext(filename_name(_filePath), "");
+                BucketIngestSoundToProject(_soundName, _filePath, _workerInfo.folder, _workerInfo[$ "audioGroup"]);
+            }
+            else
+            {
+                __BucketError($"Type \"{_type}\" unhandled");
+            }
+        });
+    })();
+    
     
     if (not BUCKET_DEV_MODE)
     {
-        __BucketSoftError("Cannot injest files, not running in developer mode");
+        __BucketSoftError("Cannot ingest files, not running in developer mode");
+        return;
     }
     
     with(_system)
@@ -20,7 +76,6 @@ function BucketIngest()
         }
         
         var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{__config.__rootDirectory}";
-        
         if (directory_exists(_rootDirectory))
         {
             __BucketTrace($"Root directory \"{_rootDirectory}\" found");
@@ -38,8 +93,12 @@ function BucketIngest()
             buffer_delete(_buffer);
         }
         
-        var _injestStruct = new __BucketClassInjest(_system.__config);
-        _system.__config.__Collect(_injestStruct);
-        _injestStruct.__Injest();
+        var _oldIngestStruct = __currentIngestStruct;
+        __currentIngestStruct = new __BucketClassIngest(_system.__config);
+        
+        _system.__config.__Collect();
+        __currentIngestStruct.__Ingest();
+        
+        __currentIngestStruct = _oldIngestStruct;
     }
 }

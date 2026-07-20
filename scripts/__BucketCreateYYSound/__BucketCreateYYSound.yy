@@ -6,7 +6,7 @@
   "name":"__BucketCreateYYSound",
   "parent":{
     "name":"YY",
-    "path":"folders/Asset Bucket/(System)/Injest/YY.yy",
+    "path":"folders/Asset Bucket/(System)/Ingest/YY.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

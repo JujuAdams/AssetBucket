@@ -1,32 +1,33 @@
 function __BucketClassConfigRoot() constructor
 {
-    static _static_fileInfoDict = __BucketSystem().__fileInfoDict;
+    static _system = __BucketSystem();
+    static _static_fileInfoDict = _system.__fileInfoDict;
     
     static __Deserialize = function(_struct)
     {
-        __BucketVariableAssertOnly(_struct, ["version", "rootDirectory", "includeAllPaths", "excludeAllPaths", "buckets", "datafiles", "sprites", "sounds"]);
+        __BucketVariableAssertOnly(_struct, ["version", "rootDirectory", "includeAllPaths", "excludeAllPaths", "buckets", "tasks"]);
         
         __version = __BucketVariableAssertNumber(_struct, "version");
-        if (__version != 1)
+        if (__version != BUCKET_CONFIG_VERSION)
         {
-            __BucketError($"Version mismatch. Found {__version}, expecting 1");
+            __BucketError($"Version mismatch. Found {__version}, expecting {BUCKET_CONFIG_VERSION}");
         }
         
         __rootDirectory   = __BucketEnsureDirectory(__BucketVariableAssertString(_struct, "rootDirectory"));
         __includeAllPaths = __BucketVariableAssertStringOrArray(_struct, "includeAllPaths");
         __excludeAllPaths = __BucketVariableAssertStringOrArray(_struct, "excludeAllPaths");
-        __bucketsArray    = __BucketDeserializeArrayOf(self, _struct[$ "buckets"  ], __BucketClassConfigBucket);
-        __datafilesArray  = __BucketDeserializeArrayOf(self, _struct[$ "datafiles"], __BucketClassConfigDatafiles);
-        __spritesArray    = __BucketDeserializeArrayOf(self, _struct[$ "sprites"  ], __BucketClassConfigSprites);
-        __soundsArray     = __BucketDeserializeArrayOf(self, _struct[$ "sounds"   ], __BucketClassConfigSounds);
+        __bucketsArray    = __BucketDeserializeArrayOf(self, _struct[$ "buckets"], __BucketClassConfigBucket);
+        __tasksArray      = __BucketDeserializeArrayOf(self, _struct[$ "tasks"  ], __BucketClassConfigTask);
         
         return self;
     }
     
-    static __Collect = function(_injestStruct)
+    static __Collect = function()
     {
+        var _ingestStruct = _system.__currentIngestStruct;
+        
         var _fileArray = __BucketDirectoryFileArray($"{BUCKET_PROJECT_DIRECTORY}{__rootDirectory}");
-        _injestStruct.__workingFileArray = _fileArray;
+        _ingestStruct.__workingFileArray = _fileArray;
         
         //Remove anything that doesn't fit the global include mask
         if (array_length(__includeAllPaths) > 0)
@@ -73,39 +74,21 @@ function __BucketClassConfigRoot() constructor
             ++_i;
         }
         
-        //Collect buckets
+        //Build buckets
         var _bucketsArray = __bucketsArray;
         var _i = 0;
         repeat(array_length(_bucketsArray))
         {
-            _bucketsArray[_i].__Collect(_injestStruct);
+            _bucketsArray[_i].__Build();
             ++_i;
         }
         
-        //Collect datafiles
-        var _datafilesArray = __datafilesArray;
+        //Execute tasks
+        var _tasksArray = __tasksArray;
         var _i = 0;
-        repeat(array_length(_datafilesArray))
+        repeat(array_length(_tasksArray))
         {
-            _datafilesArray[_i].__Collect(_injestStruct);
-            ++_i;
-        }
-        
-        //Collect sprites
-        var _spritesArray = __spritesArray;
-        var _i = 0;
-        repeat(array_length(_spritesArray))
-        {
-            _spritesArray[_i].__Collect(_injestStruct);
-            ++_i;
-        }
-        
-        //Collect sounds
-        var _soundsArray = __soundsArray;
-        var _i = 0;
-        repeat(array_length(_soundsArray))
-        {
-            _soundsArray[_i].__Collect(_injestStruct);
+            _tasksArray[_i].__Execute();
             ++_i;
         }
     }

@@ -8,35 +8,35 @@
         },
     ],
 
-    "datafiles": [
+    "tasks": [
         {
             "include": {
                 "path": "datafiles/*",
             },
-            "import": {
+            "worker": {
+                "name": "defaultToBucket",
+                "type": "datafile",
                 "bucket": "bucketDefault"
             },
         },
-    ],
-    
-    "sprites": [
         {
             "include": {
                 "path": "sprites/*",
             },
-            "import": {
+            "worker": {
+                "name": "defaultToProject",
+                "type": "sprite",
                 "folder": "Sprites/Asset Bucket/",
                 "textureGroup": "Default",
             },
         },
-    ],
-    
-    "sounds": [
         {
             "include": {
-                "path": ["sounds/*.wav", "sounds/*.ogg"]
+                "path": ["sounds/*.wav", "sounds/*.ogg"],
             },
-            "import": {
+            "worker": {
+                "name": "defaultToProject",
+                "type": "sound",
                 "folder": "Sounds/Asset Bucket/",
                 "audioGroup": "audiogroup_default",
             },

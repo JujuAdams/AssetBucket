@@ -1,5 +1,7 @@
 function __BucketClassConfigBucket() constructor
 {
+    static _system = __BucketSystem();
+    
     static __Deserialize = function(_parent, _struct)
     {
         __BucketVariableAssertOnly(_struct, ["name"]);
@@ -11,10 +13,12 @@ function __BucketClassConfigBucket() constructor
         return self;
     }
     
-    static __Collect = function(_injestStruct)
+    static __Build = function()
     {
-        var _bucketStruct = new __BucketClassInjestBucket(__name);
-        array_push(_injestStruct.__bucketArray, _bucketStruct);
-        _injestStruct.__bucketDict[$ __name] = _bucketStruct;
+        var _ingestStruct = _system.__currentIngestStruct;
+        
+        var _bucketStruct = new __BucketClassIngestBucket(__name);
+        array_push(_ingestStruct.__bucketArray, _bucketStruct);
+        _ingestStruct.__bucketDict[$ __name] = _bucketStruct;
     }
 }

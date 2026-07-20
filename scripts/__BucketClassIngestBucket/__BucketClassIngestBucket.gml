@@ -1,0 +1,56 @@
+function __BucketClassIngestBucket(_name) constructor
+{
+    static _system = __BucketSystem();
+    
+    __name = _name;
+    
+    __accumulationBuffer = buffer_create(1024*1024, buffer_grow, 1);
+    __contentsDict = {};
+    
+    
+    
+    static __AddFile = function(_sourcePath)
+    {
+        var _accumulationBuffer = __accumulationBuffer;
+        
+        var _absolutePath = $"{BUCKET_PROJECT_DIRECTORY}{_system.__currentIngestStruct.__configStruct.__rootDirectory}{_sourcePath}";
+        if (not file_exists(_absolutePath))
+        {
+            __BucketError($"Can't find \"{_absolutePath}\"");
+        }
+        
+        var _fileBuffer = buffer_load(_absolutePath);
+        if (not buffer_exists(_fileBuffer))
+        {
+            __BucketError($"Failed to load \"{_absolutePath}\"");
+        }
+        
+        var _fileSize = buffer_get_size(_fileBuffer);
+        
+        __contentsDict[$ _sourcePath] = {
+            offset: buffer_tell(_accumulationBuffer),
+            size: _fileSize,
+        };
+        
+        buffer_copy(_fileBuffer, 0, _fileSize, _accumulationBuffer, buffer_tell(_accumulationBuffer));
+        buffer_seek(_accumulationBuffer, buffer_seek_relative, _fileSize);
+        buffer_write(_accumulationBuffer, buffer_u8, 0x00);
+        
+        buffer_delete(_fileBuffer);
+    }
+    
+    static __Save = function(_ensureDatafileDict)
+    {
+        var _filename = __BucketGetDatafilesName(__name);
+        _ensureDatafileDict[$ _filename] = true;
+        
+        var _buffer = buffer_create(1024*1024, buffer_grow, 1);
+        buffer_write(_buffer, buffer_string, json_stringify({ version: int64(BUCKET_CONTENTS_VERSION), contents: __contentsDict }));
+        buffer_copy(__accumulationBuffer, 0, buffer_tell(__accumulationBuffer), _buffer, buffer_tell(_buffer));
+        
+        buffer_save_ext(_buffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_filename}", 0, buffer_tell(__accumulationBuffer) + buffer_tell(_buffer));
+        
+        buffer_delete(_buffer);
+        buffer_delete(__accumulationBuffer);
+    }
+}
