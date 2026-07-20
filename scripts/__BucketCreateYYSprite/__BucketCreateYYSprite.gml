@@ -56,8 +56,9 @@ function __BucketCreateYYSprite(_rootDirectory, _framePathArray, _spriteName, _w
         //Add to the sequence frame array string
         var _seqFrameArraySubtring = _templateSeqFrame;
         _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%resourceName%", _spriteName);
-        _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%frameIndex%", _i);
         _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%frameUUID%", _frameUUID);
+        _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%frameIndex%", _i);
+        _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%seqFrameUUID%", __BucketGenerateUUID());
         _seqFrameArrayString += _seqFrameArraySubtring;
         
         //Copy the source file over
@@ -82,7 +83,9 @@ function __BucketCreateYYSprite(_rootDirectory, _framePathArray, _spriteName, _w
     static _templateFrame = @'    {"$GMSpriteFrame":"v1","%Name":"%frameUUID%","name":"%frameUUID%","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
 ';
     
-    static _templateSeqFrame = @'                "%frameIndex%":{"$SpriteFrameKeyframe":"","Id":{"name":"%frameUUID%","path":"sprites/%resourceName%/%resourceName%.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+    static _templateSeqFrame = @'            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"%frameUUID%","path":"sprites/%resourceName%/%resourceName%.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"%seqFrameUUID%","IsCreationKey":false,"Key":%frameIndex%.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
 ';
     
     static _templateYY = @'{
@@ -155,9 +158,7 @@ function __BucketCreateYYSprite(_rootDirectory, _framePathArray, _spriteName, _w
     "timeUnits":1,
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
-            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
 %seqFrameArray%
-              },"Disabled":false,"id":"%seqFrameUUID%","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

@@ -98,6 +98,7 @@
     {"id":{"name":"BucketDatafilesGetLoaded","path":"scripts/BucketDatafilesGetLoaded/BucketDatafilesGetLoaded.yy",},},
     {"id":{"name":"BucketDatafilesLoad","path":"scripts/BucketDatafilesLoad/BucketDatafilesLoad.yy",},},
     {"id":{"name":"BucketDatafilesUnload","path":"scripts/BucketDatafilesUnload/BucketDatafilesUnload.yy",},},
+    {"id":{"name":"BucketFindSpriteFrames","path":"scripts/BucketFindSpriteFrames/BucketFindSpriteFrames.yy",},},
     {"id":{"name":"BucketIngest","path":"scripts/BucketIngest/BucketIngest.yy",},},
     {"id":{"name":"BucketIngestBufferToBucket","path":"scripts/BucketIngestBufferToBucket/BucketIngestBufferToBucket.yy",},},
     {"id":{"name":"BucketIngestBufferToProject","path":"scripts/BucketIngestBufferToProject/BucketIngestBufferToProject.yy",},},

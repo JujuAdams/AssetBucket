@@ -42,7 +42,7 @@ function BucketIngest()
             else if (_type == "sprite")
             {
                 var _spriteName = filename_change_ext(filename_name(_filePath), "");
-                BucketIngestSpriteToProject(_spriteName, _filePath, _workerInfo.folder, _workerInfo[$ "textureGroup"]);
+                BucketIngestSpriteToProject(_spriteName, BucketFindSpriteFrames(_filePath), _workerInfo.folder, _workerInfo[$ "textureGroup"]);
             }
             else if (_type == "sound")
             {
