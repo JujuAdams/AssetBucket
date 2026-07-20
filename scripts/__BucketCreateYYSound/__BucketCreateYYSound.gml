@@ -23,8 +23,9 @@ function __BucketCreateYYSound(_sourcePath, _soundName, _folderInProject, _audio
     }
     else
     {
-        var _parentName = $"folders/{_folderInProject}/";
-        var _parentPath = $"{filename_name(_folderInProject)}.yy";
+        _folderInProject = __BucketTrimDirectory(_folderInProject);
+        var _parentPath = $"folders/{_folderInProject}.yy";
+        var _parentName = $"{filename_name(_folderInProject)}.yy";
     }
     
     _yyString = string_replace_all(_yyString, "%folderName%", _parentName);

@@ -75,6 +75,7 @@
     {"id":{"name":"__BucketTestStringMaskAll","path":"scripts/__BucketTestStringMaskAll/__BucketTestStringMaskAll.yy",},},
     {"id":{"name":"__BucketTestStringMaskAny","path":"scripts/__BucketTestStringMaskAny/__BucketTestStringMaskAny.yy",},},
     {"id":{"name":"__BucketTrace","path":"scripts/__BucketTrace/__BucketTrace.yy",},},
+    {"id":{"name":"__BucketTrimDirectory","path":"scripts/__BucketTrimDirectory/__BucketTrimDirectory.yy",},},
     {"id":{"name":"__BucketVariableAssertAny","path":"scripts/__BucketVariableAssertAny/__BucketVariableAssertAny.yy",},},
     {"id":{"name":"__BucketVariableAssertExactly","path":"scripts/__BucketVariableAssertExactly/__BucketVariableAssertExactly.yy",},},
     {"id":{"name":"__BucketVariableAssertMutuallyExclusive","path":"scripts/__BucketVariableAssertMutuallyExclusive/__BucketVariableAssertMutuallyExclusive.yy",},},

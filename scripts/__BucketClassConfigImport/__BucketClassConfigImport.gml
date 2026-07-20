@@ -37,13 +37,13 @@ function __BucketClassConfigImport() constructor
         else if (is_instanceof(_parent, __BucketClassConfigSounds))
         {
             __BucketVariableAssertOnly(_struct, ["folder", "compression", "audioGroup", "folderOrigin"]);
-            __BucketVariableDefaultUndefined(_struct, "compression");
-            __BucketVariableDefaultUndefined(_struct, "audioGroup");
+            __compression = __BucketVariableDefaultUndefined(_struct, "compression");
+            __audioGroup  = __BucketVariableDefault(_struct, "audioGroup", "audiogroup_default");
         }
         else if (is_instanceof(_parent, __BucketClassConfigSprites))
         {
             __BucketVariableAssertOnly(_struct, ["folder", "textureGroup", "folderOrigin"]);
-            __BucketVariableDefaultUndefined(_struct, "textureGroup");
+            __textureGroup = __BucketVariableDefault(_struct, "textureGroup", "Default");
         }
         
         __folderOrigin = __BucketVariableDefaultUndefined(_struct, "folderOrigin");

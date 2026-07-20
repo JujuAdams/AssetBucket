@@ -31,7 +31,7 @@
                 width: >100
             }
             import: {
-                folder: sprites
+                folder: Sprites/Docs/
                 textureGroup: tgBackground
             }
         }

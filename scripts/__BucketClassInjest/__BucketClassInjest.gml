@@ -33,11 +33,7 @@ function __BucketClassInjest(_configStruct) constructor
     
     static __RegisterProjectSprite = function(_originalPath, _spriteName, _projectPath, _textureGroupName)
     {
-        var _lastChar = string_char_at(_projectPath, string_length(_projectPath));
-        if ((_lastChar == "/") || (_lastChar == "\\"))
-        {
-            string_copy(_projectPath, 1, string_length(_projectPath)-1);
-        }
+        _projectPath = __BucketTrimDirectory(_projectPath);
         
         array_push(__projectSpriteArray, _originalPath);
         __ensureResourceDict[$ _spriteName] = "sprites";
@@ -51,11 +47,7 @@ function __BucketClassInjest(_configStruct) constructor
     
     static __RegisterProjectSound = function(_originalPath, _audioName, _projectPath, _audioGroupName)
     {
-        var _lastChar = string_char_at(_projectPath, string_length(_projectPath));
-        if ((_lastChar == "/") || (_lastChar == "\\"))
-        {
-            string_copy(_projectPath, 1, string_length(_projectPath)-1);
-        }
+        _projectPath = __BucketTrimDirectory(_projectPath);
         
         array_push(__projectSoundArray, _originalPath);
         __ensureResourceDict[$ _audioName] = "sounds";
