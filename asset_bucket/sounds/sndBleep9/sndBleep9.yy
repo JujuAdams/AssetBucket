@@ -1,0 +1,29 @@
+{
+  "$GMSound":"v2",
+  "%Name":"sndBleep9",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "channelFormat":0,
+  "compression":0,
+  "compressionQuality":4,
+  "conversionMode":0,
+  "duration":0.18902494,
+  "exportDir":"",
+  "name":"sndBleep9",
+  "parent":{
+    "name":"Sounds",
+    "path":"folders/Sounds.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sndBleep9.wav",
+  "tags":[
+    "bleep",
+  ],
+  "volume":1.0,
+}
