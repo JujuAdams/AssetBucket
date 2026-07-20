@@ -1,4 +1,4 @@
-function BucketDatafileGetRef(_originalPath)
+function BucketDatafileGetMetadata(_originalPath)
 {
     static _system = __BucketSystem();
     static _runtimeBucketMap = _system.__runtimeBucketMap;
@@ -22,12 +22,5 @@ function BucketDatafileGetRef(_originalPath)
         __BucketError($"Missing file metadata for \"{_originalPath}\" in bucket \"{_bucketName}\"");
     }
     
-    with(_result)
-    {
-        buffer = _bucket.__buffer;
-        offset = _assetInfo.offset + _bucket.__globalAssetOffset;
-        size   = _assetInfo.size;
-    }
-    
-    return _result;
+    return _assetInfo[$ "metadata"];
 }

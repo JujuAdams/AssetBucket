@@ -10,3 +10,5 @@
 #macro BUCKET_MANIFEST_FILENAME  "ab_manifest"
 
 #macro BUCKET_MANIFEST_PATH  __BucketGetDatafilePath("ab_manifest")
+
+#macro BUCKET_CONTENTS_VERSION  1

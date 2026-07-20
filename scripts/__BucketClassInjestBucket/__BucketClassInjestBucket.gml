@@ -3,6 +3,7 @@ function __BucketClassInjestBucket(_name) constructor
     __name = _name;
     
     __accumulationBuffer = buffer_create(1024*1024, buffer_grow, 1);
+    __contentsDict = {};
     
     
     
@@ -24,8 +25,11 @@ function __BucketClassInjestBucket(_name) constructor
         
         var _fileSize = buffer_get_size(_fileBuffer);
         
-        buffer_write(_accumulationBuffer, buffer_string, _sourcePath);
-        buffer_write(_accumulationBuffer, buffer_u32, _fileSize);
+        __contentsDict[$ _sourcePath] = {
+            offset: buffer_tell(_accumulationBuffer),
+            size: _fileSize,
+        };
+        
         buffer_copy(_fileBuffer, 0, _fileSize, _accumulationBuffer, buffer_tell(_accumulationBuffer));
         buffer_seek(_accumulationBuffer, buffer_seek_relative, _fileSize);
         buffer_write(_accumulationBuffer, buffer_u8, 0x00);
@@ -37,7 +41,14 @@ function __BucketClassInjestBucket(_name) constructor
     {
         var _filename = __BucketGetDatafilesName(__name);
         _ensureDatafileDict[$ _filename] = true;
-        buffer_save(__accumulationBuffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_filename}");
+        
+        var _buffer = buffer_create(1024*1024, buffer_grow, 1);
+        buffer_write(_buffer, buffer_string, json_stringify({ version: int64(BUCKET_CONTENTS_VERSION), contents: __contentsDict }));
+        buffer_copy(__accumulationBuffer, 0, buffer_tell(__accumulationBuffer), _buffer, buffer_tell(_buffer));
+        
+        buffer_save_ext(_buffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_filename}", 0, buffer_tell(__accumulationBuffer) + buffer_tell(_buffer));
+        
+        buffer_delete(_buffer);
         buffer_delete(__accumulationBuffer);
     }
 }

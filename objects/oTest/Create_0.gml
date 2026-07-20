@@ -1,8 +1,7 @@
 BucketIngest();
 BucketInitialize();
 
-BucketDatafilesLoad("bucketTest");
-show_debug_message(json_stringify(BucketDatafilesGetFiles("bucketTest"), true));
+BucketDatafilesLoad("bucketDefault");
+show_debug_message(json_stringify(BucketDatafilesGetFiles("bucketDefault"), true));
 
-show_debug_message(BucketDatafileGetString("localization/english.txt"));
-sprite = BucketDatafileGetSprite("sprites/docs/DocsAnchor.png", 500, 500);
+show_debug_message(BucketDatafileGetString("datafiles/localization/english.txt"));

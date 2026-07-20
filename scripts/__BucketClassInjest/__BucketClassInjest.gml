@@ -33,29 +33,27 @@ function __BucketClassInjest(_configStruct) constructor
     
     static __RegisterProjectSprite = function(_originalPath, _spriteName, _projectPath, _textureGroupName)
     {
-        _projectPath = __BucketTrimDirectory(_projectPath);
-        
         array_push(__projectSpriteArray, _originalPath);
         __ensureResourceDict[$ _spriteName] = "sprites";
         __ensureTextureGroupDict[$ _textureGroupName] = true;
         
+        _projectPath = __BucketTrimDirectory(_projectPath);
         if (_projectPath != "")
         {
-            __ensureFolderDict[$ filename_name(_projectPath)] = _projectPath;
+            __ensureFolderDict[$ _projectPath] = true;
         }
     }
     
     static __RegisterProjectSound = function(_originalPath, _audioName, _projectPath, _audioGroupName)
     {
-        _projectPath = __BucketTrimDirectory(_projectPath);
-        
         array_push(__projectSoundArray, _originalPath);
         __ensureResourceDict[$ _audioName] = "sounds";
         __ensureAudioGroupDict[$ _audioGroupName] = true;
         
+        _projectPath = __BucketTrimDirectory(_projectPath);
         if (_projectPath != "")
         {
-            __ensureFolderDict[$ filename_name(_projectPath)] = _projectPath;
+            __ensureFolderDict[$ _projectPath] = true;
         }
     }
     
@@ -165,26 +163,13 @@ function __BucketClassInjest(_configStruct) constructor
         var _ensureFolderDict = __ensureFolderDict;
         var _ensureFolderArray = struct_get_names(__ensureFolderDict);
         
-        var _foundPathDict = {};
         var _i = 0;
         repeat(array_length(_ensureFolderArray))
         {
-            _foundPathDict[$ _ensureFolderDict[$ _ensureFolderArray[_i]]] = true;
-            ++_i;
-        }
-        
-        var _i = 0;
-        repeat(array_length(_ensureFolderArray))
-        {
-            var _path = _ensureFolderDict[$ _ensureFolderArray[_i]];
+            var _path = _ensureFolderArray[_i];
             while(_path != "")
             {
-                if (not struct_exists(_foundPathDict, _path))
-                {
-                    _foundPathDict[$ _path] = true;
-                    _ensureFolderDict[$ filename_name(_path)] = _path;
-                }
-                
+                _ensureFolderDict[$ _path] = true;
                 _path = filename_dir(_path);
             }
             
@@ -198,11 +183,11 @@ function __BucketClassInjest(_configStruct) constructor
         var _newResourcesString     = _resourcesContent.__string;
         var _newTextureGroupsString = _textureGroupsContent.__string;
         
-        _newAudioGroupsString   = _funcContentBuild(   _newAudioGroupsString,   _audioGroupsContent.__emptyArray,   __ensureAudioGroupDict,   _yypAudioGroupsDict,   _audioGroupTemplate                 );
-        _newFoldersString       = _funcContentBuildExt(_newFoldersString,       _foldersContent.__emptyArray,       __ensureFolderDict,       _yypFoldersDict,       _folderTemplate,      "path"        );
-        _newDatafilesString     = _funcContentBuild(   _newDatafilesString,     _datafilesContent.__emptyArray,     __ensureDatafileDict,     _yypDatafilesDict,     _datafileTemplate                   );
-        _newResourcesString     = _funcContentBuildExt(_newResourcesString,     _resourcesContent.__emptyArray,     __ensureResourceDict,     _yypResourcesDict,     _resourceTemplate,    "resourceType");
-        _newTextureGroupsString = _funcContentBuild(   _newTextureGroupsString, _textureGroupsContent.__emptyArray, __ensureTextureGroupDict, _yypTextureGroupsDict, _textureGroupTemplate               );
+        _newAudioGroupsString   = _funcContentBuild(       _newAudioGroupsString,   _audioGroupsContent.__emptyArray,   __ensureAudioGroupDict,   _yypAudioGroupsDict,   _audioGroupTemplate                 );
+        _newFoldersString       = _funcContentBuildFolders(_newFoldersString,       _foldersContent.__emptyArray,       __ensureFolderDict,       _yypFoldersDict,       _folderTemplate                     );
+        _newDatafilesString     = _funcContentBuild(       _newDatafilesString,     _datafilesContent.__emptyArray,     __ensureDatafileDict,     _yypDatafilesDict,     _datafileTemplate                   );
+        _newResourcesString     = _funcContentBuildExt(    _newResourcesString,     _resourcesContent.__emptyArray,     __ensureResourceDict,     _yypResourcesDict,     _resourceTemplate,    "resourceType");
+        _newTextureGroupsString = _funcContentBuild(       _newTextureGroupsString, _textureGroupsContent.__emptyArray, __ensureTextureGroupDict, _yypTextureGroupsDict, _textureGroupTemplate               );
         
         static _funcContentBuild = function(_string, _isEmptyArray, _ensureDict, _existingDict, _templateString)
         {
@@ -221,6 +206,32 @@ function __BucketClassInjest(_configStruct) constructor
                     
                     _addedContent = true;
                     _string += string_replace_all(_templateString, "%name%", _newName);
+                }
+                
+                ++_i;
+            }
+            if (_addedContent && _isEmptyArray) _string += "  ";
+            
+            return _string;
+        }
+        
+        static _funcContentBuildFolders = function(_string, _isEmptyArray, _ensureDict, _existingDict, _templateString, _replaceExt)
+        {
+            var _ensureArray = struct_get_names(_ensureDict);
+            var _addedContent = false;
+            var _i = 0;
+            repeat(array_length(_ensureArray))
+            {
+                var _path = _ensureArray[_i];
+                if (not struct_exists(_existingDict, _path))
+                {
+                    if ((not _addedContent) && _isEmptyArray)
+                    {
+                        _string += "\n";
+                    }
+                    
+                    _addedContent = true;
+                    _string += string_replace_all(string_replace_all(_templateString, "%name%", filename_name(_path)), "%path%", _path);
                 }
                 
                 ++_i;
