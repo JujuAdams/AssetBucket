@@ -22,8 +22,7 @@ function BucketIngestSoundToProject(_soundName, _soundPath, _projectFolder, _aud
         _ingestStruct.__EnsureProjectFolder(_projectFolder);
         _ingestStruct.__EnsureProjectAudioGroup(_audioGroup);
         
-        __BucketCreateYYSound(_rootDirectory, _soundPath, _soundName,
-                              _projectFolder, _audioGroup);
+        __BucketCreateYYSound(_rootDirectory, _soundPath, _soundName, _projectFolder, _audioGroup);
     }
     else
     {

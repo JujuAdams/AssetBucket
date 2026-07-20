@@ -43,6 +43,11 @@ function __BucketClassIngest(_configStruct) constructor
         __ensureResourceDict[$ _audioName] = "sounds";
     }
     
+    static __EnsureProjectDatafile = function(_filename)
+    {
+        __ensureDatafileDict[$ _filename] = true;
+    }
+    
     static __EnsureProjectFolder = function(_projectFolder)
     {
         _projectFolder = __BucketTrimDirectory(_projectFolder);

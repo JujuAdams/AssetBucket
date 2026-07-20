@@ -1,6 +1,7 @@
-/// @param path
+/// @param sourcePath
+/// @param [destinationPath]
 
-function BucketIngestDatafileToProject(_path)
+function BucketIngestDatafileToProject(_sourcePath, _destinationPath = undefined)
 {
     static _system = __BucketSystem();
     
@@ -10,8 +11,10 @@ function BucketIngestDatafileToProject(_path)
         __BucketError("Cannot call `BucketIngestDatafileToProject()` outside of a worker function");
     }
     
-    _ingestStruct.__RegisterProjectDatafile(_path);
+    _destinationPath ??= $"ab_{md5_string_utf8(_sourcePath)}";
     
-    file_copy($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{_path}",
-              $"{BUCKET_PROJECT_DIRECTORY}datafiles/ab_{md5_string_utf8(_path)}");
+    _ingestStruct.__RegisterProjectDatafile(_sourcePath);
+    _ingestStruct.__EnsureProjectDatafile(_destinationPath);
+    
+    file_copy($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{_sourcePath}", $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_destinationPath}");
 }

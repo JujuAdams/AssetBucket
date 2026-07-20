@@ -9,34 +9,18 @@ function __BucketClassIngestBucket(_name) constructor
     
     
     
-    static __AddFile = function(_sourcePath)
+    static __AddBuffer = function(_alias, _buffer, _offset, _size)
     {
         var _accumulationBuffer = __accumulationBuffer;
         
-        var _absolutePath = $"{BUCKET_PROJECT_DIRECTORY}{_system.__currentIngestStruct.__configStruct.__rootDirectory}{_sourcePath}";
-        if (not file_exists(_absolutePath))
-        {
-            __BucketError($"Can't find \"{_absolutePath}\"");
-        }
-        
-        var _fileBuffer = buffer_load(_absolutePath);
-        if (not buffer_exists(_fileBuffer))
-        {
-            __BucketError($"Failed to load \"{_absolutePath}\"");
-        }
-        
-        var _fileSize = buffer_get_size(_fileBuffer);
-        
-        __contentsDict[$ _sourcePath] = {
+        __contentsDict[$ _alias] = {
             offset: buffer_tell(_accumulationBuffer),
-            size: _fileSize,
+            size: _size,
         };
         
-        buffer_copy(_fileBuffer, 0, _fileSize, _accumulationBuffer, buffer_tell(_accumulationBuffer));
-        buffer_seek(_accumulationBuffer, buffer_seek_relative, _fileSize);
+        buffer_copy(_buffer, _offset, _size, _accumulationBuffer, buffer_tell(_accumulationBuffer));
+        buffer_seek(_accumulationBuffer, buffer_seek_relative, _size);
         buffer_write(_accumulationBuffer, buffer_u8, 0x00);
-        
-        buffer_delete(_fileBuffer);
     }
     
     static __Save = function(_ensureDatafileDict)

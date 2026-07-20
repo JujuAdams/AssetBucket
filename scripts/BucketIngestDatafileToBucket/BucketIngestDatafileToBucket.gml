@@ -1,25 +1,22 @@
-/// @param path
+/// @param localPath
 /// @param bucketName
 
 function BucketIngestDatafileToBucket(_path, _bucketName)
 {
     static _system = __BucketSystem();
     
-    var _ingestStruct = _system.__currentIngestStruct;
-    if (not is_struct(_ingestStruct))
+    var _absolutePath = $"{BUCKET_PROJECT_DIRECTORY}{_system.__currentIngestStruct.__configStruct.__rootDirectory}{_path}";
+    if (not file_exists(_absolutePath))
     {
-        __BucketError("Cannot call `BucketIngestDatafileToBucket()` outside of a worker function");
+        __BucketError($"Can't find \"{_absolutePath}\"");
     }
     
-    _ingestStruct.__RegisterBucketDatafile(_path, _bucketName);
+    var _buffer = buffer_load(_absolutePath);
+    if (not buffer_exists(_buffer))
+    {
+        __BucketError($"Failed to load \"{_absolutePath}\"");
+    }
     
-    var _bucketStruct = _ingestStruct.__bucketDict[$ _bucketName];
-    if (_bucketStruct == undefined)
-    {
-        __BucketError($"Couldn't find bucket with name \"{_bucketName}\"");
-    }
-    else
-    {
-        _bucketStruct.__AddFile(_path);
-    }
+    BucketIngestBufferToBucket(_path, _buffer, 0, buffer_get_size(_buffer), _bucketName);
+    buffer_delete(_buffer);
 }
