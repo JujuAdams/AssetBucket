@@ -37,18 +37,18 @@ function __BucketClassBucket(_bucketName) constructor
         if (__loaded) return;
         __loaded = true;
         
-        var _filename = __BucketGetDatafilesName(__name);
-        if (not file_exists(_filename))
+        var _path = __BucketGetDatafilePath(__BucketGetDatafilesName(__name));
+        if (not file_exists(_path))
         {
-            __BucketError($"Could not find \"{_filename}\"");
+            __BucketError($"Could not find \"{_path}\"");
         }
         
-        __buffer = buffer_load(_filename);
+        __buffer = buffer_load(_path);
         var _buffer = __buffer;
         
         if (not buffer_exists(_buffer))
         {
-            __BucketError($"Failed to load \"{_filename}\"");
+            __BucketError($"Failed to load \"{_path}\"");
         }
         
         var _assetArray    = __assetArray;
@@ -65,7 +65,7 @@ function __BucketClassBucket(_bucketName) constructor
             _assetSizeDict[$ _originalPath] = _size;
             _assetPosDict[$  _originalPath] = buffer_tell(_buffer);
             
-            buffer_seek(_buffer, buffer_seek_relative, _size);
+            buffer_seek(_buffer, buffer_seek_relative, _size+1); //Also skip over 1 byte null
         }
     }
 }

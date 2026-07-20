@@ -4,48 +4,12 @@ function BucketInitialize()
     
     with(_system)
     {
-        if (BUCKET_DEV_MODE)
+        if (file_exists(BUCKET_MANIFEST_PATH))
         {
-            if (GM_is_sandboxed)
-            {
-                __BucketError("Please disable sandboxing for this platform");
-            }
-            
-            if (not __BucketLoadConfigurationFile())
-            {
-                return false;
-            }
-            
-            var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{__config.__rootDirectory}";
-            
-            if (directory_exists(_rootDirectory))
-            {
-                __BucketTrace($"Root directory \"{_rootDirectory}\" found");
-            }
-            else
-            {
-                __BucketTrace($"Root directory \"{_rootDirectory}\" doesn't exist, creating now");
-                directory_create(_rootDirectory);
-                
-                var _introText = "# Welcome\n\nWelcome to Asset Bucket by Juju Adams!";
-                
-                var _buffer = buffer_create(string_byte_length(_introText), buffer_fixed, 1);
-                buffer_write(_buffer, buffer_text, _introText);
-                buffer_save(_buffer, $"{_rootDirectory}README.md");
-                buffer_delete(_buffer);
-            }
-        }
-        else
-        {
-            
-        }
-        
-        if (file_exists(BUCKET_MANIFEST_FILENAME))
-        {
-            var _buffer = buffer_load(BUCKET_MANIFEST_FILENAME);;
+            var _buffer = buffer_load(BUCKET_MANIFEST_PATH);
             if (not buffer_exists(_buffer))
             {
-                __BucketError($"Failed to open \"{BUCKET_MANIFEST_FILENAME}\"");
+                __BucketError($"Failed to open \"{BUCKET_MANIFEST_PATH}\"");
             }
             
             var _json = buffer_read(_buffer, buffer_text);
@@ -56,7 +20,7 @@ function BucketInitialize()
             catch(_error)
             {
                 show_debug_message(_error);
-                __BucketError($"Failed to parse JSON in {BUCKET_MANIFEST_FILENAME}");
+                __BucketError($"Failed to parse JSON in {BUCKET_MANIFEST_PATH}");
             }
             
             __BucketVariableAssertExactly(__manifest, ["buckets", "bucketLookup", "datafiles", "sprites", "sounds"]);

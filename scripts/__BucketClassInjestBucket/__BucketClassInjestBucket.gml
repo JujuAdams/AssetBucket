@@ -28,6 +28,7 @@ function __BucketClassInjestBucket(_name) constructor
         buffer_write(_accumulationBuffer, buffer_u32, _fileSize);
         buffer_copy(_fileBuffer, 0, _fileSize, _accumulationBuffer, buffer_tell(_accumulationBuffer));
         buffer_seek(_accumulationBuffer, buffer_seek_relative, _fileSize);
+        buffer_write(_accumulationBuffer, buffer_u8, 0x00);
         
         buffer_delete(_fileBuffer);
     }

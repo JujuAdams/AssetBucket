@@ -8,3 +8,5 @@
 #macro BUCKET_PROJECT_DIRECTORY  $"{filename_dir(GM_project_filename)}/"
 
 #macro BUCKET_MANIFEST_FILENAME  "ab_manifest"
+
+#macro BUCKET_MANIFEST_PATH  __BucketGetDatafilePath("ab_manifest")
