@@ -20,7 +20,7 @@
     {"$GMFolder":"","%Name":"Runtime","folderPath":"folders/Asset Bucket/(System)/Runtime.yy","name":"Runtime","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Classes","folderPath":"folders/Asset Bucket/(System)/Runtime/Classes.yy","name":"Classes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Variables","folderPath":"folders/Asset Bucket/(System)/Variables.yy","name":"Variables","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Buckets","folderPath":"folders/Asset Bucket/Buckets.yy","name":"Buckets","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Datafiles","folderPath":"folders/Asset Bucket/Datafiles.yy","name":"Datafiles","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[

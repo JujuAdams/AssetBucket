@@ -19,7 +19,7 @@ function __BucketClassInjest(_configStruct) constructor
     
     
     
-    static __RegisterBucketDatafile = function(_originalPath, _filename, _bucketName)
+    static __RegisterBucketDatafile = function(_originalPath, _bucketName)
     {
         array_push(__projectDatafileArray, _originalPath);
         __assetToBucketDict[$ _originalPath] = _bucketName;
