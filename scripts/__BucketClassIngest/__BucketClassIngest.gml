@@ -2,7 +2,6 @@ function __BucketClassIngest(_configStruct) constructor
 {
     __configStruct = variable_clone(_configStruct);
     
-    __workingFileArray = [];
     __bucketArray = [];
     __bucketDict = {};
     

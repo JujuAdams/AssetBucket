@@ -25,9 +25,9 @@ function __BucketClassConfigTask() constructor
         return self;
     }
     
-    static __Execute = function()
+    static __Execute = function(_globalFileArray)
     {
-        var _fileArray = variable_clone(_system.__currentIngestStruct.__workingFileArray);
+        var _fileArray = variable_clone(_globalFileArray);
         
         var _includeStruct = __include;
         if (is_struct(_includeStruct))

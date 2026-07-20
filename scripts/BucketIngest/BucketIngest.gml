@@ -41,8 +41,16 @@ function BucketIngest()
             }
             else if (_type == "sprite")
             {
-                var _spriteName = filename_change_ext(filename_name(_filePath), "");
-                BucketIngestSpriteToProject(_spriteName, BucketFindSpriteFrames(_filePath), _workerInfo.folder, _workerInfo[$ "textureGroup"]);
+                if (is_array(_filePath))
+                {
+                    var _spriteName = filename_change_ext(string_replace_all(filename_name(_filePath[0]), "_frame0.", "."), "");
+                }
+                else
+                {
+                    var _spriteName = filename_change_ext(filename_name(_filePath), "");
+                }
+                
+                BucketIngestSpriteToProject(_spriteName, _filePath, _workerInfo.folder, _workerInfo[$ "textureGroup"]);
             }
             else if (_type == "sound")
             {

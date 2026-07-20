@@ -31,8 +31,10 @@ function __BucketClassConfigFilter() constructor
         return self;
     }
     
-    static __TestFilter = function(_filePath)
+    static __TestFilter = function(_inputFilePath)
     {
+        var _filePath = is_array(_inputFilePath)? _inputFilePath[0] : _inputFilePath;
+        
         if (not __BucketTestStringMaskAny(_filePath, __pathMask))
         {
             return false;

@@ -24,10 +24,7 @@ function __BucketClassConfigRoot() constructor
     
     static __Collect = function()
     {
-        var _ingestStruct = _system.__currentIngestStruct;
-        
         var _fileArray = __BucketDirectoryFileArray($"{BUCKET_PROJECT_DIRECTORY}{__rootDirectory}");
-        _ingestStruct.__workingFileArray = _fileArray;
         
         //Remove anything that doesn't fit the global include mask
         if (array_length(__includeAllPaths) > 0)
@@ -74,6 +71,26 @@ function __BucketClassConfigRoot() constructor
             ++_i;
         }
         
+        //Remove files that look like frames of sprites
+        var _i = array_length(_fileArray)-1;
+        repeat(array_length(_fileArray))
+        {
+            var _localPath = _fileArray[_i];
+            if (__BucketTestStringMask(_localPath, "*_frame*.*"))
+            {
+                if (string_pos("_frame0.", _localPath) > 0)
+                {
+                    _fileArray[@ _i] = BucketFindSpriteFrames(_localPath);
+                }
+                else
+                {
+                    array_delete(_fileArray, _i, 1);
+                }
+            }
+            
+            --_i;
+        }
+        
         //Build buckets
         var _bucketsArray = __bucketsArray;
         var _i = 0;
@@ -88,7 +105,7 @@ function __BucketClassConfigRoot() constructor
         var _i = 0;
         repeat(array_length(_tasksArray))
         {
-            _tasksArray[_i].__Execute();
+            _tasksArray[_i].__Execute(_fileArray);
             ++_i;
         }
     }
