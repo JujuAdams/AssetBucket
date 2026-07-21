@@ -8,7 +8,7 @@
 #macro BUCKET_PROJECT_NAME       filename_change_ext(filename_name(GM_project_filename), "")
 #macro BUCKET_PROJECT_DIRECTORY  $"{filename_dir(GM_project_filename)}/"
 
-#macro BUCKET_MANIFEST_FILENAME  "ab_manifest"
+#macro BUCKET_MANIFEST_FILENAME  "ab_manifest.bin"
 #macro BUCKET_MANIFEST_PATH      __BucketGetDatafilePath(BUCKET_MANIFEST_FILENAME)
 
 #macro BUCKET_CONFIG_VERSION  1

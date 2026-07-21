@@ -18,6 +18,7 @@ function BucketIngestBucketBuffer(_alias, _buffer, _offset, _size, _bucketName, 
     _ingestStruct.__QueueBucketOperation(_alias, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
         _ingestStruct.__RegisterBucketDatafile(__alias, __bucketName);
+        _ingestStruct.__SetBucketMetadata(__alias, __metadata);
         
         var _bucketStruct = _ingestStruct.__bucketDict[$ __bucketName];
         if (_bucketStruct == undefined)

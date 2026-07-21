@@ -15,10 +15,13 @@ function __BucketClassIngest(_configStruct) constructor
     __projectDatafileArray = [];
     __projectSpriteArray   = [];
     __projectSoundArray    = [];
+    __bucketMetadataDict   = {};
+    __datafileMetadataDict = {};
+    __projectMetadataDict  = {};
     
-    __queueBucketAlias = {};
+    __queueArray        = [];
+    __queueBucketAlias  = {};
     __queueProjectAsset = {};
-    __queueArray = [];
     
     
     
@@ -68,6 +71,30 @@ function __BucketClassIngest(_configStruct) constructor
     {
         array_push(__projectSoundArray, _originalPath);
         __ensureResourceDict[$ _audioName] = "sounds";
+    }
+    
+    static __SetBucketMetadata = function(_alias, _metadata)
+    {
+        if (_metadata != undefined)
+        {
+            __bucketMetadataDict[$ _alias] = _metadata;
+        }
+    }
+    
+    static __SetDatafileMetadata = function(_alias, _metadata)
+    {
+        if (_metadata != undefined)
+        {
+            __datafileMetadataDict[$ _alias] = _metadata;
+        }
+    }
+    
+    static __SetProjectMetadata = function(_assetName, _metadata)
+    {
+        if (_metadata != undefined)
+        {
+            __projectMetadataDict[$ _alias] = _metadata;
+        }
     }
     
     static __EnsureProjectDatafile = function(_filename)

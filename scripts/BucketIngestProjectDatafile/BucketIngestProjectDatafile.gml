@@ -18,12 +18,13 @@ function BucketIngestProjectDatafile(_sourcePath, _destinationPath = undefined, 
         __BucketError($"Can't find \"{_absolutePath}\"");
     }
     
+    _destinationPath ??= filename_name(__sourcePath);
+    
     _ingestStruct.__QueueProjectOperation(_sourcePath, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
-        var _destinationPath = __destinationPath ?? __BucketGetDatafilesName(__sourcePath);
-        
         _ingestStruct.__RegisterProjectDatafile(__sourcePath);
-        _ingestStruct.__EnsureProjectDatafile(_destinationPath);
+        _ingestStruct.__EnsureProjectDatafile(__destinationPath);
+        _ingestStruct.__SetDatafileMetadata(__alias, __metadata);
         
         file_copy($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}", $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_destinationPath}");
     },

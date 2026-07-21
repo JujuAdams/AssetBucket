@@ -1,11 +1,10 @@
-/// @param alias
+/// @param localPath
 /// @param buffer
 /// @param offset
 /// @param size
-/// @param [destinationPath]
 /// @param [metadata]
 
-function BucketIngestProjectBuffer(_alias, _buffer, _offset, _size, _destinationPath = undefined, _metadata = undefined)
+function BucketIngestProjectBuffer(_localPath, _buffer, _offset, _size, _metadata = undefined)
 {
     static _system = __BucketSystem();
     
@@ -15,21 +14,19 @@ function BucketIngestProjectBuffer(_alias, _buffer, _offset, _size, _destination
         __BucketError("Cannot call `BucketIngestProjectBuffer()` outside of a worker function");
     }
     
-    _destinationPath ??= $"ab_{md5_string_utf8(_alias)}";
-    
     _ingestStruct.__QueueProjectOperation(_alias, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
-        _ingestStruct.__RegisterProjectDatafile(__alias);
-        _ingestStruct.__EnsureProjectDatafile(__destinationPath);
+        _ingestStruct.__RegisterProjectDatafile(__localPath);
+        _ingestStruct.__EnsureProjectDatafile(__localPath);
+        _ingestStruct.__SetDatafileMetadata(__localPath, __metadata);
         
-        buffer_save_ext(__buffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{__destinationPath}", __offset, __size);
+        buffer_save_ext(__buffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{__localPath}", __offset, __size);
     },
     {
-        __alias:           _alias,
-        __buffer:          _buffer,
-        __offset:          _offset,
-        __size:            _size,
-        __destinationPath: _destinationPath,
-        __metadata:        _metadata,
+        __localPath: _localPath,
+        __buffer:    _buffer,
+        __offset:    _offset,
+        __size:      _size,
+        __metadata:  _metadata,
     }));
 }

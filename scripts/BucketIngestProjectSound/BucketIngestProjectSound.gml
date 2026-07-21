@@ -24,6 +24,7 @@ function BucketIngestProjectSound(_soundName, _soundPath, _projectFolder, _audio
             _ingestStruct.__RegisterProjectSound(__soundPath, __soundName);
             _ingestStruct.__EnsureProjectFolder(__projectFolder);
             _ingestStruct.__EnsureProjectAudioGroup(__audioGroup);
+            _ingestStruct.__SetProjectMetadata(__soundName, __metadata);
             
             __BucketCreateYYSound(_rootDirectory, __soundPath, __soundName, __projectFolder, __audioGroup);
         }
