@@ -1,10 +1,17 @@
-function __BucketClassBucket(_bucketName) constructor
+function __BucketClassBucket(_bucketName, _filesize) constructor
 {
-    __name = _bucketName;
+    __name     = _bucketName;
+    __filesize = _filesize;
     
-    __buffer     = -1;
-    __assetArray = [];
-    __assetDict  = {};
+    __buffer = -1;
+    
+    __datafileDict = {};
+    __soundsDict   = {};
+    __spritesDict  = {};
+    
+    __datafileNameArray = [];
+    __soundNameArray    = [];
+    __spriteNameArray   = [];
     
     __globalAssetOffset = 0;
     
@@ -25,11 +32,22 @@ function __BucketClassBucket(_bucketName) constructor
         if (buffer_exists(__buffer))
         {
             buffer_delete(__buffer);
-            __buffer = undefined;
+            __buffer = -1;
         }
         
-        array_resize(__assetArray, 0);
-        __assetDict = {};
+        struct_foreach(__soundsDict, function(_variable_UNUSED, _value)
+        {
+            audio_free_buffer_sound(_value);
+        });
+        
+        __datafileDict = {};
+        __soundsDict   = {};
+        __spritesDict  = {};
+        
+        array_resize(__datafileNameArray, 0);
+        array_resize(__soundNameArray,    0);
+        array_resize(__spriteNameArray,   0);
+    
         __globalAssetOffset = 0;
     }
     
@@ -44,7 +62,9 @@ function __BucketClassBucket(_bucketName) constructor
             __BucketError($"Could not find \"{_path}\"");
         }
         
-        __buffer = buffer_load(_path);
+        //Use a fixed buffer for the benefit of `audio_create_buffer_sound()`
+        __buffer = buffer_create(__filesize, buffer_fixed, 1);
+        buffer_load_ext(__buffer, _path, 0);
         var _buffer = __buffer;
         
         if (not buffer_exists(_buffer))
@@ -63,28 +83,60 @@ function __BucketClassBucket(_bucketName) constructor
         catch(_error)
         {
             show_debug_message(_error);
-            __BucketError("\"{_path}\" failed to parse JSON");
+            __BucketError($"Failed to parse JSON\nPath was \"{_path}\"");
             return;
         }
         
         if (not is_struct(_bucketInfoStruct))
         {
-            __BucketError($"\"{_path}\" parser expecting an object, got {typeof(_bucketInfoStruct)}");
+            __BucketError($"Parser expecting an object, got {typeof(_bucketInfoStruct)}\nPath was \"{_path}\"");
         }
         
-        var _version = _bucketInfoStruct[$ "version"];
-        __assetDict = _bucketInfoStruct[$ "contents"];
+        var _version                = _bucketInfoStruct[$ "version"];
+        __datafileDict              = _bucketInfoStruct[$ "datafiles"];
+        var _soundsDefinitionArray  = _bucketInfoStruct[$ "sounds"];
+        var _spritesDefinitionArray = _bucketInfoStruct[$ "sprites"];
         
         if (_version != BUCKET_CONTENTS_VERSION)
         {
             __BucketError($"\"{_path}\" was expecting version {BUCKET_CONTENTS_VERSION}, got {_version}");
         }
         
-        if (not is_struct(__assetDict))
+        if (not is_struct(__datafileDict))
         {
-            __BucketError($"\"{_path}\" `.contents` not an object, got {typeof(__assetDict)}");
+            __BucketError($"\"{_path}\" `.datafiles` not an object, got {typeof(__datafileDict)}");
         }
         
-        __assetArray = struct_get_names(__assetDict);
+        if (not is_array(_soundsDefinitionArray))
+        {
+            __BucketError($"\"{_path}\" `.sounds` not an array, got {typeof(_soundsDefinitionArray)}");
+        }
+        
+        if (not is_array(_spritesDefinitionArray))
+        {
+            __BucketError($"\"{_path}\" `.sprites` not an array, got {typeof(_spritesDefinitionArray)}");
+        }
+        
+        var _globalAssetOffset = __globalAssetOffset;
+        var _soundsDict = __soundsDict;
+        var _i = 0;
+        repeat(array_length(_soundsDefinitionArray))
+        {
+            with(_soundsDefinitionArray[_i])
+            {
+                var _sound = audio_create_buffer_sound(_buffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, _globalAssetOffset + offset, size, (channels == 2)? audio_stereo : audio_mono);
+                _soundsDict[$ alias] = _sound;
+            }
+            
+            ++_i;
+        }
+        
+        __datafileNameArray = struct_get_names(__datafileDict);
+        __soundNameArray    = struct_get_names(__soundsDict);
+        __spriteNameArray   = struct_get_names(__spritesDict);
+        
+        show_debug_message(json_stringify(__datafileNameArray, true));
+        show_debug_message(json_stringify(__soundNameArray, true));
+        show_debug_message(json_stringify(__spriteNameArray, true));
     }
 }

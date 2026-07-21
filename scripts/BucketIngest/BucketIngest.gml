@@ -20,7 +20,7 @@ function BucketIngest()
             }
             else if (_type == "sound")
             {
-                BucketIngestSoundToBucket(_filePath, _workerInfo.bucket);
+                BucketIngestBucketSound(_filePath, _workerInfo.bucket);
             }
             else
             {

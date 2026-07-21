@@ -47,9 +47,10 @@ function BucketInitialize()
             var _i = 0;
             repeat(array_length(_manifestBucketArray))
             {
-                var _bucketName = _manifestBucketArray[_i];
+                var _bucketInfo = _manifestBucketArray[_i];
+                var _bucketName = _bucketInfo.name;
                 
-                var _runtimeBucket = new __BucketClassBucket(_bucketName);
+                var _runtimeBucket = new __BucketClassBucket(_bucketName, _bucketInfo.size);
                 array_push(__runtimeBucketArray, _runtimeBucket);
                 __runtimeBucketMap[? _bucketName] = _runtimeBucket;
                 

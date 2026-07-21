@@ -16,11 +16,11 @@ function BucketDatafileGetMetadata(_originalPath)
         __BucketError($"Bucket \"{_bucket.__name}\" for path \"{_originalPath}\" not loaded");
     }
     
-    var _assetInfo = _bucket.__assetDict[$ _originalPath];
-    if (not is_struct(_assetInfo))
+    var _datafileInfo = _bucket.__datafileDict[$ _originalPath];
+    if (not is_struct(_datafileInfo))
     {
         __BucketError($"Missing file metadata for \"{_originalPath}\" in bucket \"{_bucketName}\"");
     }
     
-    return _assetInfo[$ "metadata"];
+    return _datafileInfo[$ "metadata"];
 }

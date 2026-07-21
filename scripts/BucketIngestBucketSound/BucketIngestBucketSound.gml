@@ -1,16 +1,22 @@
 /// @param sourcePath
 /// @param bucketName
-/// @param [alias]
+/// @param [alias=sourcePath]
 /// @param [metadata]
 
-function BucketIngestBucketDatafile(_sourcePath, _bucketName, _alias = _sourcePath, _metadata = undefined)
+function BucketIngestBucketSound(_sourcePath, _bucketName, _alias = _sourcePath, _metadata = undefined)
 {
     static _system = __BucketSystem();
     
     var _ingestStruct = _system.__currentIngestStruct;
     if (not is_struct(_ingestStruct))
     {
-        __BucketError("Cannot call `BucketIngestBucketDatafile()` outside of a worker function");
+        __BucketError("Cannot call `BucketIngestBucketSound()` outside of a worker function");
+    }
+    
+    var _fileExtension = filename_ext(_sourcePath);
+    if (_fileExtension != ".wav")
+    {
+        __BucketError($"Audio file extension \"{_fileExtension}\" not supported by `BucketIngestBucketSound()`\nPath was \"{_sourcePath}\"");
     }
     
     _ingestStruct.__QueueBucketOperation(_alias, new __BucketClassDeferredFunction(function(_ingestStruct)
@@ -26,7 +32,7 @@ function BucketIngestBucketDatafile(_sourcePath, _bucketName, _alias = _sourcePa
         else
         {
             var _buffer = buffer_load($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}");
-            _bucketStruct.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
+            _bucketStruct.__AddWAV(__sourcePath, __alias, _buffer, 0);
             buffer_delete(_buffer);
         }
     },

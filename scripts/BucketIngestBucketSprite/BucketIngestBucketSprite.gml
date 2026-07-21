@@ -1,17 +1,20 @@
-/// @param sourcePath
+/// @param imagePathArray
 /// @param bucketName
-/// @param [alias]
+/// @param [alias=sourcePath]
 /// @param [metadata]
 
-function BucketIngestBucketDatafile(_sourcePath, _bucketName, _alias = _sourcePath, _metadata = undefined)
+function BucketIngestBucketSprite(_imagePathArray, _bucketName, _alias = undefined, _metadata = undefined)
 {
     static _system = __BucketSystem();
     
     var _ingestStruct = _system.__currentIngestStruct;
     if (not is_struct(_ingestStruct))
     {
-        __BucketError("Cannot call `BucketIngestBucketDatafile()` outside of a worker function");
+        __BucketError("Cannot call `BucketIngestBucketSprite()` outside of a worker function");
     }
+    
+    _imagePathArray = __BucketEnsureArray(_imagePathArray);
+    _alias ??= _imagePathArray[0];
     
     _ingestStruct.__QueueBucketOperation(_alias, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
@@ -31,9 +34,9 @@ function BucketIngestBucketDatafile(_sourcePath, _bucketName, _alias = _sourcePa
         }
     },
     {
-        __alias:      _alias,
-        __sourcePath: _sourcePath,
-        __bucketName: _bucketName,
-        __metadata:   _metadata,
+        __alias:          _alias,
+        __imagePathArray: _imagePathArray,
+        __bucketName:     _bucketName,
+        __metadata:       _metadata,
     }));
 }

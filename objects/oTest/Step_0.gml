@@ -2,6 +2,9 @@ if (keyboard_check_pressed(vk_f5))
 {
     BucketIngest();
     BucketInitialize();
-    
-    show_debug_message(BucketDatafileGetString("datafiles/localization/english.txt"));
+}
+
+if (keyboard_check_pressed(vk_space))
+{
+    BucketPlaySound("sounds/snd1KHz/snd1KHz.wav");
 }

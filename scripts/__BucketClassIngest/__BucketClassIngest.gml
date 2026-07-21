@@ -49,10 +49,10 @@ function __BucketClassIngest(_configStruct) constructor
         array_push(__queueArray, _deferredFunction);
     }
     
-    static __RegisterBucketDatafile = function(_originalPath, _bucketName)
+    static __RegisterBucketDatafile = function(_alias, _bucketName)
     {
-        array_push(__projectDatafileArray, _originalPath);
-        __assetToBucketDict[$ _originalPath] = _bucketName;
+        array_push(__projectDatafileArray, _alias);
+        __assetToBucketDict[$ _alias] = _bucketName;
     }
     
     static __RegisterProjectDatafile = function(_originalPath, _filename)
@@ -131,15 +131,16 @@ function __BucketClassIngest(_configStruct) constructor
             ++_i;
         }
         
+        var _bucketExportArray = [];
         var _i = 0;
         repeat(array_length(__bucketArray))
         {
-            __bucketArray[_i].__Save(__ensureDatafileDict);
+            __bucketArray[_i].__Save(__ensureDatafileDict, _bucketExportArray);
             ++_i;
         }
         
         var _json = json_stringify({
-            buckets:      struct_get_names(__bucketDict),
+            buckets:      _bucketExportArray,
             bucketLookup: __assetToBucketDict,
             datafiles:    __projectDatafileArray,
             sprites:      __projectSpriteArray,
