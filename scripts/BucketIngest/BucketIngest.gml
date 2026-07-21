@@ -20,7 +20,7 @@ function BucketIngest()
             }
             else if (_type == "sound")
             {
-                BucketIngestBucketSound(_filePath, _workerInfo.bucket);
+                BucketIngestBucketSound(_filePath, _workerInfo.bucket, _workerInfo[$ "compress"] ?? false);
             }
             else
             {

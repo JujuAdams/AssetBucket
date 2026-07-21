@@ -1,9 +1,10 @@
 /// @param sourcePath
 /// @param bucketName
+/// @param [compress=false]
 /// @param [alias=sourcePath]
 /// @param [metadata]
 
-function BucketIngestBucketSound(_sourcePath, _bucketName, _alias = _sourcePath, _metadata = undefined)
+function BucketIngestBucketSound(_sourcePath, _bucketName, _compress = false, _alias = _sourcePath, _metadata = undefined)
 {
     static _system = __BucketSystem();
     
@@ -32,13 +33,14 @@ function BucketIngestBucketSound(_sourcePath, _bucketName, _alias = _sourcePath,
         else
         {
             var _buffer = buffer_load($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}");
-            _bucketStruct.__AddWAV(__sourcePath, __alias, _buffer, 0);
+            _bucketStruct.__AddWAV(__sourcePath, __alias, _buffer, 0, __compress);
             buffer_delete(_buffer);
         }
     },
     {
         __alias:      _alias,
         __sourcePath: _sourcePath,
+        __compress:   _compress,
         __bucketName: _bucketName,
         __metadata:   _metadata,
     }));

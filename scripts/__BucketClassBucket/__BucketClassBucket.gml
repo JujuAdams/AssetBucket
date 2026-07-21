@@ -9,6 +9,8 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
     __soundsDict   = {};
     __spritesDict  = {};
     
+    __decompressedBufferArray = [];
+    
     __datafileNameArray = [];
     __soundNameArray    = [];
     __spriteNameArray   = [];
@@ -29,16 +31,25 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         if (not __loaded) return;
         __loaded = false;
         
+        struct_foreach(__soundsDict, function(_variable_UNUSED, _value)
+        {
+            audio_free_buffer_sound(_value);
+        });
+        
         if (buffer_exists(__buffer))
         {
             buffer_delete(__buffer);
             __buffer = -1;
         }
         
-        struct_foreach(__soundsDict, function(_variable_UNUSED, _value)
+        var _i = 0;
+        repeat(array_length(__decompressedBufferArray))
         {
-            audio_free_buffer_sound(_value);
-        });
+            buffer_delete(__decompressedBufferArray[_i]);
+            ++_i;
+        }
+        
+        array_resize(__decompressedBufferArray, 0);
         
         __datafileDict = {};
         __soundsDict   = {};
@@ -124,7 +135,26 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         {
             with(_soundsDefinitionArray[_i])
             {
-                var _sound = audio_create_buffer_sound(_buffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, _globalAssetOffset + offset, size, (channels == 2)? audio_stereo : audio_mono);
+                if (format == "wav")
+                {
+                    if (compressed)
+                    {
+                        var _compressedBuffer = buffer_create(size, buffer_fixed, 1);
+                        buffer_copy(_buffer, _globalAssetOffset + offset, size, _compressedBuffer, 0);
+                        
+                        var _decompressedBuffer = buffer_decompress(_compressedBuffer);
+                        buffer_delete(_compressedBuffer);
+                        
+                        array_push(__decompressedBufferArray, _decompressedBuffer);
+                        
+                        var _sound = audio_create_buffer_sound(_decompressedBuffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, 0, buffer_get_size(_decompressedBuffer), (channels == 2)? audio_stereo : audio_mono);
+                    }
+                    else
+                    {
+                        var _sound = audio_create_buffer_sound(_buffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, _globalAssetOffset + offset, size, (channels == 2)? audio_stereo : audio_mono);
+                    }
+                }
+                
                 _soundsDict[$ alias] = _sound;
             }
             

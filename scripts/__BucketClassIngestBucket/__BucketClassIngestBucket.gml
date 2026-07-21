@@ -36,7 +36,7 @@ function __BucketClassIngestBucket(_name) constructor
         });
     }
     
-    static __AddWAV = function(_sourcePath, _alias, _buffer, _offset)
+    static __AddWAV = function(_sourcePath, _alias, _buffer, _offset, _compress)
     {
         var _accumulationBuffer = __accumulationBuffer;
         
@@ -95,18 +95,31 @@ function __BucketClassIngestBucket(_name) constructor
             __BucketError($"Mismatch between block alignment ({_blockAlignment}) and data format ({buffer_sizeof(_dataFormat)})");
         }
         
+        if (_compress)
+        {
+            var _compressedBuffer = buffer_compress(_buffer, buffer_tell(_buffer), _subchunk2Size);
+            var _bucketSize = buffer_get_size(_compressedBuffer);
+            buffer_copy(_compressedBuffer, 0, _bucketSize, _accumulationBuffer, buffer_tell(_accumulationBuffer));
+            buffer_delete(_compressedBuffer);
+        }
+        else
+        {
+            var _bucketSize = _subchunk2Size;
+            buffer_copy(_buffer, buffer_tell(_buffer), _subchunk2Size, _accumulationBuffer, buffer_tell(_accumulationBuffer));
+        }
+        
         array_push(__soundsArray, {
+            format:      "wav",
             alias:       _alias,
             offset:      buffer_tell(_accumulationBuffer),
-            size:        _subchunk2Size,
+            size:        _bucketSize,
             sample16bit: (_bitsPerSample == 16),
             sampleRate:  _sampleRate,
             channels:    _channels,
+            compressed:  _compress,
         });
         
-        buffer_copy(_buffer, buffer_tell(_buffer), _subchunk2Size, _accumulationBuffer, buffer_tell(_accumulationBuffer));
-        buffer_seek(_accumulationBuffer, buffer_seek_relative, _subchunk2Size);
-        buffer_write(_accumulationBuffer, buffer_u8, 0x00);
+        buffer_seek(_accumulationBuffer, buffer_seek_relative, _bucketSize);
     }
     
     static __Save = function(_ensureDatafileDict, _bucketExportArray)

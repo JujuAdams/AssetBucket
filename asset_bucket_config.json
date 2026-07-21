@@ -38,6 +38,7 @@
                 "resourceType": "sound",
                 "name": "importToBucket",
                 "bucket": "bucketDefault",
+                "compress": false,
             },
         },
     ],
