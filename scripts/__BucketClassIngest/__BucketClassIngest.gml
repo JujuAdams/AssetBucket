@@ -16,7 +16,35 @@ function __BucketClassIngest(_configStruct) constructor
     __projectSpriteArray   = [];
     __projectSoundArray    = [];
     
+    __queueBucketAlias = {};
+    __queueProjectAsset = {};
+    __queueArray = [];
     
+    
+    
+    static __QueueBucketOperation = function(_alias, _deferredFunction)
+    {
+        if (struct_exists(__queueBucketAlias, _alias))
+        {
+            _deferredFunction.__Destroy();
+            __BucketError($"Operation already exists for bucket content with alias \"{_alias}\"");
+        }
+        
+        __queueBucketAlias[$ _alias] = _deferredFunction;
+        array_push(__queueArray, _deferredFunction);
+    }
+    
+    static __QueueProjectOperation = function(_assetName, _deferredFunction)
+    {
+        if (struct_exists(__queueProjectAsset, _assetName))
+        {
+            _deferredFunction.__Destroy();
+            __BucketError($"Operation already exists for project asset \"{_assetName}\"");
+        }
+        
+        __queueProjectAsset[$ _assetName] = _deferredFunction;
+        array_push(__queueArray, _deferredFunction);
+    }
     
     static __RegisterBucketDatafile = function(_originalPath, _bucketName)
     {
@@ -68,6 +96,14 @@ function __BucketClassIngest(_configStruct) constructor
     
     static __Ingest = function()
     {
+        var _queueArray = __queueArray;
+        var _i = 0;
+        repeat(array_length(_queueArray))
+        {
+            _queueArray[_i].__Execute();
+            ++_i;
+        }
+        
         var _i = 0;
         repeat(array_length(__bucketArray))
         {

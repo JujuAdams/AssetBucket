@@ -1,7 +1,9 @@
 /// @param localPath
 /// @param bucketName
+/// @param [alias]
+/// @param [metadata]
 
-function BucketIngestDatafileToBucket(_path, _bucketName)
+function BucketIngestBucketDatafile(_path, _bucketName, _alias = _path, _metadata = undefined)
 {
     static _system = __BucketSystem();
     
@@ -17,6 +19,5 @@ function BucketIngestDatafileToBucket(_path, _bucketName)
         __BucketError($"Failed to load \"{_absolutePath}\"");
     }
     
-    BucketIngestBufferToBucket(_path, _buffer, 0, buffer_get_size(_buffer), _bucketName);
-    buffer_delete(_buffer);
+    BucketIngestBucketBuffer(_alias, _buffer, 0, buffer_get_size(_buffer), _bucketName);
 }

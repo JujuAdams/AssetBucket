@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__BucketSoftError",
   "parent":{
-    "name":"Helper",
-    "path":"folders/Asset Bucket/(System)/Helper.yy",
+    "name":"Output",
+    "path":"folders/Asset Bucket/(System)/Output.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

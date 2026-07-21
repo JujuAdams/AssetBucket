@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__BucketEnsureIngestFileInfo",
   "parent":{
-    "name":"Helper",
-    "path":"folders/Asset Bucket/(System)/Helper.yy",
+    "name":"(System)",
+    "path":"folders/Asset Bucket/(System).yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

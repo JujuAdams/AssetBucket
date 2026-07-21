@@ -12,7 +12,7 @@ function BucketIngest()
             var _type = _workerInfo.type;
             if (_type == "datafile")
             {
-                BucketIngestDatafileToBucket(_filePath, _workerInfo.bucket);
+                BucketIngestBucketDatafile(_filePath, _workerInfo.bucket);
             }
             else if (_type == "sprite")
             {
@@ -37,7 +37,7 @@ function BucketIngest()
             var _type = _workerInfo.type;
             if (_type == "datafile")
             {
-                //BucketIngestDatafileToProject(_workerInfo.folder);
+                BucketIngestProjectDatafile(_workerInfo.folder);
             }
             else if (_type == "sprite")
             {
@@ -50,12 +50,12 @@ function BucketIngest()
                     var _spriteName = filename_change_ext(filename_name(_filePath), "");
                 }
                 
-                BucketIngestSpriteToProject(_spriteName, _filePath, _workerInfo.folder, _workerInfo[$ "textureGroup"]);
+                BucketIngestProjectSprite(_spriteName, _filePath, _workerInfo.folder, _workerInfo[$ "textureGroup"]);
             }
             else if (_type == "sound")
             {
                 var _soundName = filename_change_ext(filename_name(_filePath), "");
-                BucketIngestSoundToProject(_soundName, _filePath, _workerInfo.folder, _workerInfo[$ "audioGroup"]);
+                BucketIngestProjectSound(_soundName, _filePath, _workerInfo.folder, _workerInfo[$ "audioGroup"]);
             }
             else
             {

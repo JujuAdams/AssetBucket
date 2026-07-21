@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__BucketTrimDirectory",
   "parent":{
-    "name":"(System)",
-    "path":"folders/Asset Bucket/(System).yy",
+    "name":"Helper",
+    "path":"folders/Asset Bucket/(System)/Helper.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

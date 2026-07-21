@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BucketIngestDatafileToBucket",
+  "%Name":"BucketIngestBucketDatafile",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BucketIngestDatafileToBucket",
+  "name":"BucketIngestBucketDatafile",
   "parent":{
     "name":"Pipeline",
     "path":"folders/Asset Bucket/Pipeline.yy",
