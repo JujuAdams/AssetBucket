@@ -1,8 +1,14 @@
-function __BucketClassIngestBucket(_name) constructor
+/// @param name
+/// @param textureSize
+/// @param textureFormat
+
+function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) constructor
 {
     static _system = __BucketSystem();
     
-    __name = _name;
+    __name          = _name;
+    __textureSize   = _textureSize;
+    __textureFormat = _textureFormat;
     
     __accumulationBuffer = buffer_create(1024*1024, buffer_grow, 1);
     
@@ -128,8 +134,9 @@ function __BucketClassIngestBucket(_name) constructor
         if (array_length(__queuedSprites) <= 0) return;
         
         var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
-        var _surfaceWidth  = 1024;
-        var _surfaceHeight = 1024;
+        var _textureFormat = __textureFormat;
+        var _surfaceWidth  = __textureSize;
+        var _surfaceHeight = __textureSize;
         
         var _imagesArray = [];
         var _surfaceCount = 0;
@@ -299,14 +306,28 @@ function __BucketClassIngestBucket(_name) constructor
             return sign(_a.__packIndex - _b.__packIndex);
         });
         
-        var _funcMakeBuffer = function(_surface)
+        var _funcMakeBuffer = function(_surface, _textureFormat)
         {
-            var _buffer = buffer_create(16 + 4*surface_get_width(_surface)*surface_get_height(_surface), buffer_fixed, 1);
-            buffer_write(_buffer, buffer_text, "RAW ");
-            buffer_write(_buffer, buffer_s32,  surface_get_width(_surface));
-            buffer_write(_buffer, buffer_s32,  surface_get_height(_surface));
-            buffer_write(_buffer, buffer_s32,  0x00);
-            buffer_get_surface(_buffer, _surface, 16);
+            if (_textureFormat == "raw")
+            {
+                var _buffer = buffer_create(16 + 4*surface_get_width(_surface)*surface_get_height(_surface), buffer_fixed, 1);
+                buffer_write(_buffer, buffer_text, "RAW ");
+                buffer_write(_buffer, buffer_s32,  surface_get_width(_surface));
+                buffer_write(_buffer, buffer_s32,  surface_get_height(_surface));
+                buffer_write(_buffer, buffer_s32,  0x00);
+                buffer_get_surface(_buffer, _surface, 16);
+            }
+            else if (_textureFormat == "png")
+            {
+                surface_save(_surface, "asset_bucket_temp.png");
+                var _buffer = buffer_load("asset_bucket_temp.png");
+                file_delete("asset_bucket_temp.png");
+            }
+            else
+            {
+                __BucketError($"Texture format \"{_textureFormat}\" unhandled for bucket \"{__name}\"");
+            }
+            
             return _buffer;
         }
         
@@ -330,8 +351,9 @@ function __BucketClassIngestBucket(_name) constructor
                 {
                     if (_currentIndex != undefined)
                     {
-                        var _buffer = _funcMakeBuffer(_surface);
+                        var _buffer = _funcMakeBuffer(_surface, _textureFormat);
                         other.__AddTexturePage(_currentIndex, _buffer);
+                        buffer_delete(_buffer);
                     }
                     
                     _currentIndex = __packIndex;
@@ -359,8 +381,9 @@ function __BucketClassIngestBucket(_name) constructor
         
         if (_currentIndex != undefined)
         {
-            var _buffer = _funcMakeBuffer(_surface);
+            var _buffer = _funcMakeBuffer(_surface, _textureFormat);
             __AddTexturePage(_currentIndex, _buffer);
+            buffer_delete(_buffer);
         }
         
         surface_reset_target();

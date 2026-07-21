@@ -5,6 +5,8 @@
     "buckets": [
         {
             "name": "bucketDefault",
+            "textureFormat": "png",
+            "textureSize": 2048,
         },
     ],
 
