@@ -6,7 +6,7 @@
   "name":"__BucketWarning",
   "parent":{
     "name":"Output",
-    "path":"folders/Asset Bucket/(System)/Output.yy",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Output.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

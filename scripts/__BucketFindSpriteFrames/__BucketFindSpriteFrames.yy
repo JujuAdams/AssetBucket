@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketSaveString",
+  "%Name":"__BucketFindSpriteFrames",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketSaveString",
+  "name":"__BucketFindSpriteFrames",
   "parent":{
     "name":"I've kicked the bucket",
     "path":"folders/Asset Bucket/(System)/I've kicked the bucket.yy",

@@ -15,11 +15,11 @@ function BucketIngestBucketBuffer(_alias, _buffer, _offset, _size, _bucketName, 
         __BucketError("Cannot call `BucketIngestBucketDatafile()` outside of a worker function");
     }
     
-    _ingestStruct.__QueueBucketOperation(_alias, new __BucketClassDeferredFunction(function()
+    _ingestStruct.__QueueBucketOperation(_alias, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
-        __ingestStruct.__RegisterBucketDatafile(__alias, __bucketName);
+        _ingestStruct.__RegisterBucketDatafile(__alias, __bucketName);
         
-        var _bucketStruct = __ingestStruct.__bucketDict[$ __bucketName];
+        var _bucketStruct = _ingestStruct.__bucketDict[$ __bucketName];
         if (_bucketStruct == undefined)
         {
             __BucketError($"Couldn't find bucket with name \"{__bucketName}\"");
@@ -30,12 +30,11 @@ function BucketIngestBucketBuffer(_alias, _buffer, _offset, _size, _bucketName, 
         }
     },
     {
-        __ingestStruct: _ingestStruct,
-        __alias:        _alias,
-        __buffer:       _buffer,
-        __offset:       _offset,
-        __size:         _size,
-        __bucketName:   _bucketName,
-        __metadata:     _metadata,
+        __alias:      _alias,
+        __buffer:     _buffer,
+        __offset:     _offset,
+        __size:       _size,
+        __bucketName: _bucketName,
+        __metadata:   _metadata,
     }));
 }

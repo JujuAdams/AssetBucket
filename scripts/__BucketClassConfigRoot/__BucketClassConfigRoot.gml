@@ -80,7 +80,7 @@ function __BucketClassConfigRoot() constructor
             {
                 if (string_pos("_frame0.", _localPath) > 0)
                 {
-                    _fileArray[@ _i] = BucketFindSpriteFrames(_localPath);
+                    _fileArray[@ _i] = __BucketFindSpriteFrames(_localPath);
                 }
                 else
                 {

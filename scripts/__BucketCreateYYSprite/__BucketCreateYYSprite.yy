@@ -6,7 +6,7 @@
   "name":"__BucketCreateYYSprite",
   "parent":{
     "name":"YY",
-    "path":"folders/Asset Bucket/(System)/Ingest/YY.yy",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Ingest/YY.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

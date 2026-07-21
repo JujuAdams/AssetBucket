@@ -100,7 +100,7 @@ function __BucketClassIngest(_configStruct) constructor
         var _i = 0;
         repeat(array_length(_queueArray))
         {
-            _queueArray[_i].__Execute();
+            _queueArray[_i].__Execute(self);
             ++_i;
         }
         

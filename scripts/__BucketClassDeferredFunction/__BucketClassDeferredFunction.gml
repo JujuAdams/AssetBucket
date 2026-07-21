@@ -8,9 +8,9 @@ function __BucketClassDeferredFunction(_function, _scope, _buffer = undefined) c
     __scope    = _scope;
     __buffer   = _buffer;
     
-    static __Execute = function()
+    static __Execute = function(_injestStruct)
     {
-        __function();
+        __function(_injestStruct);
         __Destroy();
     }
     

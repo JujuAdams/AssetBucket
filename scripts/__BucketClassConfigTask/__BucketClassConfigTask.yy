@@ -6,7 +6,7 @@
   "name":"__BucketClassConfigTask",
   "parent":{
     "name":"Configuration",
-    "path":"folders/Asset Bucket/(System)/Ingest/Classes/Configuration.yy",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Ingest/Classes/Configuration.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

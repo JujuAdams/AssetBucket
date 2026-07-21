@@ -6,7 +6,7 @@
   "name":"__BucketEnsureArray",
   "parent":{
     "name":"Helper",
-    "path":"folders/Asset Bucket/(System)/Helper.yy",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Helper.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

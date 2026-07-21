@@ -1,6 +1,6 @@
 /// @param path
 
-function BucketFindSpriteFrames(_path)
+function __BucketFindSpriteFrames(_path)
 {
     static _system = __BucketSystem();
     

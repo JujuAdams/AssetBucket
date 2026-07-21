@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__BucketLoadConfigurationFile",
   "parent":{
-    "name":"(System)",
-    "path":"folders/Asset Bucket/(System).yy",
+    "name":"I've kicked the bucket",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

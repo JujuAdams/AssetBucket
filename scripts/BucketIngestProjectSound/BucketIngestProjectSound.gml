@@ -14,16 +14,16 @@ function BucketIngestProjectSound(_soundName, _soundPath, _projectFolder, _audio
         __BucketError("Cannot call `BucketIngestProjectSprite()` outside of a worker function");
     }
     
-    _ingestStruct.__QueueProjectOperation(_soundName, new __BucketClassDeferredFunction(function()
+    _ingestStruct.__QueueProjectOperation(_soundName, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
         var _fileExtension = filename_ext(__soundPath);
         if ((_fileExtension == ".wav") || (_fileExtension == ".wave") || (_fileExtension == ".ogg"))
         {
-            var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{__ingestStruct.__configStruct.__rootDirectory}";
+            var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
             
-            __ingestStruct.__RegisterProjectSound(__soundPath, __soundName);
-            __ingestStruct.__EnsureProjectFolder(__projectFolder);
-            __ingestStruct.__EnsureProjectAudioGroup(__audioGroup);
+            _ingestStruct.__RegisterProjectSound(__soundPath, __soundName);
+            _ingestStruct.__EnsureProjectFolder(__projectFolder);
+            _ingestStruct.__EnsureProjectAudioGroup(__audioGroup);
             
             __BucketCreateYYSound(_rootDirectory, __soundPath, __soundName, __projectFolder, __audioGroup);
         }
@@ -33,7 +33,6 @@ function BucketIngestProjectSound(_soundName, _soundPath, _projectFolder, _audio
         }
     },
     {
-        __ingestStruct:  _ingestStruct,
         __soundName:     _soundName,
         __soundPath:     _soundPath,
         __projectFolder: _projectFolder,
