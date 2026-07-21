@@ -3,13 +3,13 @@ function BucketIngest()
     static _system = __BucketSystem();
     static _once = (function()
     {
-        BucketSetWorkerFunction("defaultToBucket", function(_filePath, _workerInfo)
+        BucketSetWorkerFunction("importToBucket", function(_filePath, _workerInfo)
         {
             __BucketVariableAssertString(_workerInfo, "name");
-            __BucketVariableAssertString(_workerInfo, "type");
+            __BucketVariableAssertString(_workerInfo, "resourceType");
             __BucketVariableAssertString(_workerInfo, "bucket");
             
-            var _type = _workerInfo.type;
+            var _type = _workerInfo.resourceType;
             if (_type == "datafile")
             {
                 BucketIngestBucketDatafile(_filePath, _workerInfo.bucket);
@@ -20,7 +20,7 @@ function BucketIngest()
             }
             else if (_type == "sound")
             {
-                //BucketIngestSoundToBucket(_workerInfo.bucket);
+                BucketIngestSoundToBucket(_filePath, _workerInfo.bucket);
             }
             else
             {
@@ -28,13 +28,13 @@ function BucketIngest()
             }
         });
         
-        BucketSetWorkerFunction("defaultToProject", function(_filePath, _workerInfo)
+        BucketSetWorkerFunction("importToProject", function(_filePath, _workerInfo)
         {
             __BucketVariableAssertString(_workerInfo, "name");
-            __BucketVariableAssertString(_workerInfo, "type");
+            __BucketVariableAssertString(_workerInfo, "resourceType");
             __BucketVariableAssertString(_workerInfo, "folder");
             
-            var _type = _workerInfo.type;
+            var _type = _workerInfo.resourceType;
             if (_type == "datafile")
             {
                 BucketIngestProjectDatafile(_workerInfo.folder);

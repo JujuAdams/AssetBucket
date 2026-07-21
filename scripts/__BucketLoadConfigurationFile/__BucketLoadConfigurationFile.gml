@@ -93,36 +93,36 @@ function __BucketLoadConfigurationFile()
         },
     ],
 
-    "datafiles": [
+    "tasks": [
         {
             "include": {
                 "path": "datafiles/*",
             },
-            "import": {
+            "worker": {
+                "resourceType": "datafile",
+                "name": "importToBucket",
                 "bucket": "bucketDefault"
             },
         },
-    ],
-    
-    "sprites": [
         {
             "include": {
-                "path": "sprites/*",
+                "path": "sprites/*.png",
             },
-            "import": {
-                "folder": "Sprites/Asset Bucket/",
+            "worker": {
+                "resourceType": "sprite",
+                "name": "importToProject",
+                "folder": "Sprites/",
                 "textureGroup": "Default",
             },
         },
-    ],
-    
-    "sounds": [
         {
             "include": {
-                "path": ["sounds/*.wav", "sounds/*.ogg"]
+                "path": ["sounds/*.wav", "sounds/*.ogg"],
             },
-            "import": {
-                "folder": "Sounds/Asset Bucket/",
+            "worker": {
+                "resourceType": "sound",
+                "name": "importToProject",
+                "folder": "Sounds/",
                 "audioGroup": "audiogroup_default",
             },
         },

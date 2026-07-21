@@ -14,19 +14,19 @@
                 "path": "datafiles/*",
             },
             "worker": {
-                "name": "defaultToBucket",
-                "type": "datafile",
+                "resourceType": "datafile",
+                "name": "importToBucket",
                 "bucket": "bucketDefault"
             },
         },
         {
             "include": {
-                "path": "sprites/*",
+                "path": "sprites/*.png",
             },
             "worker": {
-                "name": "defaultToProject",
-                "type": "sprite",
-                "folder": "Sprites/Asset Bucket/",
+                "resourceType": "sprite",
+                "name": "importToProject",
+                "folder": "Sprites/",
                 "textureGroup": "Default",
             },
         },
@@ -35,9 +35,9 @@
                 "path": ["sounds/*.wav", "sounds/*.ogg"],
             },
             "worker": {
-                "name": "defaultToProject",
-                "type": "sound",
-                "folder": "Sounds/Asset Bucket/",
+                "resourceType": "sound",
+                "name": "importToProject",
+                "folder": "Sounds/",
                 "audioGroup": "audiogroup_default",
             },
         },

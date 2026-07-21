@@ -8,7 +8,7 @@ function __BucketClassConfigWorker() constructor
         __parent = _parent;
         
         __BucketVariableAssertString(_struct, "name");
-        __BucketVariableAssertString(_struct, "type");
+        __BucketVariableAssertString(_struct, "resourceType");
         
         __data = _struct;
         

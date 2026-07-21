@@ -11,7 +11,7 @@ function __BucketClassConfigFilter() constructor
         __height = undefined;
         __length = undefined;
         
-        var _type = _parent.__worker.__data.type;
+        var _type = _parent.__worker.__data.resourceType;
         if (_type == "datafile")
         {
             __BucketVariableAssertOnly(_struct, ["path", "bytes"]);
