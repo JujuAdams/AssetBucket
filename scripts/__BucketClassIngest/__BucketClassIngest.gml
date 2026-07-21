@@ -135,7 +135,7 @@ function __BucketClassIngest(_configStruct) constructor
         var _i = 0;
         repeat(array_length(__bucketArray))
         {
-            __bucketArray[_i].__Save(__ensureDatafileDict, _bucketExportArray);
+            __bucketArray[_i].__Save(self, __ensureDatafileDict, _bucketExportArray);
             ++_i;
         }
         

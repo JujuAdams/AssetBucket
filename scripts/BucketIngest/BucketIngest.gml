@@ -16,11 +16,21 @@ function BucketIngest()
             }
             else if (_type == "sprite")
             {
-                //BucketIngestSpriteToBucket(_workerInfo.bucket);
+                if (is_array(_filePath))
+                {
+                    var _spriteName = filename_change_ext(string_replace_all(filename_name(_filePath[0]), "_frame0.", "."), "");
+                }
+                else
+                {
+                    var _spriteName = filename_change_ext(filename_name(_filePath), "");
+                }
+                
+                BucketIngestBucketSprite(_filePath, _workerInfo.bucket, _spriteName);
             }
             else if (_type == "sound")
             {
-                BucketIngestBucketSound(_filePath, _workerInfo.bucket, _workerInfo[$ "compress"] ?? false);
+                var _soundName = filename_change_ext(filename_name(_filePath), "");
+                BucketIngestBucketSound(_filePath, _workerInfo.bucket, _workerInfo[$ "compress"] ?? false, _soundName);
             }
             else
             {

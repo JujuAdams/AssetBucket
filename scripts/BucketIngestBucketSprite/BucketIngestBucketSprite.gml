@@ -28,9 +28,7 @@ function BucketIngestBucketSprite(_imagePathArray, _bucketName, _alias = undefin
         }
         else
         {
-            var _buffer = buffer_load($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}");
-            _bucketStruct.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
-            buffer_delete(_buffer);
+            _bucketStruct.__AddSprite(__imagePathArray, __alias);
         }
     },
     {

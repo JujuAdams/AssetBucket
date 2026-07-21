@@ -19,27 +19,26 @@
                 "bucket": "bucketDefault"
             },
         },
-        //{
-        //    "include": {
-        //        "path": "sprites/*.png",
-        //    },
-        //    "worker": {
-        //        "resourceType": "sprite",
-        //        "name": "importToProject",
-        //        "folder": "Sprites/",
-        //        "textureGroup": "Default",
-        //    },
-        //},
         {
             "include": {
-                "path": "sounds/*.wav",
+                "path": "sprites/*.png",
             },
             "worker": {
-                "resourceType": "sound",
+                "resourceType": "sprite",
                 "name": "importToBucket",
                 "bucket": "bucketDefault",
-                "compress": false,
             },
         },
+        //{
+        //    "include": {
+        //        "path": ["sounds/*.wav", "sounds/*.ogg"],
+        //    },
+        //    "worker": {
+        //        "resourceType": "sound",
+        //        "name": "importToProject",
+        //        "folder": "Sounds/",
+        //        "audioGroup": "audiogroup_default",
+        //    },
+        //},
     ],
 }

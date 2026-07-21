@@ -1,6 +1,8 @@
 /// @param alias
 /// @param [loop=false]
 
+// TODO - Optimise
+
 function BucketPlaySound(_alias, _loop = false)
 {
     static _system = __BucketSystem();

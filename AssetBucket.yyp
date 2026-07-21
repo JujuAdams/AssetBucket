@@ -101,6 +101,7 @@
     {"id":{"name":"BucketDatafilesGetLoaded","path":"scripts/BucketDatafilesGetLoaded/BucketDatafilesGetLoaded.yy",},},
     {"id":{"name":"BucketDatafilesLoad","path":"scripts/BucketDatafilesLoad/BucketDatafilesLoad.yy",},},
     {"id":{"name":"BucketDatafilesUnload","path":"scripts/BucketDatafilesUnload/BucketDatafilesUnload.yy",},},
+    {"id":{"name":"BucketGetSprite","path":"scripts/BucketGetSprite/BucketGetSprite.yy",},},
     {"id":{"name":"BucketIngest","path":"scripts/BucketIngest/BucketIngest.yy",},},
     {"id":{"name":"BucketIngestBucketBuffer","path":"scripts/BucketIngestBucketBuffer/BucketIngestBucketBuffer.yy",},},
     {"id":{"name":"BucketIngestBucketDatafile","path":"scripts/BucketIngestBucketDatafile/BucketIngestBucketDatafile.yy",},},

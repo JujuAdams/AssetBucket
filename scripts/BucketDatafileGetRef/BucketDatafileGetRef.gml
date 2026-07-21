@@ -24,7 +24,7 @@ function BucketDatafileGetRef(_originalPath)
     
     with(_result)
     {
-        buffer = _bucket.__buffer;
+        buffer = _bucket.__mainBuffer;
         offset = _datafileInfo.offset + _bucket.__globalAssetOffset;
         size   = _datafileInfo.size;
     }

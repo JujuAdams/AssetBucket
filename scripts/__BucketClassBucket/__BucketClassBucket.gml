@@ -3,17 +3,18 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
     __name     = _bucketName;
     __filesize = _filesize;
     
-    __buffer = -1;
+    __mainBuffer = -1;
     
     __datafileDict = {};
     __soundsDict   = {};
-    __spritesDict  = {};
+    __spriteArray  = [];
+    __spriteDict   = {};
     
-    __decompressedBufferArray = [];
+    __textureGroup = undefined;
+    __ownedBufferArray = [];
     
     __datafileNameArray = [];
     __soundNameArray    = [];
-    __spriteNameArray   = [];
     
     __globalAssetOffset = 0;
     
@@ -36,20 +37,25 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
             audio_free_buffer_sound(_value);
         });
         
-        if (buffer_exists(__buffer))
+        if (__textureGroup != undefined)
         {
-            buffer_delete(__buffer);
-            __buffer = -1;
+            texturegroup_delete(__textureGroup);
+        }
+        
+        if (buffer_exists(__mainBuffer))
+        {
+            buffer_delete(__mainBuffer);
+            __mainBuffer = -1;
         }
         
         var _i = 0;
-        repeat(array_length(__decompressedBufferArray))
+        repeat(array_length(__ownedBufferArray))
         {
-            buffer_delete(__decompressedBufferArray[_i]);
+            buffer_delete(__ownedBufferArray[_i]);
             ++_i;
         }
         
-        array_resize(__decompressedBufferArray, 0);
+        array_resize(__ownedBufferArray, 0);
         
         __datafileDict = {};
         __soundsDict   = {};
@@ -74,9 +80,9 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         }
         
         //Use a fixed buffer for the benefit of `audio_create_buffer_sound()`
-        __buffer = buffer_create(__filesize, buffer_fixed, 1);
-        buffer_load_ext(__buffer, _path, 0);
-        var _buffer = __buffer;
+        __mainBuffer = buffer_create(__filesize, buffer_fixed, 1);
+        buffer_load_ext(__mainBuffer, _path, 0);
+        var _buffer = __mainBuffer;
         
         if (not buffer_exists(_buffer))
         {
@@ -106,7 +112,8 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         var _version                = _bucketInfoStruct[$ "version"];
         __datafileDict              = _bucketInfoStruct[$ "datafiles"];
         var _soundsDefinitionArray  = _bucketInfoStruct[$ "sounds"];
-        var _spritesDefinitionArray = _bucketInfoStruct[$ "sprites"];
+        var _texturePageArray       = _bucketInfoStruct[$ "tpages"];
+        var _textureGroupDesc       = _bucketInfoStruct[$ "tgroup"];
         
         if (_version != BUCKET_CONTENTS_VERSION)
         {
@@ -123,11 +130,17 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
             __BucketError($"\"{_path}\" `.sounds` not an array, got {typeof(_soundsDefinitionArray)}");
         }
         
-        if (not is_array(_spritesDefinitionArray))
+        if (not is_array(_texturePageArray))
         {
-            __BucketError($"\"{_path}\" `.sprites` not an array, got {typeof(_spritesDefinitionArray)}");
+            __BucketError($"\"{_path}\" `.tpages` not an array, got {typeof(_texturePageArray)}");
         }
         
+        if (not is_struct(_textureGroupDesc))
+        {
+            __BucketError($"\"{_path}\" `.tgroup` not an object, got {typeof(_textureGroupDesc)}");
+        }
+        
+        //Set up sounds
         var _globalAssetOffset = __globalAssetOffset;
         var _soundsDict = __soundsDict;
         var _i = 0;
@@ -145,7 +158,7 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
                         var _decompressedBuffer = buffer_decompress(_compressedBuffer);
                         buffer_delete(_compressedBuffer);
                         
-                        array_push(__decompressedBufferArray, _decompressedBuffer);
+                        array_push(__ownedBufferArray, _decompressedBuffer);
                         
                         var _sound = audio_create_buffer_sound(_decompressedBuffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, 0, buffer_get_size(_decompressedBuffer), (channels == 2)? audio_stereo : audio_mono);
                     }
@@ -161,12 +174,38 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
             ++_i;
         }
         
+        //Create sprites as necessary
+        if (array_length(_texturePageArray) > 0)
+        {
+            var _textureBufferArray = array_create(array_length(_texturePageArray), undefined);
+            var _i = 0;
+            repeat(array_length(_texturePageArray))
+            {
+                var _texturePageInfo = _texturePageArray[_i];
+                
+                var _textureBuffer = buffer_create(_texturePageInfo.size, buffer_fixed, 1);
+                buffer_copy(_buffer, _texturePageInfo.offset + __globalAssetOffset, _texturePageInfo.size, _textureBuffer, 0);
+                _textureBufferArray[@ _i] = _textureBuffer;
+                array_push(__ownedBufferArray, _textureBuffer);
+                
+                ++_i;
+            }
+            
+            __textureGroup = texturegroup_add(__name, _textureBufferArray, _textureGroupDesc);
+            __spriteArray = texturegroup_get_sprites(__name);
+            
+            var _spriteArray = __spriteArray;
+            var _spriteDict  = __spriteDict;
+            var _i = 0;
+            repeat(array_length(_spriteArray))
+            {
+                var _sprite = _spriteArray[_i];
+                _spriteDict[$ sprite_get_name(_spriteArray[_i])] = _sprite;
+                ++_i;
+            }
+        }
+        
         __datafileNameArray = struct_get_names(__datafileDict);
         __soundNameArray    = struct_get_names(__soundsDict);
-        __spriteNameArray   = struct_get_names(__spritesDict);
-        
-        show_debug_message(json_stringify(__datafileNameArray, true));
-        show_debug_message(json_stringify(__soundNameArray, true));
-        show_debug_message(json_stringify(__spriteNameArray, true));
     }
 }
