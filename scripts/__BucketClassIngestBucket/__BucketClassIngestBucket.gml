@@ -141,8 +141,8 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         var _imagesArray = [];
         var _surfaceCount = 0;
         
-        var _smallestWidth  = 1;
-        var _smallestHeight = 1;
+        var _smallestWidth  = infinity;
+        var _smallestHeight = infinity;
         
         var _i = 0;
         repeat(array_length(__queuedSprites))
@@ -158,13 +158,13 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
             repeat(array_length(_imagePathArray))
             {
                 var _path = _rootDirectory + _imagePathArray[_j];
-                var _sprite = sprite_add(_path, 0, false, false, 0, 0);
+                var _sprite = __BucketAddSprite(_path);
                 
                 var _width  = sprite_get_width(_sprite);
                 var _height = sprite_get_height(_sprite);
                 
-                _smallestWidth  = max(_smallestWidth,  _width );
-                _smallestHeight = max(_smallestHeight, _height);
+                _smallestWidth  = min(_smallestWidth,  _width );
+                _smallestHeight = min(_smallestHeight, _height);
                 
                 array_push(_imagesArray, {
                     __alias:      _alias,
@@ -190,13 +190,17 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
             ++_i;
         }
         
+        //Safety, should never happen
+        if (is_infinity(_smallestWidth)) _smallestWidth = 1;
+        if (is_infinity(_smallestHeight)) _smallestHeight = 1;
+        
         array_sort(_imagesArray, function(_a, _b)
         {
-            var _sign = sign(_a.__height - _b.__height);
+            var _sign = sign(_b.__height - _a.__height);
             
             if (_sign == 0)
             {
-                _sign = sign(_a.__width - _b.__width);
+                _sign = sign(_b.__width - _a.__width);
             }
             
             return _sign;
