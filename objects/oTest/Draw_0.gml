@@ -1,1 +1,0 @@
-draw_sprite(BucketGetSprite("test"), 0, 10, 10);

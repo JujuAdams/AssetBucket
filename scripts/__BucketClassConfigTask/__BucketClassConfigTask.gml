@@ -4,10 +4,11 @@ function __BucketClassConfigTask() constructor
     
     static __Deserialize = function(_parent, _struct)
     {
-        __BucketVariableAssertOnly(_struct, ["include", "exclude", "worker"]);
+        __BucketVariableAssertOnly(_struct, ["enable", "include", "exclude", "worker"]);
         
         __parent = _parent;
         
+        __enable  = __BucketVariableDefault(_struct, "enable", true);
         __worker  = __BucketDeserializeStruct(self, _struct[$ "worker" ], __BucketClassConfigWorker);
         __include = __BucketDeserializeStruct(self, _struct[$ "include"], __BucketClassConfigFilter);
         __exclude = __BucketDeserializeStruct(self, _struct[$ "exclude"], __BucketClassConfigFilter);
@@ -19,7 +20,7 @@ function __BucketClassConfigTask() constructor
         
         if (__worker == undefined)
         {
-            __BucketError("Must have an `.worker` struct");
+            __BucketError("Must have a `.worker` struct");
         }
         
         return self;
@@ -27,6 +28,11 @@ function __BucketClassConfigTask() constructor
     
     static __Execute = function(_globalFileArray)
     {
+        if (not __enable)
+        {
+            return;
+        }
+        
         var _fileArray = variable_clone(_globalFileArray);
         
         var _includeStruct = __include;

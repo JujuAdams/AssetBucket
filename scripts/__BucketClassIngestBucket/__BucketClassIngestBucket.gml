@@ -362,7 +362,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
                 }
                 
                 draw_sprite(__sprite, 0, __packX, __packY);
-                        
+                
                 _spritesDict[$ __alias] = {
                     width: __width,
                     height: __height,

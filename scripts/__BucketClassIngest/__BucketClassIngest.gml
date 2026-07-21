@@ -150,9 +150,20 @@ function __BucketClassIngest(_configStruct) constructor
         __BucketSaveString(_json, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{BUCKET_MANIFEST_FILENAME}");
         __ensureDatafileDict[$ BUCKET_MANIFEST_FILENAME] = true;
         
+        //Skip .yyp modification if we have nothing to add
+        if ((struct_names_count(__ensureAudioGroupDict) <= 0)
+        &&  (struct_names_count(__ensureFolderDict) <= 0)
+        //&&  (struct_names_count(__ensureDatafileDict) <= 0) //Unnecessary because GameMaker will automatically build its own datafiles index
+        &&  (struct_names_count(__ensureResourceDict) <= 0)
+        &&  (struct_names_count(__ensureTextureGroupDict) <= 0))
+        {
+            return;
+        }
+        
         //Load the base project .yy
         file_copy(GM_project_filename, $"{GM_project_filename}.old");
         var _yypString = __BucketLoadString(GM_project_filename);
+        var _oldYYPString = _yypString;
         
         //Extract arrays as strings from the .yyp
         var _audioGroupsContent   = __BucketYYPExtract(_yypString, "AudioGroups");
@@ -258,7 +269,10 @@ function __BucketClassIngest(_configStruct) constructor
         
         _newAudioGroupsString   = _funcContentBuild(       _newAudioGroupsString,   _audioGroupsContent.__emptyArray,   __ensureAudioGroupDict,   _yypAudioGroupsDict,   _audioGroupTemplate                 );
         _newFoldersString       = _funcContentBuildFolders(_newFoldersString,       _foldersContent.__emptyArray,       __ensureFolderDict,       _yypFoldersDict,       _folderTemplate                     );
-        _newDatafilesString     = _funcContentBuild(       _newDatafilesString,     _datafilesContent.__emptyArray,     __ensureDatafileDict,     _yypDatafilesDict,     _datafileTemplate                   );
+        
+        //This line is unnecessary because GameMaker will automatically build its own datafiles index
+        //_newDatafilesString     = _funcContentBuild(       _newDatafilesString,     _datafilesContent.__emptyArray,     __ensureDatafileDict,     _yypDatafilesDict,     _datafileTemplate                   );
+        
         _newResourcesString     = _funcContentBuildExt(    _newResourcesString,     _resourcesContent.__emptyArray,     __ensureResourceDict,     _yypResourcesDict,     _resourceTemplate,    "resourceType");
         _newTextureGroupsString = _funcContentBuild(       _newTextureGroupsString, _textureGroupsContent.__emptyArray, __ensureTextureGroupDict, _yypTextureGroupsDict, _textureGroupTemplate               );
         
@@ -352,8 +366,11 @@ function __BucketClassIngest(_configStruct) constructor
         _yypString = __BucketYYPInject(_yypString, _foldersContent,       _newFoldersString);
         _yypString = __BucketYYPInject(_yypString, _audioGroupsContent,   _newAudioGroupsString);
         
-        //Save the .yyp
-        __BucketSaveString(_yypString, GM_project_filename);
+        if (_yypString != _oldYYPString)
+        {
+            //Save the .yyp if anything's changed
+            __BucketSaveString(_yypString, GM_project_filename);
+        }
     }
     
     static _audioGroupTemplate = "    {\"$GMAudioGroup\":\"v1\",\"%Name\":\"%name%\",\"exportDir\":\"\",\"name\":\"%name%\",\"resourceType\":\"GMAudioGroup\",\"resourceVersion\":\"2.0\",\"targets\":-1,},\n";
