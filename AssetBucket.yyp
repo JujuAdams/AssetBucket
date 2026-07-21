@@ -37,9 +37,11 @@
   },
   "name":"AssetBucket",
   "resources":[
+    {"id":{"name":"__BucketExecuteShell","path":"extensions/__BucketExecuteShell/__BucketExecuteShell.yy",},},
     {"id":{"name":"Note1","path":"notes/Note1/Note1.yy",},},
     {"id":{"name":"oTest","path":"objects/oTest/oTest.yy",},},
     {"id":{"name":"rMain","path":"rooms/rMain/rMain.yy",},},
+    {"id":{"name":"__BucketAddSprite","path":"scripts/__BucketAddSprite/__BucketAddSprite.yy",},},
     {"id":{"name":"__BucketClassBucket","path":"scripts/__BucketClassBucket/__BucketClassBucket.yy",},},
     {"id":{"name":"__BucketClassConfigBucket","path":"scripts/__BucketClassConfigBucket/__BucketClassConfigBucket.yy",},},
     {"id":{"name":"__BucketClassConfigFilter","path":"scripts/__BucketClassConfigFilter/__BucketClassConfigFilter.yy",},},

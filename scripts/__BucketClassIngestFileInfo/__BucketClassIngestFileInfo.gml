@@ -84,7 +84,7 @@ function __BucketClassIngestFileInfo(_filePath) constructor
     
     static __GetSpriteDimensions = function()
     {
-        var _sprite = sprite_add(__absolutePath, 0, false, false, 0, 0);
+        var _sprite = __BucketAddSprite(__absolutePath);
         if (not sprite_exists(_sprite))
         {
             __BucketError($"Failed to load \"{__absolutePath}\"");

@@ -1,0 +1,1 @@
+draw_sprite(asset_get_index("HotGlue_PSD_Color"), 0, 10, 10);

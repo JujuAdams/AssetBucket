@@ -5,8 +5,6 @@
     "buckets": [
         {
             "name": "bucketDefault",
-            "textureFormat": "png",
-            "textureSize": 2048,
         },
     ],
 
@@ -23,24 +21,27 @@
         },
         {
             "include": {
-                "path": "sprites/*.png",
+                "path": ["sprites/*.png", "sprites/*.psd"],
             },
             "worker": {
                 "resourceType": "sprite",
                 "name": "importToBucket",
-                "bucket": "bucketDefault",
+                "bucket": "bucketDefault"
+                //"folder": "Sprites/",
+                //"textureGroup": "Default",
             },
         },
-        //{
-        //    "include": {
-        //        "path": ["sounds/*.wav", "sounds/*.ogg"],
-        //    },
-        //    "worker": {
-        //        "resourceType": "sound",
-        //        "name": "importToProject",
-        //        "folder": "Sounds/",
-        //        "audioGroup": "audiogroup_default",
-        //    },
-        //},
+        {
+            "enable": false,
+            "include": {
+                "path": ["sounds/*.wav", "sounds/*.ogg"],
+            },
+            "worker": {
+                "resourceType": "sound",
+                "name": "importToProject",
+                "folder": "Sounds/",
+                "audioGroup": "audiogroup_default",
+            },
+        },
     ],
 }
