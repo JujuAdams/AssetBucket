@@ -8,10 +8,12 @@
 #macro BUCKET_PROJECT_NAME       filename_change_ext(filename_name(GM_project_filename), "")
 #macro BUCKET_PROJECT_DIRECTORY  $"{filename_dir(GM_project_filename)}/"
 
+#macro BUCKET_CONFIG_NOTE_ASSET_NAME  "AssetBucketConfig"
+
 #macro BUCKET_MANIFEST_FILENAME  "ab_manifest.ab"
 #macro BUCKET_MANIFEST_PATH      __BucketGetDatafilePath(BUCKET_MANIFEST_FILENAME)
 
-#macro BUCKET_CONFIG_VERSION  1
+#macro BUCKET_CONFIG_VERSION    1
 #macro BUCKET_CONTENTS_VERSION  1
 
 #macro BUCKET_TEXTURE_FORMAT_RAW   "raw"

@@ -5,7 +5,6 @@
     "buckets": [
         {
             "name": "bucketDefault",
-            "textureFormat": "zlib",
         },
     ],
 
@@ -22,14 +21,13 @@
         },
         {
             "include": {
-                "path": ["sprites/*.png", "sprites/*.psd"],
+                "path": "sprites/*.png",
             },
             "worker": {
                 "resourceType": "sprite",
-                "function": "importToBucket",
-                "bucket": "bucketDefault"
-                //"folder": "Sprites/",
-                //"textureGroup": "Default",
+                "function": "importToProject",
+                "folder": "Sprites/",
+                "textureGroup": "Default",
             },
         },
         {
@@ -38,10 +36,9 @@
             },
             "worker": {
                 "resourceType": "sound",
-                "function": "importToBucket",
-                "bucket": "bucketDefault"
-                //"folder": "Sounds/",
-                //"audioGroup": "audiogroup_default",
+                "function": "importToProject",
+                "folder": "Sounds/",
+                "audioGroup": "audiogroup_default",
             },
         },
     ],

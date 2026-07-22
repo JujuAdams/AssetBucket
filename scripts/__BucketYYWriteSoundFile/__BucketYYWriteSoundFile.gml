@@ -4,7 +4,7 @@
 /// @param folderInProject
 /// @param audioGroupName
 
-function __BucketCreateYYSound(_rootDirectory, _sourcePath, _soundName, _folderInProject, _audioGroupName)
+function __BucketYYWriteSoundFile(_rootDirectory, _sourcePath, _soundName, _folderInProject, _audioGroupName)
 {
     var _directory = $"{BUCKET_PROJECT_DIRECTORY}sounds/{_soundName}/";
     var _soundFilename = filename_name(_sourcePath);

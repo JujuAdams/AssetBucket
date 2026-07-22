@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketCreateYYSound",
+  "%Name":"__BucketYYWriteSoundFile",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketCreateYYSound",
+  "name":"__BucketYYWriteSoundFile",
   "parent":{
     "name":"YY",
     "path":"folders/Asset Bucket/(System)/I've kicked the bucket/YY.yy",

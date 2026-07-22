@@ -1,7 +1,7 @@
 {
   "$GMNotes":"v1",
-  "%Name":"Note1",
-  "name":"Note1",
+  "%Name":"AssetBucketConfig",
+  "name":"AssetBucketConfig",
   "parent":{
     "name":"AssetBucket",
     "path":"AssetBucket.yyp",

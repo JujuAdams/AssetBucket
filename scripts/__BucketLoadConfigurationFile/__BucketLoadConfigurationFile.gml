@@ -8,22 +8,17 @@ function __BucketLoadConfigurationFile()
         return false;
     }
     
-    var _configPath = $"{BUCKET_PROJECT_DIRECTORY}{BUCKET_CONFIG_FILENAME}";
+    var _configPath = $"{BUCKET_PROJECT_DIRECTORY}notes/{BUCKET_CONFIG_NOTE_ASSET_NAME}/{BUCKET_CONFIG_NOTE_ASSET_NAME}.txt";
     if (not file_exists(_configPath))
     {
         __BucketTrace($"Could not find configuration file at \"{_configPath}\"");
         
         if (show_question($"Could not find configuration file at \"{_configPath}\".\n \nWould you like to make it now?"))
         {
-            __BucketSaveString(_templateConfig, _configPath);
+            __BucketYYCreateNote(BUCKET_CONFIG_NOTE_ASSET_NAME, _templateConfig);
             
-            if (not file_exists(_configPath))
-            {
-                __BucketError($"Failed to save \"{_configPath}\"");
-                return false;
-            }
-            
-            var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}asset_bucket/";
+            var _templateJSON = json_parse(_templateConfig);
+            var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_templateJSON.rootDirectory}/";
             directory_create($"{_rootDirectory}datafiles");
             directory_create($"{_rootDirectory}sprites");
             directory_create($"{_rootDirectory}sounds");
@@ -55,7 +50,6 @@ function __BucketLoadConfigurationFile()
         if (not BUCKET_ALLOW_LOOSE_JSON)
         {
             __BucketError("Failed to parse configuration file as JSON");
-            
             return false;
         }
         else
@@ -67,16 +61,14 @@ function __BucketLoadConfigurationFile()
             catch(_error)
             {
                 show_debug_message(_error);
-                __BucketError("Failed to parse configuration file as either JSON or Loose JSON");
                 
+                __BucketError("Failed to parse configuration file as either JSON or Loose JSON");
                 return false;
             }
         }
     }
     
     buffer_delete(_buffer);
-    
-    __BucketTrace("Parsed configuration file successfully");
     
     _system.__config = new __BucketClassConfigRoot().__Deserialize(_config);
     

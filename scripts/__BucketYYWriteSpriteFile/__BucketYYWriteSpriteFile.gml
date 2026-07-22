@@ -6,7 +6,7 @@
 /// @param folderInProject
 /// @param textureGroupName
 
-function __BucketCreateYYSprite(_rootDirectory, _framePathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)
+function __BucketYYWriteSpriteFile(_rootDirectory, _framePathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)
 {
     var _directory = $"{BUCKET_PROJECT_DIRECTORY}sprites/{_spriteName}/";
     
