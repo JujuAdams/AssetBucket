@@ -151,7 +151,8 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
     
     static __Save = function(_ingestStruct, _bucketExportArray)
     {
-        var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
+        var _rootDirectory = $"{_system.__currentYYPDirectory}{_ingestStruct.__configStruct.__rootDirectory}";
+        var _datafilesDirectory = $"{_system.__currentYYPDirectory}datafiles/";
         
         //Save OGG files that have been added to the bucket
         var _soundsArray = __soundsArray;
@@ -162,7 +163,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
             var _oggInfo = _queuedOGGArray[_i];
             
             var _filename = __NewExportFilename();
-            file_copy($"{_rootDirectory}{_oggInfo.__path}", $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_filename}");
+            file_copy(_rootDirectory + _oggInfo.__path, _datafilesDirectory + _filename);
             
             array_push(_soundsArray, {
                 format:   BUCKET_AUDIO_FORMAT_OGG,
@@ -195,7 +196,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         buffer_copy(__accumulationBuffer, 0, buffer_tell(__accumulationBuffer), _buffer, buffer_tell(_buffer));
         
         //Save out the buffer and clean up
-        var _filename = $"{BUCKET_PROJECT_DIRECTORY}datafiles/ab_{__hash}_0.ab";
+        var _filename = $"{_datafilesDirectory}ab_{__hash}_0.ab";
         var _size = buffer_tell(__accumulationBuffer) + buffer_tell(_buffer);
         buffer_save_ext(_buffer, _filename, 0, _size);
         

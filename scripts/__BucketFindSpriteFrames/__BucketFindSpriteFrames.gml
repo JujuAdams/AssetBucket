@@ -1,12 +1,11 @@
+/// @param directory
 /// @param path
 
-function __BucketFindSpriteFrames(_path)
+function __BucketFindSpriteFrames(_directory, _path)
 {
     static _system = __BucketSystem();
     
     var _searchString = "_frame0";
-    var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_system.__currentIngestStruct.__configStruct.__rootDirectory}";
-    
     var _array = [_path];
     
     var _framePos = string_pos(_searchString, _path);
@@ -23,7 +22,7 @@ function __BucketFindSpriteFrames(_path)
     while(true)
     {
         var _searchPath = $"{_startString}_frame{_i}{_extension}";
-        if (file_exists(_rootDirectory + _searchPath))
+        if (file_exists(_directory + _searchPath))
         {
             array_push(_array, _searchPath);
             ++_i;

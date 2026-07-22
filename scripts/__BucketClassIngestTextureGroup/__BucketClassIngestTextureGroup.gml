@@ -3,6 +3,8 @@
 
 function __BucketClassIngestTextureGroup(_parent, _name) constructor
 {
+    static _system = __BucketSystem();
+    
     __parent = _parent;
     __name   = _name;
     
@@ -26,7 +28,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
     static __AddTexturePage = function(_surface)
     {
         var _filename = __parent.__NewExportFilename();
-        var _destinationPath = $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_filename}";
+        var _destinationPath = $"{_system.__currentYYPDirectory}datafiles/{_filename}";
         
         if ((__textureFormat == BUCKET_TEXTURE_FORMAT_RAW) || (__textureFormat == BUCKET_TEXTURE_FORMAT_ZLIB))
         {
@@ -116,7 +118,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         }
         
         var _parent = __parent;
-        var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
+        var _rootDirectory = $"{_system.__currentYYPDirectory}{_ingestStruct.__configStruct.__rootDirectory}";
         
         var _textureFormat = __textureFormat;
         var _surfaceWidth  = __textureSize;

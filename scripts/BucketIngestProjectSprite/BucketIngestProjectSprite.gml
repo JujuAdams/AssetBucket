@@ -28,9 +28,10 @@ function BucketIngestProjectSprite(_spriteName, _imagePathArray, _projectFolder,
         _ingestStruct.__EnsureProjectTextureGroup(__textureGroup);
         _ingestStruct.__SetAssetMetadata(__spriteName, __metadata);
         
-        __BucketYYWriteSpriteFile(_rootDirectory, _imagePathArray,
-                               __spriteName, _fileInfo.__GetWidth(), _fileInfo.__GetHeight(),
-                               __projectFolder, __textureGroup);
+        __BucketYYWriteSpriteFile(_system.__currentYYPDirectory, BUCKET_PROJECT_NAME,
+                                  _rootDirectory, _imagePathArray,
+                                  __spriteName, _fileInfo.__GetWidth(), _fileInfo.__GetHeight(),
+                                  __projectFolder, __textureGroup);
     },
     {
         __spriteName:     _spriteName,

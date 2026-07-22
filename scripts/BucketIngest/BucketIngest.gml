@@ -20,7 +20,7 @@ function BucketIngest()
             
             if (show_question($"Could not find configuration file at \"{_configPath}\".\n \nWould you like to make it now?"))
             {
-                __BucketYYCreateNote(BUCKET_CONFIG_NOTE_ASSET_NAME, _templateConfig);
+                __BucketYYCreateNote(BUCKET_PROJECT_DIRECTORY, BUCKET_PROJECT_NAME, BUCKET_CONFIG_NOTE_ASSET_NAME, _templateConfig);
             }
             else
             {

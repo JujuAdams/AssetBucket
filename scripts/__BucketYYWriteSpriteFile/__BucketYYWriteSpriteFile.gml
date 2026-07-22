@@ -1,3 +1,5 @@
+/// @param yypDirectory
+/// @param projectName
 /// @param rootDirectory
 /// @param framePathArray
 /// @param spriteName
@@ -6,9 +8,9 @@
 /// @param folderInProject
 /// @param textureGroupName
 
-function __BucketYYWriteSpriteFile(_rootDirectory, _framePathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)
+function __BucketYYWriteSpriteFile(_yypDirectory, _projectName, _rootDirectory, _framePathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)
 {
-    var _directory = $"{BUCKET_PROJECT_DIRECTORY}sprites/{_spriteName}/";
+    var _directory = $"{_yypDirectory}sprites/{_spriteName}/";
     
     //Generate UUIDs
     var _frameCount = array_length(_framePathArray);
@@ -28,8 +30,8 @@ function __BucketYYWriteSpriteFile(_rootDirectory, _framePathArray, _spriteName,
     //Set the in-project folder path
     if (_folderInProject == "")
     {
-        var _parentName = BUCKET_PROJECT_NAME;
-        var _parentPath = $"{BUCKET_PROJECT_NAME}.yyp";
+        var _parentName = _projectName;
+        var _parentPath = $"{_projectName}.yyp";
     }
     else
     {

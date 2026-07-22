@@ -1,14 +1,16 @@
+/// @param yypDirectory
+/// @param projectName
 /// @param noteName
 /// @param string
 
-function __BucketYYCreateNote(_noteName, _string)
+function __BucketYYCreateNote(_yypDirectory, _projectName, _noteName, _string)
 {
-    var _directory = $"{BUCKET_PROJECT_DIRECTORY}notes/{_noteName}/";
+    var _directory = $"{_yypDirectory}notes/{_noteName}/";
     
     var _yyString = _templateYY;
     _yyString = string_replace_all(_yyString, "%resourceName%", _noteName);
-    _yyString = string_replace_all(_yyString, "%folderName%", BUCKET_PROJECT_NAME);
-    _yyString = string_replace_all(_yyString, "%folderPath%", $"{BUCKET_PROJECT_NAME}.yyp");
+    _yyString = string_replace_all(_yyString, "%folderName%", _projectName);
+    _yyString = string_replace_all(_yyString, "%folderPath%", $"{_projectName}.yyp");
     
     __BucketSaveString(_string, $"{_directory}{_noteName}.txt")
     __BucketSaveString(_yyString, $"{_directory}{_noteName}.yy");

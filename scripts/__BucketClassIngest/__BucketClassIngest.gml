@@ -1,5 +1,7 @@
 function __BucketClassIngest(_configStruct) constructor
 {
+    static _system = __BucketSystem();
+    
     __configStruct = variable_clone(_configStruct);
     
     __bucketArray = [];
@@ -132,7 +134,7 @@ function __BucketClassIngest(_configStruct) constructor
             },
         });
         
-        __BucketSaveString(_json, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{BUCKET_MANIFEST_FILENAME}");
+        __BucketSaveString(_json, $"{_system.__currentYYPDirectory}datafiles/{BUCKET_MANIFEST_FILENAME}");
         __EnsureProjectDatafile(BUCKET_MANIFEST_FILENAME);
         
         //Skip .yyp modification if we have nothing to add

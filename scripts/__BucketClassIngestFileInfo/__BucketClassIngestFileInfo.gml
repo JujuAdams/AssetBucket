@@ -4,7 +4,7 @@ function __BucketClassIngestFileInfo(_filePath) constructor
     
     __sourcePath = _filePath;
     
-    __absolutePath = $"{BUCKET_PROJECT_DIRECTORY}{_system.__currentIngestStruct.__configStruct.__rootDirectory}{__sourcePath}";
+    __absolutePath = $"{_system.__currentYYPDirectory}{_system.__currentIngestStruct.__configStruct.__rootDirectory}{__sourcePath}";
     if (not file_exists(__absolutePath))
     {
         __BucketError($"Could not find \"{__absolutePath}\"");

@@ -24,6 +24,7 @@ function __BucketClassConfigRoot() constructor
     
     static __Collect = function()
     {
+        var _rootDirectory = $"{_system.__currentYYPDirectory}{_system.__currentIngestStruct.__configStruct.__rootDirectory}";
         var _fileArray = __BucketDirectoryFileArray($"{_system.__currentYYPDirectory}{__rootDirectory}");
         
         //Remove anything that doesn't fit the global include mask
@@ -80,7 +81,7 @@ function __BucketClassConfigRoot() constructor
             {
                 if (string_pos("_frame0.", _localPath) > 0)
                 {
-                    _fileArray[@ _i] = __BucketFindSpriteFrames(_localPath);
+                    _fileArray[@ _i] = __BucketFindSpriteFrames(_rootDirectory, _localPath);
                 }
                 else
                 {

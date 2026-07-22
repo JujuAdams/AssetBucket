@@ -1,12 +1,13 @@
-/// @param rootDirectory
+/// @param yypDirectory
+/// @param projectName
 /// @param sourcePath
 /// @param soundName
 /// @param folderInProject
 /// @param audioGroupName
 
-function __BucketYYWriteSoundFile(_rootDirectory, _sourcePath, _soundName, _folderInProject, _audioGroupName)
+function __BucketYYWriteSoundFile(_yypDirectory, _projectName, _sourcePath, _soundName, _folderInProject, _audioGroupName)
 {
-    var _directory = $"{BUCKET_PROJECT_DIRECTORY}sounds/{_soundName}/";
+    var _directory = $"{_yypDirectory}sounds/{_soundName}/";
     var _soundFilename = filename_name(_sourcePath);
     
     //Grab the template and do some basic replacements
@@ -18,8 +19,8 @@ function __BucketYYWriteSoundFile(_rootDirectory, _sourcePath, _soundName, _fold
     //Set the in-project folder path
     if (_folderInProject == "")
     {
-        var _parentName = BUCKET_PROJECT_NAME;
-        var _parentPath = $"{BUCKET_PROJECT_NAME}.yyp";
+        var _parentName = _projectName;
+        var _parentPath = $"{_projectName}.yyp";
     }
     else
     {
@@ -31,7 +32,7 @@ function __BucketYYWriteSoundFile(_rootDirectory, _sourcePath, _soundName, _fold
     _yyString = string_replace_all(_yyString, "%folderName%", _parentName);
     _yyString = string_replace_all(_yyString, "%folderPath%", _parentPath);
     
-    file_copy(_rootDirectory + _sourcePath, $"{_directory}{_soundFilename}");
+    file_copy(_sourcePath, _directory + _soundFilename);
     
     __BucketSaveString(_yyString, $"{_directory}{_soundName}.yy");
     
