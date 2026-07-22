@@ -20,12 +20,16 @@ function BucketIngestExt(_configPath, _yypPath)
     {
         var _configStruct = __BucketLoadConfigurationFile(_configPath);
         
+        var _oldYYPDirectory = __currentYYPDirectory;
         var _oldIngestStruct = __currentIngestStruct;
+        
+        __currentYYPDirectory = $"{filename_dir(GM_project_filename)}/";
         __currentIngestStruct = new __BucketClassIngest(_configStruct);
         
         _configStruct.__Collect();
         __currentIngestStruct.__Ingest();
         
+        __currentYYPDirectory = _oldYYPDirectory;
         __currentIngestStruct = _oldIngestStruct;
         
         return true;

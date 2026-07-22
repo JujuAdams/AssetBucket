@@ -16,10 +16,12 @@ function BucketIngestProjectSound(_soundName, _soundPath, _projectFolder, _audio
     
     _ingestStruct.__QueueProjectOperation(_soundName, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
+        static _system = __BucketSystem();
+        
         var _fileExtension = filename_ext(__soundPath);
         if ((_fileExtension == ".wav") || (_fileExtension == ".wave") || (_fileExtension == ".ogg"))
         {
-            var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
+            var _rootDirectory = $"{_system.__currentYYPDirectory}{_ingestStruct.__configStruct.__rootDirectory}";
             
             _ingestStruct.__EnsureProjectSound(__soundName);
             _ingestStruct.__EnsureProjectFolder(__projectFolder);

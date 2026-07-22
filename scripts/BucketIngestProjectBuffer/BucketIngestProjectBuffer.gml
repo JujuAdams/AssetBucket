@@ -16,13 +16,15 @@ function BucketIngestProjectBuffer(_localPath, _buffer, _offset, _size, _metadat
     
     _ingestStruct.__QueueProjectOperation(_alias, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
+        static _system = __BucketSystem();
+        
         _ingestStruct.__EnsureProjectDatafile(__localPath);
         _ingestStruct.__SetDatafileMetadata(__localPath, __metadata);
         
         //Unnecessary because GameMaker will automatically build its own datafiles index
         //_ingestStruct.__EnsureProjectDatafile(__localPath);
         
-        buffer_save_ext(__buffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{__localPath}", __offset, __size);
+        buffer_save_ext(__buffer, $"{_system.__currentYYPDirectory}datafiles/{__localPath}", __offset, __size);
     },
     {
         __localPath: _localPath,

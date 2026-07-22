@@ -17,6 +17,7 @@ function __BucketSystem()
             
             __fileInfoDict = {};
             __workerFunctionDict = {};
+            __currentYYPDirectory = undefined;
             __currentIngestStruct = undefined;
             
             __runtimeBucketArray = [];

@@ -22,6 +22,8 @@ function BucketIngestBucketSound(_sourcePath, _bucketName, _compress = false, _a
     
     _ingestStruct.__QueueBucketOperation(_alias, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
+        static _system = __BucketSystem();
+        
         _ingestStruct.__SetBucketMetadata(__alias, __metadata);
         
         var _bucketStruct = _ingestStruct.__bucketDict[$ __bucketName];
@@ -37,7 +39,7 @@ function BucketIngestBucketSound(_sourcePath, _bucketName, _compress = false, _a
             }
             else
             {
-                var _buffer = buffer_load($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}");
+                var _buffer = buffer_load($"{_system.__currentYYPDirectory}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}");
                 _bucketStruct.__AddWAV(__sourcePath, __alias, _buffer, 0, __compress);
                 buffer_delete(_buffer);
             }

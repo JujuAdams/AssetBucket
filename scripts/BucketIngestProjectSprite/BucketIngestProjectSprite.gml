@@ -16,9 +16,11 @@ function BucketIngestProjectSprite(_spriteName, _imagePathArray, _projectFolder,
     
     _ingestStruct.__QueueProjectOperation(_spriteName, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
+        static _system = __BucketSystem();
+        
         var _imagePathArray = __BucketEnsureArray(__imagePathArray);
         
-        var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
+        var _rootDirectory = $"{_system.__currentYYPDirectory}{_ingestStruct.__configStruct.__rootDirectory}";
         var _fileInfo = __BucketEnsureIngestFileInfo(_imagePathArray[0]);
         
         _ingestStruct.__EnsureProjectSprite(__spriteName);

@@ -24,7 +24,7 @@ function __BucketClassConfigRoot() constructor
     
     static __Collect = function()
     {
-        var _fileArray = __BucketDirectoryFileArray($"{BUCKET_PROJECT_DIRECTORY}{__rootDirectory}");
+        var _fileArray = __BucketDirectoryFileArray($"{_system.__currentYYPDirectory}{__rootDirectory}");
         
         //Remove anything that doesn't fit the global include mask
         if (array_length(__includeAllPaths) > 0)
