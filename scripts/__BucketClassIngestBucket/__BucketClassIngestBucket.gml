@@ -391,6 +391,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         }
         
         surface_reset_target();
+        gpu_set_blendmode(bm_normal);
         surface_free(_surface);
     }
     

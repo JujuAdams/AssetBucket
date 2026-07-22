@@ -10,7 +10,6 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
     __spriteArray  = [];
     __spriteDict   = {};
     
-    __textureGroup = undefined;
     __ownedBufferArray = [];
     
     __datafileNameArray = [];
@@ -37,9 +36,9 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
             audio_free_buffer_sound(_value);
         });
         
-        if (__textureGroup != undefined)
+        if (texturegroup_exists(__name))
         {
-            texturegroup_delete(__textureGroup);
+            texturegroup_delete(__name);
         }
         
         if (buffer_exists(__mainBuffer))
@@ -191,7 +190,7 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
                 ++_i;
             }
             
-            __textureGroup = texturegroup_add(__name, _textureBufferArray, _textureGroupDesc);
+            texturegroup_add(__name, _textureBufferArray, _textureGroupDesc);
             __spriteArray = texturegroup_get_sprites(__name);
             
             var _spriteArray = __spriteArray;
