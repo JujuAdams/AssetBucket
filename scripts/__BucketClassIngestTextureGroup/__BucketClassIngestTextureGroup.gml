@@ -14,6 +14,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
     
     __textureFormat = BUCKET_TEXTURE_FORMAT_PNG;
     __textureSize   = 2048;
+    __imageBorder   = 2;
     
     
     
@@ -52,6 +53,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         else if (__textureFormat == BUCKET_TEXTURE_FORMAT_PNG)
         {
             surface_save(_surface, _destinationPath);
+            surface_save(_surface, "test.png");
         }
         //else if (__textureFormat == BUCKET_TEXTURE_FORMAT_QOI)
         //{
@@ -123,6 +125,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         var _textureFormat = __textureFormat;
         var _surfaceWidth  = __textureSize;
         var _surfaceHeight = __textureSize;
+        var _imageBorder   = __imageBorder;
         
         var _imagesArray = [];
         var _surfaceCount = 0;
@@ -233,22 +236,22 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                 
                 with(_foundBox)
                 {
-                    if (__height - _imageHeight > _smallestHeight)
+                    if (__height - (_imageHeight + _imageBorder) > _smallestHeight)
                     {
                         array_insert(_boxArray, _foundIndex+1, {
                             __surfaceIndex: __surfaceIndex,
                             __left:         __left,
-                            __top:          __top + _imageHeight,
+                            __top:          __top + _imageHeight + _imageBorder,
                             __width:        __width,
-                            __height:       __height - _imageHeight,
-                            __area:         __width*(__height - _imageHeight),
+                            __height:       __height - (_imageHeight + _imageBorder),
+                            __area:         __width*(__height - (_imageHeight + _imageBorder)),
                         });
                     }
                     
-                    if (__width - _imageWidth > _smallestWidth)
+                    if (__width - (_imageWidth + _imageBorder) > _smallestWidth)
                     {
-                        __left  += _imageWidth;
-                        __width -= _imageWidth;
+                        __left  += _imageWidth + _imageBorder;
+                        __width -= _imageWidth + _imageBorder;
                         __height = _imageHeight;
                         __area   = __width*_imageHeight;
                     }
@@ -263,26 +266,26 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                 with(_imageInfo)
                 {
                     __packIndex = _surfaceCount;
-                    __packX     = 0;
-                    __packY     = 0;
+                    __packX     = _imageBorder;
+                    __packY     = _imageBorder;
                 }
                 
                 array_push(_boxArray, {
                     __surfaceIndex: _surfaceCount,
-                    __left:         _imageWidth,
-                    __top:          0,
-                    __width:        _surfaceWidth - _imageWidth,
+                    __left:         _imageWidth + 2*_imageBorder,
+                    __top:          _imageBorder,
+                    __width:        _surfaceWidth - (_imageWidth + 3*_imageBorder),
                     __height:       _imageHeight,
-                    __area:         _imageHeight*(_surfaceWidth - _imageWidth),
+                    __area:         _imageHeight*(_surfaceWidth - (_imageWidth + 3*_imageBorder)),
                 });
                 
                 array_push(_boxArray, {
                     __surfaceIndex: _surfaceCount,
-                    __left:         0,
-                    __top:          _imageHeight,
-                    __width:        _surfaceWidth,
-                    __height:       _surfaceHeight - _imageHeight,
-                    __area:         _surfaceWidth*(_surfaceHeight - _imageHeight),
+                    __left:         _imageBorder,
+                    __top:          _imageHeight + 2*_imageBorder,
+                    __width:        _surfaceWidth - 2*_imageBorder,
+                    __height:       _surfaceHeight - (_imageHeight + 3*_imageBorder),
+                    __area:         (_surfaceWidth - 2*_imageBorder)*(_surfaceHeight - (_imageHeight + 3*_imageBorder)),
                 });
                 
                 ++_surfaceCount;

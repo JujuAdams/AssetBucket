@@ -1,3 +1,5 @@
+/// @param configStruct
+
 function __BucketClassIngest(_configStruct) constructor
 {
     static _system = __BucketSystem();

@@ -1,3 +1,5 @@
+/// @param path
+
 function __BucketLoadConfigurationFile(_path)
 {
     static _system = __BucketSystem();
