@@ -1,5 +1,7 @@
 function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
 {
+    static _system = __BucketSystem();
+    
     __name     = _bucketName;
     __blobSize = _blobSize;
     
@@ -110,10 +112,10 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
             __BucketError($"Parser expecting an object, got {typeof(_bucketInfoStruct)}\nPath was \"{_path}\"");
         }
         
-        var _version                = _bucketInfoStruct[$ "version"];
-        __datafileDict              = _bucketInfoStruct[$ "datafiles"];
-        var _soundsDefinitionArray  = _bucketInfoStruct[$ "sounds"];
-        var _textureGroupArray      = _bucketInfoStruct[$ "tgroups"];
+        var _version               = _bucketInfoStruct[$ "version"];
+        __datafileDict             = _bucketInfoStruct[$ "datafiles"];
+        var _soundsDefinitionArray = _bucketInfoStruct[$ "sounds"];
+        var _textureGroupArray     = _bucketInfoStruct[$ "tgroups"];
         
         if (_version != BUCKET_CONTENTS_VERSION)
         {
@@ -144,6 +146,7 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
         });
         
         //Set up sounds
+        var _runtimeBucketSoundMap = _system.__runtimeBucketSoundMap;
         var _wavArray = __wavArray;
         var _oggArray = __oggArray;
         var _globalAssetOffset = __globalAssetOffset;
@@ -181,6 +184,7 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
                 }
                 
                 _soundsDict[$ alias] = _sound;
+                _runtimeBucketSoundMap[$ alias] = _sound;
             }
             
             ++_i;

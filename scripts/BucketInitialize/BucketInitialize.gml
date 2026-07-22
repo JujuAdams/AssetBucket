@@ -23,7 +23,14 @@ function BucketInitialize()
                 __BucketError($"Failed to parse JSON in {BUCKET_MANIFEST_PATH}");
             }
             
-            __BucketVariableAssertExactly(_manifest, ["buckets"]);
+            __BucketVariableAssertExactly(_manifest, ["buckets", "metadata"]);
+            var _manifestBucketArray = __BucketVariableAssertArray(_manifest, "buckets");
+            var _metadataStruct      = __BucketVariableAssertStruct(_manifest, "metadata");
+            
+            __BucketVariableAssertExactly(_metadataStruct, ["bucketDatafiles", "projectDatafiles", "assets"]);
+            __metadataBucketDatafileDict  = __BucketVariableAssertStruct(_metadataStruct, "bucketDatafiles");
+            __metadataProjectDatafileDict = __BucketVariableAssertStruct(_metadataStruct, "projectDatafiles");
+            __metadataAssetDict           = __BucketVariableAssertStruct(_metadataStruct, "assets");
             
             var _loadedBucketDict = {};
             var _i = 0;
@@ -50,7 +57,6 @@ function BucketInitialize()
             ds_map_clear(__runtimeBucketSoundMap);
             
             //Create new bucket stubs
-            var _manifestBucketArray = _manifest.buckets;
             var _i = 0;
             repeat(array_length(_manifestBucketArray))
             {

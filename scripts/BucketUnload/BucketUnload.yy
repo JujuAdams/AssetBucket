@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BucketUnload",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BucketUnload",
+  "parent":{
+    "name":"Asset Bucket",
+    "path":"folders/Asset Bucket.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

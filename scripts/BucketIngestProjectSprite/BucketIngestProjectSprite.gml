@@ -21,7 +21,7 @@ function BucketIngestProjectSprite(_spriteName, _imagePathArray, _projectFolder,
         var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
         var _fileInfo = __BucketEnsureIngestFileInfo(_imagePathArray[0]);
         
-        _ingestStruct.__RegisterProjectSprite(_imagePathArray[0], __spriteName);
+        _ingestStruct.__EnsureProjectSprite(__spriteName);
         _ingestStruct.__EnsureProjectFolder(__projectFolder);
         _ingestStruct.__EnsureProjectTextureGroup(__textureGroup);
         _ingestStruct.__SetAssetMetadata(__spriteName, __metadata);

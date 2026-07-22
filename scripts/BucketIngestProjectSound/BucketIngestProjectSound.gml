@@ -21,7 +21,7 @@ function BucketIngestProjectSound(_soundName, _soundPath, _projectFolder, _audio
         {
             var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
             
-            _ingestStruct.__RegisterProjectSound(__soundPath, __soundName);
+            _ingestStruct.__EnsureProjectSound(__soundName);
             _ingestStruct.__EnsureProjectFolder(__projectFolder);
             _ingestStruct.__EnsureProjectAudioGroup(__audioGroup);
             _ingestStruct.__SetAssetMetadata(__soundName, __metadata);

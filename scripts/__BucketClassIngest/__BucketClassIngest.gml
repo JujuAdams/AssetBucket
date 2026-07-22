@@ -45,21 +45,6 @@ function __BucketClassIngest(_configStruct) constructor
         array_push(__queueArray, _deferredFunction);
     }
     
-    static __RegisterProjectDatafile = function(_originalPath, _filename)
-    {
-        __ensureDatafileDict[$ _filename] = true;
-    }
-    
-    static __RegisterProjectSprite = function(_originalPath, _spriteName)
-    {
-        __ensureResourceDict[$ _spriteName] = "sprites";
-    }
-    
-    static __RegisterProjectSound = function(_originalPath, _audioName)
-    {
-        __ensureResourceDict[$ _audioName] = "sounds";
-    }
-    
     static __SetBucketMetadata = function(_alias, _metadata)
     {
         if (_metadata != undefined)
@@ -88,6 +73,16 @@ function __BucketClassIngest(_configStruct) constructor
     {
         //Unnecessary because GameMaker will automatically build its own datafiles index
         //__ensureDatafileDict[$ _filename] = true;
+    }
+    
+    static __EnsureProjectSprite = function(_spriteName)
+    {
+        __ensureResourceDict[$ _spriteName] = "sprites";
+    }
+    
+    static __EnsureProjectSound = function(_audioName)
+    {
+        __ensureResourceDict[$ _audioName] = "sounds";
     }
     
     static __EnsureProjectFolder = function(_projectFolder)
@@ -123,7 +118,8 @@ function __BucketClassIngest(_configStruct) constructor
         var _i = 0;
         repeat(array_length(__bucketArray))
         {
-            __bucketArray[_i].__Save(self, __ensureDatafileDict, _bucketExportArray);
+            var _filename = __bucketArray[_i].__Save(self, _bucketExportArray);
+            __EnsureProjectDatafile(_filename);
             ++_i;
         }
         
@@ -137,7 +133,7 @@ function __BucketClassIngest(_configStruct) constructor
         });
         
         __BucketSaveString(_json, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{BUCKET_MANIFEST_FILENAME}");
-        __ensureDatafileDict[$ BUCKET_MANIFEST_FILENAME] = true;
+        __EnsureProjectDatafile(BUCKET_MANIFEST_FILENAME);
         
         //Skip .yyp modification if we have nothing to add
         if ((struct_names_count(__ensureAudioGroupDict) <= 0)

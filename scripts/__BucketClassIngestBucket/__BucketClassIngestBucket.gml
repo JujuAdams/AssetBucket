@@ -149,7 +149,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         return $"ab_{__hash}_{__fileCount-1}.ab";
     }
     
-    static __Save = function(_ingestStruct, _ensureDatafileDict, _bucketExportArray)
+    static __Save = function(_ingestStruct, _bucketExportArray)
     {
         var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
         
@@ -190,16 +190,14 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
             datafiles: __datafilesDict,
             sounds:    __soundsArray,
             tgroups:   _textureGroupArray,
-            fileCount: __fileCount,
+            fileCount: int64(__fileCount),
         }));
         buffer_copy(__accumulationBuffer, 0, buffer_tell(__accumulationBuffer), _buffer, buffer_tell(_buffer));
         
         //Save out the buffer and clean up
-        var _filename = __BucketGetDatafilesName(__name);
-        _ensureDatafileDict[$ _filename] = true;
-        
+        var _filename = $"{BUCKET_PROJECT_DIRECTORY}datafiles/ab_{__hash}_0.ab";
         var _size = buffer_tell(__accumulationBuffer) + buffer_tell(_buffer);
-        buffer_save_ext(_buffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/ab_{__hash}_0.ab", 0, _size);
+        buffer_save_ext(_buffer, _filename, 0, _size);
         
         buffer_delete(_buffer);
         buffer_delete(__accumulationBuffer);
@@ -208,5 +206,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
             name:     __name,
             blobSize: int64(_size),
         });
+        
+        return _filename;
     }
 }

@@ -22,7 +22,7 @@ function BucketIngestProjectDatafile(_sourcePath, _destinationPath = undefined, 
     
     _ingestStruct.__QueueProjectOperation(_sourcePath, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
-        _ingestStruct.__RegisterProjectDatafile(__sourcePath);
+        _ingestStruct.__EnsureProjectDatafile(__sourcePath);
         _ingestStruct.__SetDatafileMetadata(__alias, __metadata);
         
         //Unnecessary because GameMaker will automatically build its own datafiles index

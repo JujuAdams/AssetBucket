@@ -76,7 +76,6 @@ function __BucketLoadConfigurationFile()
     
     buffer_delete(_buffer);
     
-    show_debug_message(json_stringify(_config, true));
     __BucketTrace("Parsed configuration file successfully");
     
     _system.__config = new __BucketClassConfigRoot().__Deserialize(_config);

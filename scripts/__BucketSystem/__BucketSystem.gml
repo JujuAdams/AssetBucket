@@ -23,8 +23,11 @@ function __BucketSystem()
             __runtimeBucketMap   = ds_map_create();
             
             __runtimeBucketDatafileMap = ds_map_create();
-            __runtimeBucketSpriteMap   = ds_map_create();
             __runtimeBucketSoundMap    = ds_map_create();
+            
+            __metadataBucketDatafileDict  = {};
+            __metadataProjectDatafileDict = {};
+            __metadataAssetDict           = {};
             
             return self;
         }
