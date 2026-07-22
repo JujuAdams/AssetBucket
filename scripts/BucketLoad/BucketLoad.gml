@@ -1,6 +1,12 @@
-function BucketUnload(_bucketName)
+function BucketLoad(_bucketName)
 {
-    static _runtimeBucketMap = __BucketSystem().__runtimeBucketMap;
+    static _system = __BucketSystem();
+    static _runtimeBucketMap = _system.__runtimeBucketMap;
+    
+    if (not _system.__manifestLoaded)
+    {
+        __BucketError("Please call `BucketLoadManifest()` before `BucketLoad()`");
+    }
     
     var _bucket = _runtimeBucketMap[? _bucketName];
     
@@ -9,5 +15,5 @@ function BucketUnload(_bucketName)
         __BucketError($"Bucket \"{_bucketName}\" not found");
     }
     
-    _bucket.__Unload();
+    _bucket.__Load();
 }

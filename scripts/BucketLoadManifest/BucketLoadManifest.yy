@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BucketGetExists",
+  "%Name":"BucketLoadManifest",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BucketGetExists",
+  "name":"BucketLoadManifest",
   "parent":{
     "name":"Buckets",
     "path":"folders/Asset Bucket/Buckets.yy",

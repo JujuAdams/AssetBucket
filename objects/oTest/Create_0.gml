@@ -1,5 +1,5 @@
 BucketIngest();
-BucketInitialize();
+BucketLoadManifest();
 
 BucketLoad("bucketDefault");
 texturegroup_load("bucketDefault");

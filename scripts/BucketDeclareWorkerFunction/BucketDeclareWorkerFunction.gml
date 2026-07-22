@@ -5,7 +5,7 @@
 /// @param name
 /// @param callback
 
-function BucketSetWorkerFunction(_name, _callback)
+function BucketDeclareWorkerFunction(_name, _callback)
 {
     static _workerFunctionDict = __BucketSystem().__workerFunctionDict;
     

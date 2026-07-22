@@ -2,7 +2,7 @@ function __BucketDeclareDefaultWorkerFunctions()
 {
     static _once = (function()
     {
-        BucketSetWorkerFunction("importToBucket", function(_filePath, _workerInfo)
+        BucketDeclareWorkerFunction("importToBucket", function(_filePath, _workerInfo)
         {
             __BucketVariableAssertString(_workerInfo, "function");
             __BucketVariableAssertString(_workerInfo, "resourceType");
@@ -37,7 +37,7 @@ function __BucketDeclareDefaultWorkerFunctions()
             }
         });
         
-        BucketSetWorkerFunction("importToProject", function(_filePath, _workerInfo)
+        BucketDeclareWorkerFunction("importToProject", function(_filePath, _workerInfo)
         {
             __BucketVariableAssertString(_workerInfo, "function");
             __BucketVariableAssertString(_workerInfo, "resourceType");

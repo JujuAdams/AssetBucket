@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BucketSetWorkerFunction",
+  "%Name":"BucketDeclareWorkerFunction",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BucketSetWorkerFunction",
+  "name":"BucketDeclareWorkerFunction",
   "parent":{
     "name":"Pipeline",
     "path":"folders/Asset Bucket/Pipeline.yy",

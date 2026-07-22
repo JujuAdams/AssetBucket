@@ -1,7 +1,7 @@
 if (keyboard_check_pressed(vk_f5))
 {
     BucketIngest();
-    BucketInitialize();
+    BucketLoadManifest();
     
     BucketLoad("bucketDefault");
     texturegroup_load("bucketDefault");

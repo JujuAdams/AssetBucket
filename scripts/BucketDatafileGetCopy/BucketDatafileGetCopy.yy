@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BucketDatafileGetCopy",
   "parent":{
-    "name":"Bucket Datafiles",
-    "path":"folders/Asset Bucket/Bucket Datafiles.yy",
+    "name":"Datafiles",
+    "path":"folders/Asset Bucket/Buckets/Datafiles.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

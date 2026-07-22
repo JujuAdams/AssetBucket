@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BucketDatafileGetString",
+  "%Name":"BucketPackedDatafileGetMetadata",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BucketDatafileGetString",
+  "name":"BucketPackedDatafileGetMetadata",
   "parent":{
     "name":"Datafiles",
     "path":"folders/Asset Bucket/Buckets/Datafiles.yy",

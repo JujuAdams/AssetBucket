@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BucketGetLoaded",
   "parent":{
-    "name":"Asset Bucket",
-    "path":"folders/Asset Bucket.yy",
+    "name":"Buckets",
+    "path":"folders/Asset Bucket/Buckets.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

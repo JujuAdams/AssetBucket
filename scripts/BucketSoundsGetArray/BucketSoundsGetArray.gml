@@ -1,4 +1,6 @@
-function BucketDatafilesUnload(_bucketName)
+/// @param bucketName
+
+function BucketSoundsGetArray(_bucketName)
 {
     static _runtimeBucketMap = __BucketSystem().__runtimeBucketMap;
     
@@ -9,5 +11,10 @@ function BucketDatafilesUnload(_bucketName)
         __BucketError($"Bucket \"{_bucketName}\" not found");
     }
     
-    _bucket.__Unload();
+    if (not _bucket.__loaded)
+    {
+        __BucketError($"Bucket \"{_bucketName}\" not loaded");
+    }
+    
+    return _bucket.__soundNameArray;
 }

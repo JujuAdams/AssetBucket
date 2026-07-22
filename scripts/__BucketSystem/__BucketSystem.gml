@@ -13,7 +13,7 @@ function __BucketSystem()
                 global.__Bucket = self;
             }
             
-            __config = undefined;
+            __manifestLoaded = false;
             
             __fileInfoDict = {};
             __workerFunctionDict = {};

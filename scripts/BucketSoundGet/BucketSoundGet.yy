@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"BucketInitialize",
+  "%Name":"BucketSoundGet",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BucketInitialize",
+  "name":"BucketSoundGet",
   "parent":{
-    "name":"Asset Bucket",
-    "path":"folders/Asset Bucket.yy",
+    "name":"Sounds",
+    "path":"folders/Asset Bucket/Buckets/Sounds.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
