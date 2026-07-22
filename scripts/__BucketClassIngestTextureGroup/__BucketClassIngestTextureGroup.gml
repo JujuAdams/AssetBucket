@@ -158,22 +158,30 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                 var _path = _rootDirectory + _imagePathArray[_j];
                 var _sprite = __BucketAddSprite(_path);
                 
-                var _width  = sprite_get_width(_sprite);
-                var _height = sprite_get_height(_sprite);
+                var _bboxLeft   = sprite_get_bbox_left(_sprite);
+                var _bboxTop    = sprite_get_bbox_top(_sprite);
+                var _bboxRight  = sprite_get_bbox_right(_sprite);
+                var _bboxBottom = sprite_get_bbox_bottom(_sprite);
+                var _bboxWidth  = 1 + _bboxRight - _bboxLeft;
+                var _bboxHeight = 1 + _bboxBottom - _bboxTop;
                 
                 if (_j == 0)
                 {
-                    _spriteDesc.width  = _width;
-                    _spriteDesc.height = _height;
+                    _spriteDesc.width  = sprite_get_width(_sprite);
+                    _spriteDesc.height = sprite_get_height(_sprite);
                 }
                 
-                _smallestWidth  = min(_smallestWidth,  _width );
-                _smallestHeight = min(_smallestHeight, _height);
+                _smallestWidth  = min(_smallestWidth,  _bboxWidth );
+                _smallestHeight = min(_smallestHeight, _bboxHeight);
                 
                 var _frameDesc = {
                     __sprite: _sprite,
-                    w: _width,
-                    h: _height,
+                    w: _bboxWidth,
+                    h: _bboxHeight,
+                    x_offset: _bboxLeft,
+                    y_offset: _bboxTop,
+                    crop_width: _bboxWidth, //Don't know why we need this as well as w/h above
+                    crop_height: _bboxHeight,
                 };
                 
                 array_push(_frameDescArray,      _frameDesc);
@@ -222,7 +230,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                 if ((_imageWidth <= _box.__width) && (_imageHeight <= _box.__height))
                 {
                     var _coverage = _imageArea / _box.__area;
-                    if (_coverage > _foundCoverage)
+                    if (_coverage >= _foundCoverage) //Use an equality here to deal with floating point errors
                     {
                         _foundBox      = _box;
                         _foundIndex    = _j;
@@ -322,7 +330,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                 {
                     if (_currentIndex != undefined)
                     {
-                        __AddTexturePage(_surface);
+                        other.__AddTexturePage(_surface);
                     }
                     
                     _currentIndex = tp;
@@ -330,7 +338,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                     draw_clear_alpha(c_black, 0);
                 }
                 
-                draw_sprite(__sprite, 0, x, y);
+                draw_sprite(__sprite, 0, x - x_offset, y - y_offset);
                 draw_flush();
                 
                 sprite_delete(__sprite);
