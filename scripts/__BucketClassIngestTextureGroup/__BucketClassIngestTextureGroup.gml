@@ -119,19 +119,24 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
             };
         }
         
-        var _parent = __parent;
         var _rootDirectory = $"{_system.__currentYYPDirectory}{_ingestStruct.__configStruct.__rootDirectory}";
         
-        var _textureFormat = __textureFormat;
         var _surfaceWidth  = __textureSize;
         var _surfaceHeight = __textureSize;
         var _imageBorder   = __imageBorder;
         
-        var _imagesArray = [];
         var _surfaceCount = 0;
+        
+        var _totalFrameDescArray = [];
         
         var _smallestWidth  = infinity;
         var _smallestHeight = infinity;
+        
+        var _textureGroupDesc = {
+            sprites: {},
+        };
+        
+        var _spritesDict = _textureGroupDesc.sprites;
         
         var _i = 0;
         repeat(array_length(__queuedSprites))
@@ -143,6 +148,10 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
             
             var _boxArray = [];
             
+            var _spriteDesc = { frames: [] };
+            _spritesDict[$ _alias] = _spriteDesc;
+            
+            var _frameDescArray = _spriteDesc.frames;
             var _j = 0;
             repeat(array_length(_imagePathArray))
             {
@@ -152,26 +161,23 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                 var _width  = sprite_get_width(_sprite);
                 var _height = sprite_get_height(_sprite);
                 
+                if (_j == 0)
+                {
+                    _spriteDesc.width  = _width;
+                    _spriteDesc.height = _height;
+                }
+                
                 _smallestWidth  = min(_smallestWidth,  _width );
                 _smallestHeight = min(_smallestHeight, _height);
                 
-                array_push(_imagesArray, {
-                    __alias:      _alias,
-                    __path:       _path,
-                    __sprite:     _sprite,
-                    __width:      _width,
-                    __height:     _height,
-                    //__bboxLeft:   sprite_get_bbox_left(_sprite),
-                    //__bboxTop:    sprite_get_bbox_top(_sprite),
-                    //__bboxRight:  sprite_get_bbox_right(_sprite),
-                    //__bboxBottom: sprite_get_bbox_bottom(_sprite),
-                    //__bboxWidth:  sprite_get_bbox_right(_sprite) - sprite_get_bbox_left(_sprite),
-                    //__bboxHeight: sprite_get_bbox_bottom(_sprite) - sprite_get_bbox_top(_sprite),
-                    
-                    __packIndex: undefined,
-                    __packX:     undefined,
-                    __packY:     undefined,
-                });
+                var _frameDesc = {
+                    __sprite: _sprite,
+                    w: _width,
+                    h: _height,
+                };
+                
+                array_push(_frameDescArray,      _frameDesc);
+                array_push(_totalFrameDescArray, _frameDesc);
                 
                 ++_j;
             }
@@ -183,24 +189,26 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         if (is_infinity(_smallestWidth)) _smallestWidth = 1;
         if (is_infinity(_smallestHeight)) _smallestHeight = 1;
         
-        array_sort(_imagesArray, function(_a, _b)
+        array_sort(_totalFrameDescArray, function(_a, _b)
         {
-            var _sign = sign(_b.__height - _a.__height);
+            //Sort by height first
+            var _sign = sign(_b.h - _a.h);
             
             if (_sign == 0)
             {
-                _sign = sign(_b.__width - _a.__width);
+                //Then width
+                _sign = sign(_b.w - _a.w);
             }
             
             return _sign;
         });
         
         var _i = 0;
-        repeat(array_length(_imagesArray))
+        repeat(array_length(_totalFrameDescArray))
         {
-            var _imageInfo   = _imagesArray[_i];
-            var _imageWidth  = _imageInfo.__width;
-            var _imageHeight = _imageInfo.__height;
+            var _frameDesc   = _totalFrameDescArray[_i];
+            var _imageWidth  = _frameDesc.w;
+            var _imageHeight = _frameDesc.h;
             var _imageArea   = _imageWidth*_imageHeight;
             
             var _foundBox      = undefined;;
@@ -227,11 +235,11 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
             
             if (_foundBox != undefined)
             {
-                with(_imageInfo)
+                with(_frameDesc)
                 {
-                    __packIndex = _foundBox.__surfaceIndex;
-                    __packX     = _foundBox.__left;
-                    __packY     = _foundBox.__top;
+                    x  = _foundBox.__left;
+                    y  = _foundBox.__top;
+                    tp = _foundBox.__surfaceIndex;
                 }
                 
                 with(_foundBox)
@@ -263,11 +271,11 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
             }
             else
             {
-                with(_imageInfo)
+                with(_frameDesc)
                 {
-                    __packIndex = _surfaceCount;
-                    __packX     = _imageBorder;
-                    __packY     = _imageBorder;
+                    x  = _imageBorder;
+                    y  = _imageBorder;
+                    tp = _surfaceCount;
                 }
                 
                 array_push(_boxArray, {
@@ -294,9 +302,9 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
             ++_i;
         }
         
-        array_sort(_imagesArray, function(_a, _b)
+        array_sort(_totalFrameDescArray, function(_a, _b)
         {
-            return sign(_a.__packIndex - _b.__packIndex);
+            return sign(_a.tp - _b.tp);
         });
         
         var _currentIndex = undefined;
@@ -305,41 +313,28 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         surface_set_target(_surface);
         gpu_set_blendmode_ext(bm_one, bm_zero);
         
-        var _textureGroupDesc = {
-            sprites: {},
-        };
-        
-        var _spritesDict = _textureGroupDesc.sprites;
         var _i = 0;
-        repeat(array_length(_imagesArray))
+        repeat(array_length(_totalFrameDescArray))
         {
-            with(_imagesArray[_i])
+            with(_totalFrameDescArray[_i])
             {
-                if (__packIndex != _currentIndex)
+                if (tp != _currentIndex)
                 {
                     if (_currentIndex != undefined)
                     {
                         __AddTexturePage(_surface);
                     }
                     
-                    _currentIndex = __packIndex;
+                    _currentIndex = tp;
                     
                     draw_clear_alpha(c_black, 0);
                 }
                 
-                draw_sprite(__sprite, 0, __packX, __packY);
+                draw_sprite(__sprite, 0, x, y);
+                draw_flush();
                 
-                _spritesDict[$ __alias] = {
-                    width: __width,
-                    height: __height,
-                    frames: [
-                        {
-                            x: __packX,
-                            y: __packY,
-                            tp: _currentIndex,
-                        },
-                    ],
-                };
+                sprite_delete(__sprite);
+                struct_remove(self, "__sprite");
             }
             
             ++_i;
