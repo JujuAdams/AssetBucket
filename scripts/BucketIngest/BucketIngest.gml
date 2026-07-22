@@ -25,7 +25,7 @@ function BucketIngest()
                     var _spriteName = filename_change_ext(filename_name(_filePath), "");
                 }
                 
-                BucketIngestBucketSprite(_filePath, _workerInfo.bucket, _spriteName);
+                BucketIngestBucketSprite(_filePath, _workerInfo.bucket, _spriteName, _workerInfo[$ "textureGroup"]);
             }
             else if (_type == "sound")
             {

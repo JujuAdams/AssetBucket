@@ -5,6 +5,7 @@
     "buckets": [
         {
             "name": "bucketDefault",
+            "textureFormat": "zlib",
         },
     ],
 

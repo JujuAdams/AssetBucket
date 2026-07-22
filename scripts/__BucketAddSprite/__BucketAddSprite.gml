@@ -19,14 +19,14 @@ function __BucketAddSprite(_absolutePath)
         }
         
         var _destinationPath = $"{game_save_id}convert.png";
-        var _batchPath = $"{game_save_id}convert_psd.bat";
+        var _batchPath = $"{game_save_id}convert_psd_to_png.bat";
         
         file_delete(_batchPath);
         file_delete(_destinationPath);
         
         var _batchFileString = string_join("\n",
         "@echo off",
-        $"echo Converting {_absolutePath}",
+        $"echo Converting {_absolutePath} from PSD to PNG",
         $"\"{BUCKET_IMAGEMAGICK_PATH}\" \"{_absolutePath}\"[0] \"{_destinationPath}\"");
         
         __BucketSaveString(_batchFileString, _batchPath);

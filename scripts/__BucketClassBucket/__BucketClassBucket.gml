@@ -111,8 +111,7 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         var _version                = _bucketInfoStruct[$ "version"];
         __datafileDict              = _bucketInfoStruct[$ "datafiles"];
         var _soundsDefinitionArray  = _bucketInfoStruct[$ "sounds"];
-        var _texturePageArray       = _bucketInfoStruct[$ "tpages"];
-        var _textureGroupDesc       = _bucketInfoStruct[$ "tgroup"];
+        var _textureGroupArray      = _bucketInfoStruct[$ "tgroups"];
         
         if (_version != BUCKET_CONTENTS_VERSION)
         {
@@ -129,14 +128,9 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
             __BucketError($"\"{_path}\" `.sounds` not an array, got {typeof(_soundsDefinitionArray)}");
         }
         
-        if (not is_array(_texturePageArray))
+        if (not is_array(_textureGroupArray))
         {
-            __BucketError($"\"{_path}\" `.tpages` not an array, got {typeof(_texturePageArray)}");
-        }
-        
-        if (not is_struct(_textureGroupDesc))
-        {
-            __BucketError($"\"{_path}\" `.tgroup` not an object, got {typeof(_textureGroupDesc)}");
+            __BucketError($"\"{_path}\" `.tpages` not an array, got {typeof(_textureGroupArray)}");
         }
         
         //Set up sounds
@@ -174,24 +168,80 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         }
         
         //Create sprites as necessary
-        if (array_length(_texturePageArray) > 0)
+        if (array_length(_textureGroupArray) > 0)
         {
-            var _textureBufferArray = array_create(array_length(_texturePageArray), undefined);
             var _i = 0;
-            repeat(array_length(_texturePageArray))
+            repeat(array_length(_textureGroupArray))
             {
-                var _texturePageInfo = _texturePageArray[_i];
+                var _tgroupInfo = _textureGroupArray[_i];
+                var _tgroupName          = _tgroupInfo.name;
+                var _tgroupFormat        = _tgroupInfo.format;
+                var _tgroupPagePathArray = _tgroupInfo.tpages;
+                var _tgroupDescription   = _tgroupInfo.description;
                 
-                var _textureBuffer = buffer_create(_texturePageInfo.size, buffer_fixed, 1);
-                buffer_copy(_buffer, _texturePageInfo.offset + __globalAssetOffset, _texturePageInfo.size, _textureBuffer, 0);
-                _textureBufferArray[@ _i] = _textureBuffer;
-                array_push(__ownedBufferArray, _textureBuffer);
+                var _tgroupBufferArray = [];
+                
+                if (_tgroupFormat == BUCKET_TEXTURE_FORMAT_ZLIB)
+                {
+                    var _j = 0;
+                    repeat(array_length(_tgroupPagePathArray))
+                    {
+                        var _path = _tgroupPagePathArray[_j];
+                        if (not file_exists(_path))
+                        {
+                            __BucketError($"Could not find \"{_path}\"");
+                        }
+                        
+                        var _compressedBuffer = buffer_load(_path);
+                        if (not buffer_exists(_compressedBuffer))
+                        {
+                            __BucketError($"Failed to load \"{_path}\"");
+                        }
+                        
+                        var _textureBuffer = buffer_decompress(_compressedBuffer);
+                        if (not buffer_exists(_textureBuffer))
+                        {
+                            __BucketError($"Failed to decompress \"{_path}\" using Zlib");
+                        }
+                        
+                        buffer_delete(_compressedBuffer);
+                        
+                        _tgroupBufferArray[@ _j] = _textureBuffer;
+                        array_push(__ownedBufferArray, _textureBuffer);
+                        
+                        ++_j;
+                    }
+                }
+                else
+                {
+                    var _j = 0;
+                    repeat(array_length(_tgroupPagePathArray))
+                    {
+                        var _path = _tgroupPagePathArray[_j];
+                        if (not file_exists(_path))
+                        {
+                            __BucketError($"Could not find \"{_path}\"");
+                        }
+                        
+                        var _textureBuffer = buffer_load(_path);
+                        if (not buffer_exists(_textureBuffer))
+                        {
+                            __BucketError($"Failed to load \"{_path}\"");
+                        }
+                        
+                        _tgroupBufferArray[@ _j] = _textureBuffer;
+                        array_push(__ownedBufferArray, _textureBuffer);
+                        
+                        ++_j;
+                    }
+                }
+                
+                texturegroup_add(_tgroupName, _tgroupBufferArray, _tgroupDescription);
+                var _tgroupSpriteArray = texturegroup_get_sprites(_tgroupName);
+                array_copy(__spriteArray, array_length(__spriteArray), _tgroupSpriteArray, 0, array_length(_tgroupSpriteArray));
                 
                 ++_i;
             }
-            
-            texturegroup_add(__name, _textureBufferArray, _textureGroupDesc);
-            __spriteArray = texturegroup_get_sprites(__name);
             
             var _spriteArray = __spriteArray;
             var _spriteDict  = __spriteDict;

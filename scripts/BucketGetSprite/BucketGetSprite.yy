@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BucketGetSprite",
   "parent":{
-    "name":"Asset Bucket",
-    "path":"folders/Asset Bucket.yy",
+    "name":"Sprites & Texture Groups",
+    "path":"folders/Asset Bucket/Sprites & Texture Groups.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

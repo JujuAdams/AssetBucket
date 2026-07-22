@@ -1,9 +1,10 @@
 /// @param imagePathArray
 /// @param bucketName
 /// @param [alias=sourcePath]
+/// @param [textureGroup=bucketName]
 /// @param [metadata]
 
-function BucketIngestBucketSprite(_imagePathArray, _bucketName, _alias = undefined, _metadata = undefined)
+function BucketIngestBucketSprite(_imagePathArray, _bucketName, _alias = undefined, _textureGroup = _bucketName, _metadata = undefined)
 {
     static _system = __BucketSystem();
     
@@ -28,13 +29,14 @@ function BucketIngestBucketSprite(_imagePathArray, _bucketName, _alias = undefin
         }
         else
         {
-            _bucketStruct.__AddSprite(__imagePathArray, __alias);
+            _bucketStruct.__AddSprite(__textureGroup, __imagePathArray, __alias);
         }
     },
     {
-        __alias:          _alias,
         __imagePathArray: _imagePathArray,
         __bucketName:     _bucketName,
+        __alias:          _alias,
+        __textureGroup:   _textureGroup,
         __metadata:       _metadata,
     }));
 }
