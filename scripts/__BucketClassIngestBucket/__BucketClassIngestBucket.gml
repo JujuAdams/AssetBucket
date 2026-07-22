@@ -10,11 +10,16 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
     __textureSize   = _textureSize;
     __textureFormat = _textureFormat;
     
+    __hash = md5_string_utf8(__name);
+    
     __accumulationBuffer = buffer_create(1024*1024, buffer_grow, 1);
     
     __datafilesDict    = {};
     __soundsArray      = [];
     __textureGroupDict = {};
+    
+    __queuedOGGArray = [];
+    __fileCount = 1;
     
     
     
@@ -42,6 +47,14 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         }
         
         _textureGroup.__AddSprite(_imagePathArray, _alias);
+    }
+    
+    static __AddOGG = function(_sourcePath, _alias)
+    {
+        array_push(__queuedOGGArray, {
+            __path: _sourcePath,
+            __alias: _alias,
+        });
     }
     
     static __AddWAV = function(_sourcePath, _alias, _buffer, _offset, _compress)
@@ -117,7 +130,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         }
         
         array_push(__soundsArray, {
-            format:      "wav",
+            format:      BUCKET_AUDIO_FORMAT_WAV,
             alias:       _alias,
             offset:      int64(buffer_tell(_accumulationBuffer)),
             size:        int64(_bucketSize),
@@ -130,8 +143,38 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         buffer_seek(_accumulationBuffer, buffer_seek_relative, _bucketSize);
     }
     
+    static __NewExportFilename = function()
+    {
+        ++__fileCount;
+        return $"ab_{__hash}_{__fileCount-1}.ab";
+    }
+    
     static __Save = function(_ingestStruct, _ensureDatafileDict, _bucketExportArray)
     {
+        var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}";
+        
+        //Save OGG files that have been added to the bucket
+        var _soundsArray = __soundsArray;
+        var _queuedOGGArray = __queuedOGGArray;
+        var _i = 0;
+        repeat(array_length(_queuedOGGArray))
+        {
+            var _oggInfo = _queuedOGGArray[_i];
+            
+            var _filename = __BucketGetDatafilesName(_oggInfo.__path);
+            file_copy($"{_rootDirectory}{_oggInfo.__path}", $"{BUCKET_PROJECT_DIRECTORY}datafiles/{__NewExportFilename()}");
+            
+            array_push(_soundsArray, {
+                format:   BUCKET_AUDIO_FORMAT_OGG,
+                alias:    _oggInfo.__alias,
+                filename: _filename,
+            });
+            
+            ++__fileCount;
+            ++_i;
+        }
+        
+        //Create texture groups for sprites added to the bucket
         var _textureGroupArray = [];
         var _namesArray = struct_get_names(__textureGroupDict);
         var _i = 0;
@@ -141,20 +184,23 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
             ++_i;
         }
         
-        var _filename = __BucketGetDatafilesName(__name);
-        _ensureDatafileDict[$ _filename] = true;
-        
+        //Create a header and add it to the accumulated data
         var _buffer = buffer_create(1024*1024, buffer_grow, 1);
         buffer_write(_buffer, buffer_string, json_stringify({
-            version:    int64(BUCKET_CONTENTS_VERSION),
-            datafiles:  __datafilesDict,
-            sounds:     __soundsArray,
-            tgroups:    _textureGroupArray,
+            version:   int64(BUCKET_CONTENTS_VERSION),
+            datafiles: __datafilesDict,
+            sounds:    __soundsArray,
+            tgroups:   _textureGroupArray,
+            fileCount: __fileCount,
         }));
         buffer_copy(__accumulationBuffer, 0, buffer_tell(__accumulationBuffer), _buffer, buffer_tell(_buffer));
         
+        //Save out the buffer and clean up
+        var _filename = __BucketGetDatafilesName(__name);
+        _ensureDatafileDict[$ _filename] = true;
+        
         var _size = buffer_tell(__accumulationBuffer) + buffer_tell(_buffer);
-        buffer_save_ext(_buffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_filename}", 0, _size);
+        buffer_save_ext(_buffer, $"{BUCKET_PROJECT_DIRECTORY}datafiles/ab_{__hash}_0.ab", 0, _size);
         
         buffer_delete(_buffer);
         buffer_delete(__accumulationBuffer);

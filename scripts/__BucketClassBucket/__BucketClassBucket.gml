@@ -10,8 +10,9 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
     __spriteArray  = [];
     __spriteDict   = {};
     
-    __ownedBufferArray = [];
-    
+    __ownedBufferArray  = [];
+    __wavArray          = [];
+    __oggArray          = [];
     __datafileNameArray = [];
     __soundNameArray    = [];
     
@@ -31,10 +32,8 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         if (not __loaded) return;
         __loaded = false;
         
-        struct_foreach(__soundsDict, function(_variable_UNUSED, _value)
-        {
-            audio_free_buffer_sound(_value);
-        });
+        array_foreach(__wavArray, audio_free_buffer_sound);
+        array_foreach(__oggArray, audio_destroy_stream);
         
         if (texturegroup_exists(__name))
         {
@@ -54,17 +53,20 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
             ++_i;
         }
         
-        array_resize(__ownedBufferArray, 0);
-        
         __datafileDict = {};
         __soundsDict   = {};
-        __spritesDict  = {};
+        __spriteArray  = [];
+        __spriteDict   = {};
         
-        array_resize(__datafileNameArray, 0);
-        array_resize(__soundNameArray,    0);
-        array_resize(__spriteNameArray,   0);
-    
+        __ownedBufferArray  = [];
+        __wavArray          = [];
+        __oggArray          = [];
+        __datafileNameArray = [];
+        __soundNameArray    = [];
+        
         __globalAssetOffset = 0;
+        
+        __loaded = false;
     }
     
     static __Load = function()
@@ -134,6 +136,8 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         }
         
         //Set up sounds
+        var _wavArray = __wavArray;
+        var _oggArray = __oggArray;
         var _globalAssetOffset = __globalAssetOffset;
         var _soundsDict = __soundsDict;
         var _i = 0;
@@ -141,7 +145,7 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         {
             with(_soundsDefinitionArray[_i])
             {
-                if (format == "wav")
+                if (format == BUCKET_AUDIO_FORMAT_WAV)
                 {
                     if (compressed)
                     {
@@ -159,6 +163,13 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
                     {
                         var _sound = audio_create_buffer_sound(_buffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, _globalAssetOffset + offset, size, (channels == 2)? audio_stereo : audio_mono);
                     }
+                    
+                    array_push(_wavArray, _sound);
+                }
+                else if (format == BUCKET_AUDIO_FORMAT_OGG)
+                {
+                    var _sound = audio_create_stream(filename);
+                    array_push(_oggArray, _sound);
                 }
                 
                 _soundsDict[$ alias] = _sound;

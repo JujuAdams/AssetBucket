@@ -15,7 +15,7 @@ function BucketIngestBucketSound(_sourcePath, _bucketName, _compress = false, _a
     }
     
     var _fileExtension = filename_ext(_sourcePath);
-    if (_fileExtension != ".wav")
+    if ((_fileExtension != ".wav") && (_fileExtension != ".wave") && (_fileExtension != ".ogg"))
     {
         __BucketError($"Audio file extension \"{_fileExtension}\" not supported by `BucketIngestBucketSound()`\nPath was \"{_sourcePath}\"");
     }
@@ -32,9 +32,16 @@ function BucketIngestBucketSound(_sourcePath, _bucketName, _compress = false, _a
         }
         else
         {
-            var _buffer = buffer_load($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}");
-            _bucketStruct.__AddWAV(__sourcePath, __alias, _buffer, 0, __compress);
-            buffer_delete(_buffer);
+            if (filename_ext(__sourcePath) == ".ogg")
+            {
+                _bucketStruct.__AddOGG(__sourcePath, __alias);
+            }
+            else
+            {
+                var _buffer = buffer_load($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}");
+                _bucketStruct.__AddWAV(__sourcePath, __alias, _buffer, 0, __compress);
+                buffer_delete(_buffer);
+            }
         }
     },
     {

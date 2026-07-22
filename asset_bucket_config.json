@@ -11,6 +11,7 @@
 
     "tasks": [
         {
+            "enable": false,
             "include": {
                 "path": "datafiles/*",
             },
@@ -21,6 +22,7 @@
             },
         },
         {
+            "enable": false,
             "include": {
                 "path": ["sprites/*.png", "sprites/*.psd"],
             },
@@ -33,15 +35,15 @@
             },
         },
         {
-            "enable": false,
             "include": {
                 "path": ["sounds/*.wav", "sounds/*.ogg"],
             },
             "worker": {
                 "resourceType": "sound",
-                "name": "importToProject",
-                "folder": "Sounds/",
-                "audioGroup": "audiogroup_default",
+                "name": "importToBucket",
+                "bucket": "bucketDefault"
+                //"folder": "Sounds/",
+                //"audioGroup": "audiogroup_default",
             },
         },
     ],

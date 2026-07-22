@@ -23,9 +23,9 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         });
     }
     
-    static __AddTexturePage = function(_index, _surface)
+    static __AddTexturePage = function(_surface)
     {
-        var _filename = __BucketGetDatafilesName($"{__name}_{_index}");
+        var _filename = __parent.__NewExportFilename();
         var _destinationPath = $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_filename}";
         
         if ((__textureFormat == BUCKET_TEXTURE_FORMAT_RAW) || (__textureFormat == BUCKET_TEXTURE_FORMAT_ZLIB))
@@ -314,7 +314,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                 {
                     if (_currentIndex != undefined)
                     {
-                        __AddTexturePage(_currentIndex, _surface);
+                        __AddTexturePage(_surface);
                     }
                     
                     _currentIndex = __packIndex;
@@ -342,7 +342,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         
         if (_currentIndex != undefined)
         {
-            __AddTexturePage(_currentIndex, _surface);
+            __AddTexturePage(_surface);
         }
         
         surface_reset_target();
