@@ -1,7 +1,7 @@
-function __BucketClassRuntimeBucket(_bucketName, _filesize) constructor
+function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
 {
     __name     = _bucketName;
-    __filesize = _filesize;
+    __blobSize = _blobSize;
     
     __mainBuffer = -1;
     
@@ -81,7 +81,7 @@ function __BucketClassRuntimeBucket(_bucketName, _filesize) constructor
         }
         
         //Use a fixed buffer for the benefit of `audio_create_buffer_sound()`
-        __mainBuffer = buffer_create(__filesize, buffer_fixed, 1);
+        __mainBuffer = buffer_create(__blobSize, buffer_fixed, 1);
         buffer_load_ext(__mainBuffer, _path, 0);
         var _buffer = __mainBuffer;
         
@@ -134,6 +134,14 @@ function __BucketClassRuntimeBucket(_bucketName, _filesize) constructor
         {
             __BucketError($"\"{_path}\" `.tpages` not an array, got {typeof(_textureGroupArray)}");
         }
+        
+        struct_foreach(__datafileDict, function(_name, _value)
+        {
+            static _runtimeBucketDatafileMap = __BucketSystem().__runtimeBucketDatafileMap;
+            _value.buffer = __mainBuffer;
+            _value.offset += __globalAssetOffset;
+            _runtimeBucketDatafileMap[? _name] = _value;
+        });
         
         //Set up sounds
         var _wavArray = __wavArray;

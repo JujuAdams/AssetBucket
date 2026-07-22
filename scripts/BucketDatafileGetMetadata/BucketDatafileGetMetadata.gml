@@ -4,7 +4,7 @@ function BucketDatafileGetMetadata(_originalPath)
     static _runtimeBucketMap = _system.__runtimeBucketMap;
     static _result = {};
     
-    var _bucketName = _system.__manifest.bucketLookup[$ _originalPath];
+    var _bucketName = _system._manifest.bucketLookup[$ _originalPath];
     var _bucket = _runtimeBucketMap[? _bucketName];
     if (not is_struct(_bucket))
     {

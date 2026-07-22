@@ -23,10 +23,12 @@ function BucketIngestProjectDatafile(_sourcePath, _destinationPath = undefined, 
     _ingestStruct.__QueueProjectOperation(_sourcePath, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
         _ingestStruct.__RegisterProjectDatafile(__sourcePath);
-        _ingestStruct.__EnsureProjectDatafile(__destinationPath);
         _ingestStruct.__SetDatafileMetadata(__alias, __metadata);
         
-        file_copy($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}", $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_destinationPath}");
+        //Unnecessary because GameMaker will automatically build its own datafiles index
+        //_ingestStruct.__EnsureProjectDatafile(__destinationPath);
+        
+        file_copy($"{BUCKET_PROJECT_DIRECTORY}{_ingestStruct.__configStruct.__rootDirectory}{__sourcePath}", $"{BUCKET_PROJECT_DIRECTORY}datafiles/{__destinationPath}");
     },
     {
         __sourcePath:      _sourcePath,

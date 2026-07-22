@@ -3,7 +3,7 @@ function __BucketClassIngest(_configStruct) constructor
     __configStruct = variable_clone(_configStruct);
     
     __bucketArray = [];
-    __bucketDict = {};
+    __bucketDict  = {};
     
     __ensureAudioGroupDict   = {};
     __ensureFolderDict       = {}; //N.B. Must not include trailing backslash
@@ -11,17 +11,13 @@ function __BucketClassIngest(_configStruct) constructor
     __ensureResourceDict     = {};
     __ensureTextureGroupDict = {};
     
-    __assetToBucketDict    = {};
-    __projectDatafileArray = [];
-    __projectSpriteArray   = [];
-    __projectSoundArray    = [];
-    __bucketMetadataDict   = {};
-    __datafileMetadataDict = {};
-    __projectMetadataDict  = {};
-    
     __queueArray        = [];
     __queueBucketAlias  = {};
     __queueProjectAsset = {};
+    
+    __bucketDatafileMetadata = {};
+    __datafileMetadata       = {};
+    __assetMetadata          = {};
     
     
     
@@ -49,27 +45,18 @@ function __BucketClassIngest(_configStruct) constructor
         array_push(__queueArray, _deferredFunction);
     }
     
-    static __RegisterBucketDatafile = function(_alias, _bucketName)
-    {
-        array_push(__projectDatafileArray, _alias);
-        __assetToBucketDict[$ _alias] = _bucketName;
-    }
-    
     static __RegisterProjectDatafile = function(_originalPath, _filename)
     {
-        array_push(__projectDatafileArray, _originalPath);
         __ensureDatafileDict[$ _filename] = true;
     }
     
     static __RegisterProjectSprite = function(_originalPath, _spriteName)
     {
-        array_push(__projectSpriteArray, _originalPath);
         __ensureResourceDict[$ _spriteName] = "sprites";
     }
     
     static __RegisterProjectSound = function(_originalPath, _audioName)
     {
-        array_push(__projectSoundArray, _originalPath);
         __ensureResourceDict[$ _audioName] = "sounds";
     }
     
@@ -77,29 +64,30 @@ function __BucketClassIngest(_configStruct) constructor
     {
         if (_metadata != undefined)
         {
-            __bucketMetadataDict[$ _alias] = _metadata;
+            __bucketDatafileMetadata[$ _alias] = _metadata;
         }
     }
     
-    static __SetDatafileMetadata = function(_alias, _metadata)
+    static __SetDatafileMetadata = function(_localPath, _metadata)
     {
         if (_metadata != undefined)
         {
-            __datafileMetadataDict[$ _alias] = _metadata;
+            __datafileMetadata[$ _localPath] = _metadata;
         }
     }
     
-    static __SetProjectMetadata = function(_assetName, _metadata)
+    static __SetAssetMetadata = function(_assetName, _metadata)
     {
         if (_metadata != undefined)
         {
-            __projectMetadataDict[$ _alias] = _metadata;
+            __assetMetadata[$ _assetName] = _metadata;
         }
     }
     
     static __EnsureProjectDatafile = function(_filename)
     {
-        __ensureDatafileDict[$ _filename] = true;
+        //Unnecessary because GameMaker will automatically build its own datafiles index
+        //__ensureDatafileDict[$ _filename] = true;
     }
     
     static __EnsureProjectFolder = function(_projectFolder)
@@ -140,11 +128,12 @@ function __BucketClassIngest(_configStruct) constructor
         }
         
         var _json = json_stringify({
-            buckets:      _bucketExportArray,
-            bucketLookup: __assetToBucketDict,
-            datafiles:    __projectDatafileArray,
-            sprites:      __projectSpriteArray,
-            sounds:       __projectSoundArray,
+            buckets: _bucketExportArray,
+            metadata: {
+                bucketDatafiles:  __bucketDatafileMetadata,
+                projectDatafiles: __datafileMetadata,
+                assets:           __assetMetadata,
+            },
         });
         
         __BucketSaveString(_json, $"{BUCKET_PROJECT_DIRECTORY}datafiles/{BUCKET_MANIFEST_FILENAME}");
@@ -153,7 +142,7 @@ function __BucketClassIngest(_configStruct) constructor
         //Skip .yyp modification if we have nothing to add
         if ((struct_names_count(__ensureAudioGroupDict) <= 0)
         &&  (struct_names_count(__ensureFolderDict) <= 0)
-        //&&  (struct_names_count(__ensureDatafileDict) <= 0) //Unnecessary because GameMaker will automatically build its own datafiles index
+        &&  (struct_names_count(__ensureDatafileDict) <= 0)
         &&  (struct_names_count(__ensureResourceDict) <= 0)
         &&  (struct_names_count(__ensureTextureGroupDict) <= 0))
         {
@@ -269,10 +258,7 @@ function __BucketClassIngest(_configStruct) constructor
         
         _newAudioGroupsString   = _funcContentBuild(       _newAudioGroupsString,   _audioGroupsContent.__emptyArray,   __ensureAudioGroupDict,   _yypAudioGroupsDict,   _audioGroupTemplate                 );
         _newFoldersString       = _funcContentBuildFolders(_newFoldersString,       _foldersContent.__emptyArray,       __ensureFolderDict,       _yypFoldersDict,       _folderTemplate                     );
-        
-        //This line is unnecessary because GameMaker will automatically build its own datafiles index
-        //_newDatafilesString     = _funcContentBuild(       _newDatafilesString,     _datafilesContent.__emptyArray,     __ensureDatafileDict,     _yypDatafilesDict,     _datafileTemplate                   );
-        
+        _newDatafilesString     = _funcContentBuild(       _newDatafilesString,     _datafilesContent.__emptyArray,     __ensureDatafileDict,     _yypDatafilesDict,     _datafileTemplate                   );
         _newResourcesString     = _funcContentBuildExt(    _newResourcesString,     _resourcesContent.__emptyArray,     __ensureResourceDict,     _yypResourcesDict,     _resourceTemplate,    "resourceType");
         _newTextureGroupsString = _funcContentBuild(       _newTextureGroupsString, _textureGroupsContent.__emptyArray, __ensureTextureGroupDict, _yypTextureGroupsDict, _textureGroupTemplate               );
         

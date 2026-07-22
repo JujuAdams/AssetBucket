@@ -13,23 +13,18 @@ function __BucketSystem()
                 global.__Bucket = self;
             }
             
-            __manifest = {
-                buckets:      [],
-                bucketLookup: {},
-                datafiles:    [],
-                sprites:      [],
-                sounds:       [],
-            };
-            
             __config = undefined;
             
             __fileInfoDict = {};
             __workerFunctionDict = {};
             __currentIngestStruct = undefined;
             
-            __runtimeAllAssetsArray = [];
-            __runtimeBucketArray    = [];
-            __runtimeBucketMap      = ds_map_create();
+            __runtimeBucketArray = [];
+            __runtimeBucketMap   = ds_map_create();
+            
+            __runtimeBucketDatafileMap = ds_map_create();
+            __runtimeBucketSpriteMap   = ds_map_create();
+            __runtimeBucketSoundMap    = ds_map_create();
             
             return self;
         }

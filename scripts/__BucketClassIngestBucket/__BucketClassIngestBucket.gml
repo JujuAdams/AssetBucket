@@ -170,7 +170,6 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
                 filename: _filename,
             });
             
-            ++__fileCount;
             ++_i;
         }
         
@@ -206,8 +205,8 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         buffer_delete(__accumulationBuffer);
         
         array_push(_bucketExportArray, {
-            name: __name,
-            size: _size,
+            name:     __name,
+            blobSize: int64(_size),
         });
     }
 }

@@ -24,7 +24,12 @@
     {"$GMFolder":"","%Name":"Pipeline","folderPath":"folders/Asset Bucket/Pipeline.yy","name":"Pipeline","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
-  "IncludedFiles":[],
+  "IncludedFiles":[
+    {"$GMIncludedFile":"","%Name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_0.ab","CopyToMask":-1,"filePath":"datafiles","name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_0.ab","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_1.ab","CopyToMask":-1,"filePath":"datafiles","name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_1.ab","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_2.ab","CopyToMask":-1,"filePath":"datafiles","name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_2.ab","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"ab_manifest.ab","CopyToMask":-1,"filePath":"datafiles","name":"ab_manifest.ab","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+  ],
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{

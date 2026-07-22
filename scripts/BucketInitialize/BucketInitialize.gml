@@ -11,10 +11,11 @@ function BucketInitialize()
                 __BucketError($"Failed to open \"{BUCKET_MANIFEST_PATH}\"");
             }
             
+            var _manifest = undefined;
             var _json = buffer_read(_buffer, buffer_text);
             try
             {
-                __manifest = json_parse(_json);
+                _manifest = json_parse(_json);
             }
             catch(_error)
             {
@@ -22,8 +23,7 @@ function BucketInitialize()
                 __BucketError($"Failed to parse JSON in {BUCKET_MANIFEST_PATH}");
             }
             
-            __BucketVariableAssertExactly(__manifest, ["buckets", "bucketLookup", "datafiles", "sprites", "sounds"]);
-            __runtimeAllAssetsArray = array_concat(__manifest.datafiles, __manifest.sprites, __manifest.sounds);
+            __BucketVariableAssertExactly(_manifest, ["buckets"]);
             
             var _loadedBucketDict = {};
             var _i = 0;
@@ -46,15 +46,18 @@ function BucketInitialize()
             array_resize(__runtimeBucketArray, 0);
             ds_map_clear(__runtimeBucketMap);
             
+            ds_map_clear(__runtimeBucketDatafileMap);
+            ds_map_clear(__runtimeBucketSoundMap);
+            
             //Create new bucket stubs
-            var _manifestBucketArray = __manifest.buckets;
+            var _manifestBucketArray = _manifest.buckets;
             var _i = 0;
             repeat(array_length(_manifestBucketArray))
             {
                 var _bucketInfo = _manifestBucketArray[_i];
                 var _bucketName = _bucketInfo.name;
                 
-                var _runtimeBucket = new __BucketClassRuntimeBucket(_bucketName, _bucketInfo.size);
+                var _runtimeBucket = new __BucketClassRuntimeBucket(_bucketName, _bucketInfo.blobSize);
                 array_push(__runtimeBucketArray, _runtimeBucket);
                 __runtimeBucketMap[? _bucketName] = _runtimeBucket;
                 
