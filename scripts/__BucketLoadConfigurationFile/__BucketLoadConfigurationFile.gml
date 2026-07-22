@@ -1,122 +1,18 @@
-function __BucketLoadConfigurationFile()
+function __BucketLoadConfigurationFile(_path)
 {
     static _system = __BucketSystem();
     
     if (not BUCKET_DEV_MODE)
     {
         __BucketSoftError("Cannot load configuration file, not running in developer mode");
-        return false;
+        return undefined;
     }
     
-    var _configPath = $"{BUCKET_PROJECT_DIRECTORY}notes/{BUCKET_CONFIG_NOTE_ASSET_NAME}/{BUCKET_CONFIG_NOTE_ASSET_NAME}.txt";
-    if (not file_exists(_configPath))
+    var _configStruct = BucketLoadJSON(_path);
+    if (_configStruct == undefined)
     {
-        __BucketTrace($"Could not find configuration file at \"{_configPath}\"");
-        
-        if (show_question($"Could not find configuration file at \"{_configPath}\".\n \nWould you like to make it now?"))
-        {
-            __BucketYYCreateNote(BUCKET_CONFIG_NOTE_ASSET_NAME, _templateConfig);
-            
-            var _templateJSON = json_parse(_templateConfig);
-            var _rootDirectory = $"{BUCKET_PROJECT_DIRECTORY}{_templateJSON.rootDirectory}/";
-            directory_create($"{_rootDirectory}datafiles");
-            directory_create($"{_rootDirectory}sprites");
-            directory_create($"{_rootDirectory}sounds");
-        }
-        else
-        {
-            return false;
-        }
+        __BucketError($"Failed to parse \"{_path}\"");
     }
     
-    var _buffer = buffer_load(_configPath);
-    if (not buffer_exists(_buffer))
-    {
-        __BucketError($"Failed to load \"{_configPath}\"");
-        return false;
-    }
-    
-    var _string = buffer_peek(_buffer, 0, buffer_text);
-    
-    var _config = undefined;
-    try
-    {
-        _config = json_parse(_string);
-    }
-    catch(_error)
-    {
-        show_debug_message(_error);
-        
-        if (not BUCKET_ALLOW_LOOSE_JSON)
-        {
-            __BucketError("Failed to parse configuration file as JSON");
-            return false;
-        }
-        else
-        {
-            try
-            {
-                _config = __BucketLooseJSONRead(_buffer);
-            }
-            catch(_error)
-            {
-                show_debug_message(_error);
-                
-                __BucketError("Failed to parse configuration file as either JSON or Loose JSON");
-                return false;
-            }
-        }
-    }
-    
-    buffer_delete(_buffer);
-    
-    _system.__config = new __BucketClassConfigRoot().__Deserialize(_config);
-    
-    return true;
-    
-    static _templateConfig = @'{
-    "version": 1,
-    "rootDirectory": "asset_bucket",
-
-    "buckets": [
-        {
-            "name": "bucketDefault",
-        },
-    ],
-
-    "tasks": [
-        {
-            "include": {
-                "path": "datafiles/*",
-            },
-            "worker": {
-                "resourceType": "datafile",
-                "function": "importToBucket",
-                "bucket": "bucketDefault"
-            },
-        },
-        {
-            "include": {
-                "path": "sprites/*.png",
-            },
-            "worker": {
-                "resourceType": "sprite",
-                "function": "importToProject",
-                "folder": "Sprites/",
-                "textureGroup": "Default",
-            },
-        },
-        {
-            "include": {
-                "path": ["sounds/*.wav", "sounds/*.ogg"],
-            },
-            "worker": {
-                "resourceType": "sound",
-                "function": "importToProject",
-                "folder": "Sounds/",
-                "audioGroup": "audiogroup_default",
-            },
-        },
-    ],
-}';
+    return new __BucketClassConfigRoot().__Deserialize(_configStruct);
 }
