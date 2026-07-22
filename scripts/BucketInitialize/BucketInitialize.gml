@@ -30,11 +30,14 @@ function BucketInitialize()
             repeat(array_length(__runtimeBucketArray))
             {
                 var _bucket = __runtimeBucketArray[_i];
+                
+                //Find out which buckets are already loaded
                 if (_bucket.__loaded)
                 {
                     _loadedBucketDict[$ _bucket.__name] = true;
                 }
                 
+                //Unload
                 _bucket.__Destroy();
                 
                 ++_i;
@@ -43,6 +46,7 @@ function BucketInitialize()
             array_resize(__runtimeBucketArray, 0);
             ds_map_clear(__runtimeBucketMap);
             
+            //Create new bucket stubs
             var _manifestBucketArray = __manifest.buckets;
             var _i = 0;
             repeat(array_length(_manifestBucketArray))
@@ -50,13 +54,14 @@ function BucketInitialize()
                 var _bucketInfo = _manifestBucketArray[_i];
                 var _bucketName = _bucketInfo.name;
                 
-                var _runtimeBucket = new __BucketClassBucket(_bucketName, _bucketInfo.size);
+                var _runtimeBucket = new __BucketClassRuntimeBucket(_bucketName, _bucketInfo.size);
                 array_push(__runtimeBucketArray, _runtimeBucket);
                 __runtimeBucketMap[? _bucketName] = _runtimeBucket;
                 
                 ++_i;
             }
             
+            //Reload buckets that were previously loaded
             var _loadedBucketArray = struct_get_names(_loadedBucketDict);
             var _i = 0;
             repeat(array_length(_loadedBucketArray))

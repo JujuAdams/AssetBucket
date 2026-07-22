@@ -100,7 +100,7 @@ function __BucketLoadConfigurationFile()
             },
             "worker": {
                 "resourceType": "datafile",
-                "name": "importToBucket",
+                "function": "importToBucket",
                 "bucket": "bucketDefault"
             },
         },
@@ -110,7 +110,7 @@ function __BucketLoadConfigurationFile()
             },
             "worker": {
                 "resourceType": "sprite",
-                "name": "importToProject",
+                "function": "importToProject",
                 "folder": "Sprites/",
                 "textureGroup": "Default",
             },
@@ -121,7 +121,7 @@ function __BucketLoadConfigurationFile()
             },
             "worker": {
                 "resourceType": "sound",
-                "name": "importToProject",
+                "function": "importToProject",
                 "folder": "Sounds/",
                 "audioGroup": "audiogroup_default",
             },

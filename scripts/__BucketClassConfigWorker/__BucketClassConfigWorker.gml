@@ -7,7 +7,7 @@ function __BucketClassConfigWorker() constructor
     {
         __parent = _parent;
         
-        __name         = __BucketVariableAssertString(_struct, "name");
+        __function     = __BucketVariableAssertString(_struct, "function");
         __resourceType = __BucketVariableAssertString(_struct, "resourceType");
         
         __data = _struct;
@@ -19,7 +19,7 @@ function __BucketClassConfigWorker() constructor
     {
         var _data = __data;
         
-        var _workerCallback =_workerFunctionDict[$ _data.name];
+        var _workerCallback =_workerFunctionDict[$ _data.function];
         if (not is_method(_workerCallback))
         {
             __BucketError($"No worker function found with name \"{_data}\"");

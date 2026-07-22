@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketClassBucket",
+  "%Name":"__BucketClassRuntimeBucket",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketClassBucket",
+  "name":"__BucketClassRuntimeBucket",
   "parent":{
     "name":"Classes",
-    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Runtime/Classes.yy",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Classes.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

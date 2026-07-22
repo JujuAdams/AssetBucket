@@ -6,7 +6,7 @@
   "name":"__BucketClassDeferredFunction",
   "parent":{
     "name":"Classes",
-    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Ingest/Classes.yy",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Classes.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -161,8 +161,8 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         {
             var _oggInfo = _queuedOGGArray[_i];
             
-            var _filename = __BucketGetDatafilesName(_oggInfo.__path);
-            file_copy($"{_rootDirectory}{_oggInfo.__path}", $"{BUCKET_PROJECT_DIRECTORY}datafiles/{__NewExportFilename()}");
+            var _filename = __NewExportFilename();
+            file_copy($"{_rootDirectory}{_oggInfo.__path}", $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_filename}");
             
             array_push(_soundsArray, {
                 format:   BUCKET_AUDIO_FORMAT_OGG,

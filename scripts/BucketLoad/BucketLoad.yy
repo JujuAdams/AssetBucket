@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BucketPlaySound",
+  "%Name":"BucketLoad",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BucketPlaySound",
+  "name":"BucketLoad",
   "parent":{
     "name":"Asset Bucket",
     "path":"folders/Asset Bucket.yy",

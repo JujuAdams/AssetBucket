@@ -1,4 +1,4 @@
-function BucketDatafilesLoad(_bucketName)
+function BucketLoad(_bucketName)
 {
     static _runtimeBucketMap = __BucketSystem().__runtimeBucketMap;
     

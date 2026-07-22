@@ -17,7 +17,7 @@
             },
             "worker": {
                 "resourceType": "datafile",
-                "name": "importToBucket",
+                "function": "importToBucket",
                 "bucket": "bucketDefault"
             },
         },
@@ -28,7 +28,7 @@
             },
             "worker": {
                 "resourceType": "sprite",
-                "name": "importToBucket",
+                "function": "importToBucket",
                 "bucket": "bucketDefault"
                 //"folder": "Sprites/",
                 //"textureGroup": "Default",
@@ -40,7 +40,7 @@
             },
             "worker": {
                 "resourceType": "sound",
-                "name": "importToBucket",
+                "function": "importToBucket",
                 "bucket": "bucketDefault"
                 //"folder": "Sounds/",
                 //"audioGroup": "audiogroup_default",

@@ -5,7 +5,7 @@ function BucketIngest()
     {
         BucketSetWorkerFunction("importToBucket", function(_filePath, _workerInfo)
         {
-            __BucketVariableAssertString(_workerInfo, "name");
+            __BucketVariableAssertString(_workerInfo, "function");
             __BucketVariableAssertString(_workerInfo, "resourceType");
             __BucketVariableAssertString(_workerInfo, "bucket");
             
@@ -40,7 +40,7 @@ function BucketIngest()
         
         BucketSetWorkerFunction("importToProject", function(_filePath, _workerInfo)
         {
-            __BucketVariableAssertString(_workerInfo, "name");
+            __BucketVariableAssertString(_workerInfo, "function");
             __BucketVariableAssertString(_workerInfo, "resourceType");
             __BucketVariableAssertString(_workerInfo, "folder");
             

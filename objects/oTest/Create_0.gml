@@ -1,6 +1,5 @@
 BucketIngest();
 BucketInitialize();
 
-BucketDatafilesLoad("bucketDefault");
+BucketLoad("bucketDefault");
 texturegroup_load("bucketDefault");
-BucketPlaySound("sndChickenNuggets");

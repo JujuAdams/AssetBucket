@@ -1,4 +1,4 @@
-function __BucketClassBucket(_bucketName, _filesize) constructor
+function __BucketClassRuntimeBucket(_bucketName, _filesize) constructor
 {
     __name     = _bucketName;
     __filesize = _filesize;
@@ -74,7 +74,7 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
         if (__loaded) return;
         __loaded = true;
         
-        var _path = __BucketGetDatafilePath(__BucketGetDatafilesName(__name));
+        var _path = __BucketGetDatafilePath($"ab_{md5_string_utf8(__name)}_0.ab");
         if (not file_exists(_path))
         {
             __BucketError($"Could not find \"{_path}\"");
@@ -168,7 +168,7 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
                 }
                 else if (format == BUCKET_AUDIO_FORMAT_OGG)
                 {
-                    var _sound = audio_create_stream(filename);
+                    var _sound = audio_create_stream(__BucketGetDatafilePath(filename));
                     array_push(_oggArray, _sound);
                 }
                 
@@ -197,7 +197,7 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
                     var _j = 0;
                     repeat(array_length(_tgroupPagePathArray))
                     {
-                        var _path = _tgroupPagePathArray[_j];
+                        var _path = __BucketGetDatafilePath(_tgroupPagePathArray[_j]);
                         if (not file_exists(_path))
                         {
                             __BucketError($"Could not find \"{_path}\"");
@@ -228,7 +228,7 @@ function __BucketClassBucket(_bucketName, _filesize) constructor
                     var _j = 0;
                     repeat(array_length(_tgroupPagePathArray))
                     {
-                        var _path = _tgroupPagePathArray[_j];
+                        var _path = __BucketGetDatafilePath(_tgroupPagePathArray[_j]);
                         if (not file_exists(_path))
                         {
                             __BucketError($"Could not find \"{_path}\"");
