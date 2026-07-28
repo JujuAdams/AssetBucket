@@ -16,7 +16,6 @@ function __BucketSystem()
             __manifestLoaded = false;
             
             __fileInfoDict = {};
-            __workerFunctionDict = {};
             __currentYYPDirectory = undefined;
             __currentIngestStruct = undefined;
             

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BucketCommandList",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BucketCommandList",
+  "parent":{
+    "name":"AssetBucket",
+    "path":"AssetBucket.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

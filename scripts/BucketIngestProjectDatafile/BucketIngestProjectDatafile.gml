@@ -24,7 +24,6 @@ function BucketIngestProjectDatafile(_sourcePath, _destinationPath = undefined, 
     {
         static _system = __BucketSystem();
         
-        _ingestStruct.__EnsureProjectDatafile(__sourcePath);
         _ingestStruct.__SetDatafileMetadata(__alias, __metadata);
         
         //Unnecessary because GameMaker will automatically build its own datafiles index

@@ -37,7 +37,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         buffer_write(_accumulationBuffer, buffer_u8, 0x00);
     }
     
-    static __AddSprite = function(_textureGroupName, _imagePathArray, _alias)
+    static __AddSprite = function(_textureGroupName, _imageArray, _alias)
     {
         var _textureGroup = __textureGroupDict[$ _textureGroupName];
         if (not is_struct(_textureGroup))
@@ -46,7 +46,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
             __textureGroupDict[$ _textureGroupName] = _textureGroup;
         }
         
-        _textureGroup.__AddSprite(_imagePathArray, _alias);
+        _textureGroup.__AddSprite(_imageArray, _alias);
     }
     
     static __AddOGG = function(_sourcePath, _alias)

@@ -1,10 +1,14 @@
-/// @param imagePathArray
+/// `imageArray` parameter may be an array of one of the following contents:
+///     1. A string that is the local path to a PNG image file
+///     2. A struct that contains `.buffer` `.offset` `.width` `.height`
+/// 
+/// @param imageArray
 /// @param bucketName
 /// @param [alias=sourcePath]
 /// @param [textureGroup=bucketName]
 /// @param [metadata]
 
-function BucketIngestBucketSprite(_imagePathArray, _bucketName, _alias = undefined, _textureGroup = _bucketName, _metadata = undefined)
+function BucketIngestBucketSprite(_imageArray, _bucketName, _alias = undefined, _textureGroup = _bucketName, _metadata = undefined)
 {
     static _system = __BucketSystem();
     
@@ -14,8 +18,8 @@ function BucketIngestBucketSprite(_imagePathArray, _bucketName, _alias = undefin
         __BucketError("Cannot call `BucketIngestBucketSprite()` outside of a worker function");
     }
     
-    _imagePathArray = __BucketEnsureArray(_imagePathArray);
-    _alias ??= _imagePathArray[0];
+    _imageArray = __BucketEnsureArray(_imageArray);
+    _alias ??= _imageArray[0];
     
     _ingestStruct.__QueueBucketOperation(_alias, new __BucketClassDeferredFunction(function(_ingestStruct)
     {
@@ -30,14 +34,14 @@ function BucketIngestBucketSprite(_imagePathArray, _bucketName, _alias = undefin
         }
         else
         {
-            _bucketStruct.__AddSprite(__textureGroup, __imagePathArray, __alias);
+            _bucketStruct.__AddSprite(__textureGroup, __imageArray, __alias);
         }
     },
     {
-        __imagePathArray: _imagePathArray,
-        __bucketName:     _bucketName,
-        __alias:          _alias,
-        __textureGroup:   _textureGroup,
-        __metadata:       _metadata,
+        __imageArray:   _imageArray,
+        __bucketName:   _bucketName,
+        __alias:        _alias,
+        __textureGroup: _textureGroup,
+        __metadata:     _metadata,
     }));
 }

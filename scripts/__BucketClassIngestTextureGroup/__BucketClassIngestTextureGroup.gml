@@ -18,11 +18,11 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
     
     
     
-    static __AddSprite = function(_imagePathArray, _alias)
+    static __AddSprite = function(_imageArray, _alias)
     {
         array_push(__queuedSprites, {
-            __imagePathArray: _imagePathArray,
-            __alias:          _alias,
+            __imageArray: _imageArray,
+            __alias:      _alias,
         });
     }
     
@@ -55,51 +55,6 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
             surface_save(_surface, _destinationPath);
             surface_save(_surface, "test.png");
         }
-        //else if (__textureFormat == BUCKET_TEXTURE_FORMAT_QOI)
-        //{
-        //    if (BUCKET_IMAGEMAGICK_PATH == undefined)
-        //    {
-        //        __BucketError($"`BUCKET_IMAGEMAGICK_PATH` must be defined before exporting QOI files");
-        //    }
-        //    
-        //    if (not file_exists(BUCKET_IMAGEMAGICK_PATH))
-        //    {
-        //        __BucketError($"ImageMagick binary could not be found. Please check `BUCKET_IMAGEMAGICK_PATH`\nPath was {BUCKET_IMAGEMAGICK_PATH}");
-        //    }
-        //    
-        //    surface_save(_surface, "asset_bucket_temp.png");
-        //    
-        //    var _sourcePath = $"{game_save_id}asset_bucket_temp.png";
-        //    var _batchPath  = $"{game_save_id}convert_png_to_qoi.bat";
-        //    
-        //    file_delete(_batchPath);
-        //    
-        //    var _batchFileString = string_join("\n",
-        //    "@echo off",
-        //    $"echo Converting {_sourcePath} from PNG to QOI",
-        //    $"\"{BUCKET_IMAGEMAGICK_PATH}\" \"{_sourcePath}\" \"{_destinationPath}\"");
-        //    
-        //    __BucketSaveString(_batchFileString, _batchPath);
-        //    __BucketExecuteShell(_batchPath, "");
-        //    
-        //    var _finished = false;
-        //    var _overallTimer = current_time;
-        //    while((current_time - _overallTimer) < 10_000)
-        //    {
-        //        if (file_exists(_destinationPath))
-        //        {
-        //            _finished = true;
-        //            break;
-        //        }
-        //    }
-        //    
-        //    if (not _finished)
-        //    {
-        //        __BucketError($"ImageMagick conversion of \"{_sourcePath}\" failed");
-        //    }
-        //    
-        //    file_delete(_sourcePath);
-        //}
         else
         {
             __BucketError($"Texture format \"{_textureFormat}\" unhandled for bucket \"{__name}\"");
@@ -143,8 +98,8 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         {
             var _spriteInfo = __queuedSprites[_i];
             
-            var _alias          = _spriteInfo.__alias;
-            var _imagePathArray = _spriteInfo.__imagePathArray;
+            var _alias      = _spriteInfo.__alias;
+            var _imageArray = _spriteInfo.__imageArray;
             
             var _boxArray = [];
             
@@ -153,10 +108,19 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
             
             var _frameDescArray = _spriteDesc.frames;
             var _j = 0;
-            repeat(array_length(_imagePathArray))
+            repeat(array_length(_imageArray))
             {
-                var _path = _rootDirectory + _imagePathArray[_j];
-                var _sprite = __BucketAddSprite(_path);
+                var _path = _imageArray[_j];
+                var _sprite = __BucketAddSprite(_rootDirectory, _path);
+                
+                if (is_struct(_path))
+                {
+                    var _callback = _path[$ "callback"];
+                    if (is_method(_callback))
+                    {
+                        _callback();
+                    }
+                }
                 
                 var _bboxLeft   = sprite_get_bbox_left(_sprite);
                 var _bboxTop    = sprite_get_bbox_top(_sprite);

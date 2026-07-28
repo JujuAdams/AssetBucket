@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketDirectoryFileArray",
+  "%Name":"__BucketDirectoryPathArray",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketDirectoryFileArray",
+  "name":"__BucketDirectoryPathArray",
   "parent":{
     "name":"Helper",
     "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Helper.yy",

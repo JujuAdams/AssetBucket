@@ -2,7 +2,7 @@
 
 /// @param rootDirectory
 
-function __BucketDirectoryFileArray(_rootDirectory)
+function __BucketDirectoryPathArray(_rootDirectory)
 {
     var _wildcard = ((os_type == os_windows)? "*.*" : "*");
     

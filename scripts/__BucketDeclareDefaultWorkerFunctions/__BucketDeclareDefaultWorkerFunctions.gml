@@ -2,7 +2,7 @@ function __BucketDeclareDefaultWorkerFunctions()
 {
     static _once = (function()
     {
-        BucketDeclareWorkerFunction("importToBucket", function(_filePath, _workerInfo)
+        BucketDeclareWorkerFunction("importToBucket", function(_fileStruct, _workerInfo)
         {
             __BucketVariableAssertString(_workerInfo, "function");
             __BucketVariableAssertString(_workerInfo, "resourceType");
@@ -11,25 +11,15 @@ function __BucketDeclareDefaultWorkerFunctions()
             var _type = _workerInfo.resourceType;
             if (_type == "datafile")
             {
-                BucketIngestBucketDatafile(_filePath, _workerInfo.bucket);
+                BucketIngestBucketDatafile(_fileStruct.path, _workerInfo.bucket);
             }
             else if (_type == "sprite")
             {
-                if (is_array(_filePath))
-                {
-                    var _spriteName = filename_change_ext(string_replace_all(filename_name(_filePath[0]), "_frame0.", "."), "");
-                }
-                else
-                {
-                    var _spriteName = filename_change_ext(filename_name(_filePath), "");
-                }
-                
-                BucketIngestBucketSprite(_filePath, _workerInfo.bucket, _spriteName, _workerInfo[$ "textureGroup"]);
+                BucketIngestBucketSprite(_fileStruct.path, _workerInfo.bucket, _fileStruct.alias, _workerInfo[$ "textureGroup"]);
             }
             else if (_type == "sound")
             {
-                var _soundName = filename_change_ext(filename_name(_filePath), "");
-                BucketIngestBucketSound(_filePath, _workerInfo.bucket, _workerInfo[$ "compress"] ?? false, _soundName);
+                BucketIngestBucketSound(_fileStruct.path, _workerInfo.bucket, _workerInfo[$ "compress"] ?? false, _fileStruct.alias);
             }
             else
             {
@@ -37,7 +27,7 @@ function __BucketDeclareDefaultWorkerFunctions()
             }
         });
         
-        BucketDeclareWorkerFunction("importToProject", function(_filePath, _workerInfo)
+        BucketDeclareWorkerFunction("importToProject", function(_fileStruct, _workerInfo)
         {
             __BucketVariableAssertString(_workerInfo, "function");
             __BucketVariableAssertString(_workerInfo, "resourceType");
@@ -50,21 +40,11 @@ function __BucketDeclareDefaultWorkerFunctions()
             }
             else if (_type == "sprite")
             {
-                if (is_array(_filePath))
-                {
-                    var _spriteName = filename_change_ext(string_replace_all(filename_name(_filePath[0]), "_frame0.", "."), "");
-                }
-                else
-                {
-                    var _spriteName = filename_change_ext(filename_name(_filePath), "");
-                }
-                
-                BucketIngestProjectSprite(_spriteName, _filePath, _workerInfo.folder, _workerInfo[$ "textureGroup"]);
+                BucketIngestProjectSprite(_fileStruct.alias, _fileStruct.path, _workerInfo.folder, _workerInfo[$ "textureGroup"]);
             }
             else if (_type == "sound")
             {
-                var _soundName = filename_change_ext(filename_name(_filePath), "");
-                BucketIngestProjectSound(_soundName, _filePath, _workerInfo.folder, _workerInfo[$ "audioGroup"]);
+                BucketIngestProjectSound(_fileStruct.alias, _fileStruct.path, _workerInfo.folder, _workerInfo[$ "audioGroup"]);
             }
             else
             {

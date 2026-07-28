@@ -1,92 +1,32 @@
 function __BucketClassConfigRoot() constructor
 {
-    static _system = __BucketSystem();
-    static _static_fileInfoDict = _system.__fileInfoDict;
-    
-    static __Deserialize = function(_struct)
-    {
-        __BucketVariableAssertOnly(_struct, ["version", "rootDirectory", "includeAllPaths", "excludeAllPaths", "buckets", "tasks"]);
-        
-        __version = __BucketVariableAssertNumber(_struct, "version");
-        if (__version != BUCKET_CONFIG_VERSION)
-        {
-            __BucketError($"Version mismatch. Found {__version}, expecting {BUCKET_CONFIG_VERSION}");
-        }
-        
-        __rootDirectory   = __BucketEnsureDirectory(__BucketVariableAssertString(_struct, "rootDirectory"));
-        __includeAllPaths = __BucketVariableAssertStringOrArray(_struct, "includeAllPaths");
-        __excludeAllPaths = __BucketVariableAssertStringOrArray(_struct, "excludeAllPaths");
-        __bucketsArray    = __BucketDeserializeArrayOf(self, _struct[$ "buckets"], __BucketClassConfigBucket);
-        __tasksArray      = __BucketDeserializeArrayOf(self, _struct[$ "tasks"  ], __BucketClassConfigTask);
-        
-        return self;
-    }
-    
     static __Collect = function()
     {
-        var _rootDirectory = $"{_system.__currentYYPDirectory}{_system.__currentIngestStruct.__configStruct.__rootDirectory}";
-        var _fileArray = __BucketDirectoryFileArray($"{_system.__currentYYPDirectory}{__rootDirectory}");
-        
-        //Remove anything that doesn't fit the global include mask
-        if (array_length(__includeAllPaths) > 0)
-        {
-            var _i = array_length(_fileArray)-1;
-            repeat(array_length(_fileArray))
-            {
-                if (not __BucketTestStringMaskAny(_fileArray[_i], __includeAllPaths))
-                {
-                    array_delete(_fileArray, _i, 1);
-                }
-                
-                --_i;
-            }
-        }
-        
-        //Remove anything that does fit the global exclude mask
-        if (array_length(__excludeAllPaths) > 0)
-        {
-            var _i = array_length(_fileArray)-1;
-            repeat(array_length(_fileArray))
-            {
-                if (__BucketTestStringMaskAny(_fileArray[_i], __excludeAllPaths))
-                {
-                    array_delete(_fileArray, _i, 1);
-                }
-                
-                --_i;
-            }
-        }
-        
-        //Iterate over all existing cached file info and check their hashes. Any file info that
-        //fails the hash check has its variables wiped ready for recalculation
-        var _fileInfoDict = _static_fileInfoDict;
-        var _i = 0;
-        repeat(array_length(_fileArray))
-        {
-            var _fileInfo = _fileInfoDict[$ _fileArray[_i]];
-            if (is_struct(_fileInfo))
-            {
-                _fileInfo.__CheckHash();
-            }
-            
-            ++_i;
-        }
-        
         //Remove files that look like frames of sprites
-        var _i = array_length(_fileArray)-1;
-        repeat(array_length(_fileArray))
+        var _fileArray = [];
+        var _i = 0;
+        for(var _i = 0; _i < array_length(_localPathArray); _i++)
         {
-            var _localPath = _fileArray[_i];
-            if (__BucketTestStringMask(_localPath, "*_frame*.*"))
+            var _localPath = _localPathArray[_i];
+            if (__BucketTestStringMask(_localPath, "*_frame0.*"))
             {
-                if (string_pos("_frame0.", _localPath) > 0)
+                var _framesPathArray = __BucketFindSpriteFrames(_rootDirectory, _localPath);
+                
+                var _j = 0;
+                repeat(array_length(_framesPathArray))
                 {
-                    _fileArray[@ _i] = __BucketFindSpriteFrames(_rootDirectory, _localPath);
+                    var _index = array_get_index(_localPathArray, _framesPathArray[_j]);
+                    if (_index >= 0) array_delete(_localPathArray, _index, 1);
+                    ++_j;
                 }
-                else
-                {
-                    array_delete(_fileArray, _i, 1);
-                }
+                
+                var _spriteName = filename_change_ext(string_replace_all(filename_name(_localPath), "_frame0.", "."), "");
+                array_push(_fileArray, new __BucketClassFile(_spriteName, _framesPathArray));
+            }
+            else
+            {
+                var _spriteName = filename_change_ext(filename_name(_localPath), "");
+                array_push(_fileArray, new __BucketClassFile(_spriteName, _localPath));
             }
             
             --_i;

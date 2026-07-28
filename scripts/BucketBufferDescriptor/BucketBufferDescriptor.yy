@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BucketBufferDescriptor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BucketBufferDescriptor",
+  "parent":{
+    "name":"AssetBucket",
+    "path":"AssetBucket.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

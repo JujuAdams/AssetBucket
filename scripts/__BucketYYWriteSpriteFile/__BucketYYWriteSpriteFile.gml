@@ -65,8 +65,16 @@ function __BucketYYWriteSpriteFile(_yypDirectory, _projectName, _rootDirectory, 
         
         //Copy the source file over
         var _sourcePath = _rootDirectory + _framePathArray[_i];
-        file_copy(_sourcePath, $"{_directory}/{_frameUUID}.png");
-        file_copy(_sourcePath, $"{_directory}/layers/{_frameUUID}/{_layerUUID}.png");
+        if (is_struct(_sourcePath))
+        {
+            __BucketSaveBufferAsPNG($"{_directory}/{_frameUUID}.png", _sourcePath.buffer, _sourcePath.width, _sourcePath.height, _sourcePath[$ "offset"] ?? 0);
+        }
+        else
+        {
+            file_copy(_sourcePath, $"{_directory}/{_frameUUID}.png");
+        }
+        
+        file_copy($"{_directory}/{_frameUUID}.png", $"{_directory}/layers/{_frameUUID}/{_layerUUID}.png");
         
         ++_i;
     }
