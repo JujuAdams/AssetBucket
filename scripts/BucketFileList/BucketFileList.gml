@@ -169,33 +169,55 @@ function BucketFileList(_rootDirectory = "") constructor
     
     static CollectImageFrames = function()
     {
-        //TODO
+        var _collectionDict = {};
         
-        //Remove files that look like frames of sprites
-        var _fileArray = [];
-        var _i = 0;
-        for(var _i = 0; _i < array_length(_localPathArray); _i++)
+        var _fileDataArray = __fileDataArray;
+        var _i = array_length(_fileDataArray)-1;
+        repeat(array_length(_fileDataArray))
         {
-            var _localPath = _localPathArray[_i];
-            if (__BucketTestStringMask(_localPath, "*_frame0.*"))
+            var _fileData = _fileDataArray[_i];
+            
+            var _filenameStripped = _fileData.suggestedName;
+            var _substringPos = string_pos("_frame", _filenameStripped);
+            if (_substringPos > 0)
             {
-                var _framesPathArray = __BucketFindSpriteFrames(_rootDirectory, _localPath);
-                
-                var _j = 0;
-                repeat(array_length(_framesPathArray))
+                var _nextChar = ord(string_char_at(_filenameStripped, _substringPos + 6));
+                if ((_nextChar >= 0x30) && (_nextChar <= 0x39))
                 {
-                    var _index = array_get_index(_localPathArray, _framesPathArray[_j]);
-                    if (_index >= 0) array_delete(_localPathArray, _index, 1);
-                    ++_j;
+                    var _number = string_delete(_filenameStripped, 1, _substringPos+5);
+                    try
+                    {
+                        _number = real(_number);
+                    }
+                    catch(_error)
+                    {
+                        show_debug_message(_error);
+                    }
+                    
+                    if (is_numeric(_number))
+                    {
+                        var _basicName = string_copy(_filenameStripped, 1, _substringPos-1);
+                        
+                        var _pathArray = _collectionDict[$ _basicName];
+                        if (not is_array(_pathArray))
+                        {
+                            _pathArray = [];
+                            _collectionDict[$ _basicName] = _pathArray;
+                        }
+                        
+                        _pathArray[@ _number] = _fileData;
+                        
+                        if (_number == 0)
+                        {
+                            _fileData.suggestedName = string_copy(_filenameStripped, 1, _substringPos-1);
+                            _fileData.__linkedFileData = _pathArray;
+                        }
+                        else
+                        {
+                            array_delete(_fileDataArray, _i, 1);
+                        }
+                    }
                 }
-                
-                var _spriteName = filename_change_ext(string_replace_all(filename_name(_localPath), "_frame0.", "."), "");
-                array_push(_fileArray, new __BucketClassFile(_spriteName, _framesPathArray));
-            }
-            else
-            {
-                var _spriteName = filename_change_ext(filename_name(_localPath), "");
-                array_push(_fileArray, new __BucketClassFile(_spriteName, _localPath));
             }
             
             --_i;

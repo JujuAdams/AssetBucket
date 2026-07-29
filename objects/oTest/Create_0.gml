@@ -4,8 +4,6 @@ var _baseFileList = (new BucketFileList())
                     .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket")
                     .PopulateFromSubdirectory("");
 
-
-
 var _datafileList = _baseFileList.Duplicate()
                      .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/datafiles");
 var _datafileWorker = BucketWorkerCreate(function(_fileData)
@@ -19,7 +17,8 @@ _datafileWorker.SendToCommandList(_commandList, _datafileList);
 
 var _spriteList = _baseFileList.Duplicate()
                    .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/sprites")
-                   .IncludeLocalPaths("*.png");
+                   .IncludeLocalPaths("*.png")
+                   .CollectImageFrames();
 var _spriteWorker = BucketWorkerCreate(function(_fileData)
 {
     AddSpriteToBucket(bucket, filename_change_ext(filename_name(_fileData.absolutePath), ""), _fileData.absolutePath);
