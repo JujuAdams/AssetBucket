@@ -18,50 +18,29 @@ function BucketCommandList() constructor
     
     
     
-    static DefineBucket = function(_bucketNameOrArray)
+    static __EnsureBucket = function(_bucketName)
     {
-        _bucketNameOrArray = __BucketEnsureArray(_bucketNameOrArray);
+        var _bucketStruct = __bucketDict[$ _bucketName];
         
-        var _i = 0;
-        repeat(array_length(_bucketNameOrArray))
+        if (not is_struct(_bucketStruct))
         {
-            var _bucketName = _bucketNameOrArray[_i];
-            
             var _bucketStruct = new __BucketClassBuildBucket(_bucketName);
             __bucketDict[$ _bucketName] = _bucketStruct;
             array_push(__bucketArray, _bucketStruct);
-            
-            ++_i;
         }
         
-        return self;
+        return _bucketStruct;
     }
-    
-    static __GetBucket = function(_bucketName)
-    {
-        var _bucket = __bucketDict[$ _bucketName];
-        
-        if (not is_struct(_bucket))
-        {
-            __BucketError($"Bucket name \"{_bucketName}\" not recognised");
-        }
-        
-        return _bucket;
-    }
-    
-    
-    
-    
     
     static __SetBucketMetadata = function(_bucketName, _key, _value)
     {
         if (_value == undefined) return;
-        __GetBucket(_bucketName).__SetMetadata(_key, _value);
+        __EnsureBucket(_bucketName).__SetMetadata(_key, _value);
     }
     
     static __AddDatafileToBucket = function(_bucketName, _alias, _path)
     {
-        var _bucket = __GetBucket(_bucketName);
+        var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -81,7 +60,7 @@ function BucketCommandList() constructor
     {
         _pathOrArray = __BucketEnsureArray(_pathOrArray);
         
-        var _bucket = __GetBucket(_bucketName);
+        var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -98,7 +77,7 @@ function BucketCommandList() constructor
     
     static __AddWAVToBucket = function(_bucketName, _alias, _path, _compress)
     {
-        var _bucket = __GetBucket(_bucketName);
+        var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -117,7 +96,7 @@ function BucketCommandList() constructor
     
     static __AddOGGToBucket = function(_bucketName, _alias, _path)
     {
-        var _bucket = __GetBucket(_bucketName);
+        var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -133,7 +112,7 @@ function BucketCommandList() constructor
     
     static __AddBufferToBucket = function(_bucketName, _alias, _bufferDescription)
     {
-        var _bucket = __GetBucket(_bucketName);
+        var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({

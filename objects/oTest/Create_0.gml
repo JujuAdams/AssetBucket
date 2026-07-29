@@ -1,32 +1,57 @@
-var _commandList = (new BucketCommandList())
-                   .DefineBucket("bucketDefault");
+var _commandList = new BucketCommandList();
 
 var _baseFileList = (new BucketFileList())
                     .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket")
                     .PopulateFromSubdirectory("");
 
-var _datafilesList = _baseFileList.Duplicate()
+
+
+var _datafileList = _baseFileList.Duplicate()
                      .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/datafiles");
-var _datafilesWorker = BucketWorkerCreate(function(_fileData)
+var _datafileWorker = BucketWorkerCreate(function(_fileData)
 {
     AddDatafileToBucket(bucket, _fileData.localPath, _fileData.absolutePath);
 },
-{
-    bucket: "bucketDefault",
-});
-_datafilesWorker.SendToCommandList(_commandList, _datafilesList);
+{ bucket: "bucketDefault" });
+_datafileWorker.SendToCommandList(_commandList, _datafileList);
 
-var _spritesList = _baseFileList.Duplicate()
+
+
+var _spriteList = _baseFileList.Duplicate()
                    .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/sprites")
                    .IncludeLocalPaths("*.png");
-var _spritesWorker = BucketWorkerCreate(function(_fileData)
+var _spriteWorker = BucketWorkerCreate(function(_fileData)
 {
     AddSpriteToBucket(bucket, filename_change_ext(filename_name(_fileData.absolutePath), ""), _fileData.absolutePath);
 },
+{ bucket: "bucketDefault" });
+_spriteWorker.SendToCommandList(_commandList, _spriteList);
+
+
+
+var _wavList = _baseFileList.Duplicate()
+               .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/sounds")
+               .IncludeLocalPaths("*.wav");
+var _wavWorker = BucketWorkerCreate(function(_fileData)
 {
-    bucket: "bucketDefault",
-});
-_spritesWorker.SendToCommandList(_commandList, _spritesList);
+    AddWAVToBucket(bucket, filename_change_ext(filename_name(_fileData.absolutePath), ""), _fileData.absolutePath);
+},
+{ bucket: "bucketDefault" });
+_wavWorker.SendToCommandList(_commandList, _wavList);
+
+
+
+var _oggList = _baseFileList.Duplicate()
+               .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/sounds")
+               .IncludeLocalPaths("*.ogg");
+var _oggWorker = BucketWorkerCreate(function(_fileData)
+{
+    AddOGGToBucket(bucket, filename_change_ext(filename_name(_fileData.absolutePath), ""), _fileData.absolutePath);
+},
+{ bucket: "bucketDefault" });
+_oggWorker.SendToCommandList(_commandList, _oggList);
+
+
 
 _commandList.SaveToProject(GM_project_filename);
 
