@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__BucketClassPathDescription",
   "parent":{
-    "name":"AssetBucket",
-    "path":"AssetBucket.yyp",
+    "name":"Classes",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Classes.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

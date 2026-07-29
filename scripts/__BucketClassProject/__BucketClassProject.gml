@@ -115,7 +115,7 @@ function __BucketClassProject(_path) constructor
         var _soundFilename = filename_name(_sourcePath);
         
         //Grab the template and do some basic replacements
-        var _yyString = _templateSoundYY;
+        var _yyString = _templateYY;
         _yyString = string_replace_all(_yyString, "%resourceName%", _soundName);
         _yyString = string_replace_all(_yyString, "%audioGroupName%", _audioGroupName);
         _yyString = string_replace_all(_yyString, "%soundFilename%", _soundFilename);
@@ -139,9 +139,8 @@ function __BucketClassProject(_path) constructor
         file_copy(_sourcePath, _directory + _soundFilename);
         
         __BucketSaveString(_yyString, $"{_directory}{_soundName}.yy");
-    }
-    
-    static _templateSoundYY = @'{
+        
+        static _templateYY = @'{
   "$GMSound":"v2",
   "%Name":"%resourceName%",
   "audioGroupId":{
@@ -167,6 +166,7 @@ function __BucketClassProject(_path) constructor
   "soundFile":"%soundFilename%",
   "volume":1.0,
 }';
+    }
     
     static __SaveSprite = function(_pathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)
     {
@@ -207,7 +207,7 @@ function __BucketClassProject(_path) constructor
         var _seqFrameUUID = __BucketGenerateUUID();
         
         //Grab the template and do some basic replacements
-        var _yyString = _templateSpriteYY;
+        var _yyString = _templateYY;
         _yyString = string_replace_all(_yyString, "%resourceName%", _spriteName);
         _yyString = string_replace_all(_yyString, "%textureGroupName%", _textureGroupName);
         _yyString = string_replace_all(_yyString, "%layerUUID%", _layerUUID);
@@ -241,10 +241,10 @@ function __BucketClassProject(_path) constructor
             var _frameUUID = _frameUUIDArray[_i];
             
             //Add to the frame array string
-            _frameArrayString += string_replace_all(_templateSpriteFrame, "%frameUUID%", _frameUUID);
+            _frameArrayString += string_replace_all(_templateFrame, "%frameUUID%", _frameUUID);
             
             //Add to the sequence frame array string
-            var _seqFrameArraySubtring = _templateSpriteSeqFrame;
+            var _seqFrameArraySubtring = _templateSeqFrame;
             _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%resourceName%", _spriteName);
             _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%frameUUID%", _frameUUID);
             _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%frameIndex%", _i);
@@ -267,17 +267,16 @@ function __BucketClassProject(_path) constructor
         __BucketSaveString(_yyString, $"{_directory}{_spriteName}.yy");
         
         return _framePathArray;
-    }
-    
-    static _templateSpriteFrame = @'    {"$GMSpriteFrame":"v1","%Name":"%frameUUID%","name":"%frameUUID%","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+        
+        static _templateFrame = @'    {"$GMSpriteFrame":"v1","%Name":"%frameUUID%","name":"%frameUUID%","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
 ';
-    
-    static _templateSpriteSeqFrame = @'            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+        
+        static _templateSeqFrame = @'            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
                 "0":{"$SpriteFrameKeyframe":"","Id":{"name":"%frameUUID%","path":"sprites/%resourceName%/%resourceName%.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"%seqFrameUUID%","IsCreationKey":false,"Key":%frameIndex%.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
 ';
-    
-    static _templateSpriteYY = @'{
+        
+        static _templateYY = @'{
   "$GMSprite":"v2",
   "%Name":"%resourceName%",
   "bboxMode":0,
@@ -365,6 +364,79 @@ function __BucketClassProject(_path) constructor
   "VTile":false,
   "width":%width%,
 }';
+    }
+    
+    static __SaveNoteImmediate = function(_noteName, _folderInProject, _string)
+    {
+        var _directory = $"{__directory}notes/{_noteName}/";
+        
+        //Set the in-project folder path
+        if (_folderInProject == "")
+        {
+            var _parentName = __projectName;
+            var _parentPath = __projectFilename;
+        }
+        else
+        {
+            _folderInProject = __BucketTrimDirectory(_folderInProject);
+            var _parentPath = $"folders/{_folderInProject}.yy";
+            var _parentName = $"{filename_name(_folderInProject)}.yy";
+        }
+        
+        var _yyString = _templateYY;
+        _yyString = string_replace_all(_yyString, "%resourceName%", _noteName);
+        _yyString = string_replace_all(_yyString, "%folderName%", _parentName);
+        _yyString = string_replace_all(_yyString, "%folderPath%", _parentPath);
+    
+        __BucketSaveString(_string, $"{_directory}{_noteName}.txt")
+        __BucketSaveString(_yyString, $"{_directory}{_noteName}.yy");
+        
+        var _resourcesContent = __BucketYYPExtract(__yypString, "resources");
+        var _isEmptyArray = _resourcesContent.__emptyArray;
+        if (_resourcesContent.__error)
+        {
+            __BucketError($"Failed to extract resources from \"{__path}\"");
+        }
+        
+        var _yypResourcesDict = {};
+        var _yypResourcesArray = _resourcesContent.__array;
+        var _i = 0;
+        repeat(array_length(_yypResourcesArray))
+        {
+            _yypResourcesDict[$ _yypResourcesArray[_i].id.name] = true;
+            ++_i;
+        }
+        
+        var _resourcesString = _resourcesContent.__string;
+        if (not struct_exists(_yypResourcesDict, _noteName))
+        {
+            if (_isEmptyArray) _resourcesString += "\n";
+            _resourcesString += string_replace_all(_resourceTemplate, "%name%", _noteName);
+            if (_isEmptyArray) _resourcesString += "  ";
+        }
+        
+        var _yypString = __BucketYYPInject(__yypString, _resourcesContent, _resourcesString);
+        if (_yypString != __yypString)
+        {
+            //Save the .yyp if anything's changed
+            __BucketSaveString(_yypString, GM_project_filename);
+            __yypString = _yyString;
+        }
+        
+        static _templateYY = @'{
+    "$GMNotes":"v1",
+    "%Name":"%resourceName%",
+    "name":"%resourceName%",
+    "parent":{
+    "name":"%folderName%",
+    "path":"%folderPath%",
+    },
+    "resourceType":"GMNotes",
+    "resourceVersion":"2.0",
+}';
+    
+        static _resourceTemplate = "    {\"id\":{\"name\":\"%name%\",\"path\":\"notes/%name%/%name%.yy\",},},\n";
+    }
     
     static __SaveYY = function(_newAudioGroupDict, _newFolderDict, _newDatafileDict, _newResourceDict, _newTextureGroupDict)
     {
@@ -379,8 +451,7 @@ function __BucketClassProject(_path) constructor
         }
         
         file_copy(__path, $"{__path}.old");
-        var _oldYYPString = __yypString;
-        var _yypString    = __yypString;
+        var _yypString = __yypString;
         
         //Expand folder paths
         _newFolderDict = variable_clone(_newFolderDict);
@@ -502,10 +573,10 @@ function __BucketClassProject(_path) constructor
         _yypString = __BucketYYPInject(_yypString, __foldersContent,       _newFoldersString);
         _yypString = __BucketYYPInject(_yypString, __audioGroupsContent,   _newAudioGroupsString);
         
-        if (_yypString != _oldYYPString)
+        if (_yypString != __yypString)
         {
             //Save the .yyp if anything's changed
-            __BucketSaveString(_yypString, _projectPath);
+            __BucketSaveString(_yypString, __path);
         }
         
         static _audioGroupTemplate = "    {\"$GMAudioGroup\":\"v1\",\"%Name\":\"%name%\",\"exportDir\":\"\",\"name\":\"%name%\",\"resourceType\":\"GMAudioGroup\",\"resourceVersion\":\"2.0\",\"targets\":-1,},\n";

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__BucketEnsureBufferDescription",
   "parent":{
-    "name":"AssetBucket",
-    "path":"AssetBucket.yyp",
+    "name":"I've kicked the bucket",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
