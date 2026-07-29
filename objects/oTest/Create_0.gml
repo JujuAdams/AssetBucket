@@ -1,6 +1,8 @@
 var _commandList = new BucketCommandList();
 
-var _baseFileList = BucketQuickFileList(BUCKET_PROJECT_DIRECTORY + "asset_bucket");
+var _baseFileList = (new BucketFileList())
+                    .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket")
+                    .PopulateFromSubdirectory("");
 
 _baseFileList.Duplicate()
 .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/datafiles")
@@ -8,9 +10,9 @@ _baseFileList.Duplicate()
     commandLine: _commandList,
     bucketName: "bufferDefault",
 },
-function(_fileData)
+function(_fileDesc)
 {
-    commandLine.AddDatafileToProject(bucketName, _fileData.localPath, _fileData.absolutePath);
+    commandLine.AddDatafileToProject(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
 }));
 
 _baseFileList.Duplicate()
@@ -21,9 +23,9 @@ _baseFileList.Duplicate()
     commandLine: _commandList,
     bucketName: "bufferDefault",
 },
-function(_fileData)
+function(_fileDesc)
 {
-    commandLine.AddSpriteToProject(_fileData.suggestedName, _fileData.linkedPaths, "Sprites");
+    commandLine.AddSpriteToProject(_fileDesc.suggestedName, _fileDesc.linkedPaths, "Sprites");
 }));
 
 _baseFileList.Duplicate()
@@ -33,9 +35,9 @@ _baseFileList.Duplicate()
     commandLine: _commandList,
     bucketName: "bufferDefault",
 },
-function(_fileData)
+function(_fileDesc)
 {
-    commandLine.AddSoundToProject(_fileData.suggestedName, _fileData.absolutePath, "Sounds");
+    commandLine.AddSoundToProject(_fileDesc.suggestedName, _fileDesc.absolutePath, "Sounds");
 }));
 
 //_baseFileList.Duplicate()
@@ -44,9 +46,9 @@ function(_fileData)
 //    commandLine: _commandList,
 //    bucketName: "bufferDefault",
 //},
-//function(_fileData)
+//function(_fileDesc)
 //{
-//    commandLine.AddDatafileToBucket(bucketName, _fileData.localPath, _fileData.absolutePath);
+//    commandLine.AddDatafileToBucket(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
 //}));
 //
 //_baseFileList.Duplicate()
@@ -57,9 +59,9 @@ function(_fileData)
 //    commandLine: _commandList,
 //    bucketName: "bufferDefault",
 //},
-//function(_fileData)
+//function(_fileDesc)
 //{
-//    commandLine.AddSpriteToBucket(bucketName, _fileData.suggestedName, _fileData.linkedPaths);
+//    commandLine.AddSpriteToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.linkedPaths);
 //}));
 //
 //_baseFileList.Duplicate()
@@ -69,19 +71,19 @@ function(_fileData)
 //    commandLine: _commandList,
 //    bucketName: "bufferDefault",
 //},
-//function(_fileData)
+//function(_fileDesc)
 //{
-//    if (_fileData.extension == ".wav")
+//    if (_fileDesc.extension == ".wav")
 //    {
-//        commandLine.AddWAVToBucket(bucketName, _fileData.suggestedName, _fileData.absolutePath);
+//        commandLine.AddWAVToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.absolutePath);
 //    }
-//    else if (_fileData.extension == ".ogg")
+//    else if (_fileDesc.extension == ".ogg")
 //    {
-//        commandLine.AddOGGToBucket(bucketName, _fileData.suggestedName, _fileData.absolutePath);
+//        commandLine.AddOGGToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.absolutePath);
 //    }
 //    else
 //    {
-//        __BucketError($"Sound file extension \"{_fileData.extension}\" is not supported\nPath was \"{_fileData.absolutePath}\"");
+//        __BucketError($"Sound file extension \"{_fileDesc.extension}\" is not supported\nPath was \"{_fileDesc.absolutePath}\"");
 //    }
 //}));
 
@@ -91,30 +93,3 @@ _commandList.SaveToProject(GM_project_filename);
 //texturegroup_load("bucketDefault");
 //
 //show_debug_message(BucketDatafileGetString("datafiles/localization/english.txt"));
-
-//job = {
-//    buckets: [
-//        {
-//            name: "bucketDefault",
-//        }
-//    ],
-//    fileLists: [
-//        {
-//            name: "base"
-//            rootDirectory: "../asset_bucket/datafiles",
-//            populateFromSubdirectory: "",
-//        },
-//        {
-//            name: "datafiles"
-//            duplicateOf: "base",
-//            rootDirectory: "../asset_bucket/datafiles",
-//        },
-//    ],
-//    workers: [
-//        {
-//            name: "addDatafileToBucket",
-//            fileList: "datafiles",
-//            bucket: "bucketDefault",
-//        },
-//    ],
-//};

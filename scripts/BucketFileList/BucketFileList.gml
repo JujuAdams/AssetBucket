@@ -1,8 +1,4 @@
-/// @param [rootDirectory=""]
-
-#macro __BUCKET_PATH_WILDCARD  ((os_type == os_windows)? "*.*" : "*")
-
-function BucketFileList(_rootDirectory = "") constructor
+function BucketFileList() constructor
 {
     __rootDirectory = "";
     __fileDataArray = [];
@@ -19,11 +15,11 @@ function BucketFileList(_rootDirectory = "") constructor
         {
             var _newRootDirLength = string_length(_newRootDirectory);
             
-            var _fileDataArray = __fileDataArray;
-            var _i = array_length(_fileDataArray)-1;
-            repeat(array_length(_fileDataArray))
+            var _fileDescArray = __fileDataArray;
+            var _i = array_length(_fileDescArray)-1;
+            repeat(array_length(_fileDescArray))
             {
-                with(_fileDataArray[_i])
+                with(_fileDescArray[_i])
                 {
                     if (string_pos(_newRootDirectory, absolutePath) == 1)
                     {
@@ -32,7 +28,7 @@ function BucketFileList(_rootDirectory = "") constructor
                     }
                     else
                     {
-                        array_delete(_fileDataArray, _i, 1);
+                        array_delete(_fileDescArray, _i, 1);
                     }
                 }
                 
@@ -50,13 +46,13 @@ function BucketFileList(_rootDirectory = "") constructor
     static AddLocalPath = function(_pathOrArray)
     {
         var _rootDirectory = __rootDirectory;
-        var _fileDataArray = __fileDataArray;
+        var _fileDescArray = __fileDataArray;
         _pathOrArray = __BucketEnsureArray(_pathOrArray);
         
         var _i = 0;
         repeat(array_length(_pathOrArray))
         {
-            array_push(_fileDataArray, new BucketPathDescription(_rootDirectory, __BucketEnsureDirectory(_pathOrArray[_i])));
+            array_push(_fileDescArray, new BucketFileDescription(_rootDirectory, __BucketEnsureDirectory(_pathOrArray[_i])));
             ++_i;
         }
         
@@ -65,13 +61,13 @@ function BucketFileList(_rootDirectory = "") constructor
     
     static AddAbsolutePath = function(_pathOrArray)
     {
-        var _fileDataArray = __fileDataArray;
+        var _fileDescArray = __fileDataArray;
         _pathOrArray = __BucketEnsureArray(_pathOrArray);
         
         var _i = 0;
         repeat(array_length(_pathOrArray))
         {
-            array_push(_fileDataArray, new BucketPathDescription("", __BucketEnsureDirectory(_pathOrArray[_i])));
+            array_push(_fileDescArray, new BucketFileDescription("", __BucketEnsureDirectory(_pathOrArray[_i])));
             ++_i;
         }
         
@@ -83,7 +79,7 @@ function BucketFileList(_rootDirectory = "") constructor
         _path = __BucketEnsureDirectory(_path);
         
         var _rootDirectory = __rootDirectory;
-        var _fileDataArray = __fileDataArray;
+        var _fileDescArray = __fileDataArray;
         
         var _directoryArray = [];
         array_push(_directoryArray, "");
@@ -106,7 +102,7 @@ function BucketFileList(_rootDirectory = "") constructor
                 }
                 else
                 {
-                    array_push(_fileDataArray, new BucketPathDescription(_rootDirectory, _directory + _file));
+                    array_push(_fileDescArray, new BucketFileDescription(_rootDirectory, _directory + _file));
                 }
             }
             
@@ -117,9 +113,9 @@ function BucketFileList(_rootDirectory = "") constructor
         //fails the hash check has its variables wiped ready for recalculation
         var _fileInfoDict = __BucketSystem().__fileInfoDict;
         var _i = 0;
-        repeat(array_length(_fileDataArray))
+        repeat(array_length(_fileDescArray))
         {
-            var _fileInfo = _fileInfoDict[$ _fileDataArray[_i].absolutePath];
+            var _fileInfo = _fileInfoDict[$ _fileDescArray[_i].absolutePath];
             if (is_struct(_fileInfo))
             {
                 _fileInfo.__CheckHash();
@@ -133,14 +129,14 @@ function BucketFileList(_rootDirectory = "") constructor
     
     static IncludeLocalPaths = function(_maskOrArray)
     {
-        var _fileDataArray = __fileDataArray;
+        var _fileDescArray = __fileDataArray;
         
-        var _i = array_length(_fileDataArray)-1;
-        repeat(array_length(_fileDataArray))
+        var _i = array_length(_fileDescArray)-1;
+        repeat(array_length(_fileDescArray))
         {
-            if (not __BucketTestStringMaskAny(_fileDataArray[_i].localPath, _maskOrArray))
+            if (not __BucketTestStringMaskAny(_fileDescArray[_i].localPath, _maskOrArray))
             {
-                array_delete(_fileDataArray, _i, 1);
+                array_delete(_fileDescArray, _i, 1);
             }
             
             --_i;
@@ -151,14 +147,14 @@ function BucketFileList(_rootDirectory = "") constructor
     
     static ExcludeLocalPaths = function(_maskOrArray)
     {
-        var _fileDataArray = __fileDataArray;
+        var _fileDescArray = __fileDataArray;
         
-        var _i = array_length(_fileDataArray)-1;
-        repeat(array_length(_fileDataArray))
+        var _i = array_length(_fileDescArray)-1;
+        repeat(array_length(_fileDescArray))
         {
-            if (__BucketTestStringMaskAny(_fileDataArray[_i].localPath, _maskOrArray))
+            if (__BucketTestStringMaskAny(_fileDescArray[_i].localPath, _maskOrArray))
             {
-                array_delete(_fileDataArray, _i, 1);
+                array_delete(_fileDescArray, _i, 1);
             }
             
             --_i;
@@ -171,13 +167,13 @@ function BucketFileList(_rootDirectory = "") constructor
     {
         var _collectionDict = {};
         
-        var _fileDataArray = __fileDataArray;
-        var _i = array_length(_fileDataArray)-1;
-        repeat(array_length(_fileDataArray))
+        var _fileDescArray = __fileDataArray;
+        var _i = array_length(_fileDescArray)-1;
+        repeat(array_length(_fileDescArray))
         {
-            var _fileData = _fileDataArray[_i];
+            var _fileDesc = _fileDescArray[_i];
             
-            var _filenameStripped = _fileData.suggestedName;
+            var _filenameStripped = _fileDesc.suggestedName;
             var _substringPos = string_pos("_frame", _filenameStripped);
             if (_substringPos > 0)
             {
@@ -205,16 +201,16 @@ function BucketFileList(_rootDirectory = "") constructor
                             _collectionDict[$ _basicName] = _pathArray;
                         }
                         
-                        _pathArray[@ _number] = _fileData.absolutePath;
+                        _pathArray[@ _number] = _fileDesc.absolutePath;
                         
                         if (_number == 0)
                         {
-                            _fileData.suggestedName = string_copy(_filenameStripped, 1, _substringPos-1);
-                            _fileData.linkedPaths = _pathArray;
+                            _fileDesc.suggestedName = string_copy(_filenameStripped, 1, _substringPos-1);
+                            _fileDesc.linkedPaths = _pathArray;
                         }
                         else
                         {
-                            array_delete(_fileDataArray, _i, 1);
+                            array_delete(_fileDescArray, _i, 1);
                         }
                     }
                 }

@@ -42,15 +42,15 @@ function BucketCommandList() constructor
         __EnsureBucket(_bucketName).__SetMetadata(_key, _value);
     }
     
-    static AddDatafileToBucket = function(_bucketName, _alias, _path)
+    static AddDatafileToBucket = function(_bucketName, _alias, _sourcePath)
     {
         var _bucket = __EnsureBucket(_bucketName);
-        _bucket.__SetAliasAsModified(_alias);
+        _bucket.__SetDatafileAsModified(_alias);
         
         array_push(__commandArray, method({
             __bucket: _bucket,
             __alias:  _alias,
-            __path:   _path,
+            __path:   _sourcePath,
         },
         function(_projectStruct, _datafilesDirectory)
         {
@@ -60,9 +60,9 @@ function BucketCommandList() constructor
         }));
     }
     
-    static AddSpriteToBucket = function(_bucketName, _alias, _pathOrArray, _textureGroup = "Default")
+    static AddSpriteToBucket = function(_bucketName, _alias, _sourcePathOrArray, _textureGroup = "Default")
     {
-        _pathOrArray = __BucketEnsureArray(_pathOrArray);
+        var _sourcePathArray = __BucketEnsureArray(_sourcePathOrArray);
         
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
@@ -70,16 +70,16 @@ function BucketCommandList() constructor
         array_push(__commandArray, method({
             __bucket:       _bucket,
             __alias:        _alias,
-            __pathOrArray:  _pathOrArray,
+            __pathArray:    _sourcePathOrArray,
             __textureGroup: _textureGroup,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __bucket.__AddSprite(__alias, __pathOrArray, __textureGroup);
+            __bucket.__AddSprite(__alias, __pathArray, __textureGroup);
         }));
     }
     
-    static AddWAVToBucket = function(_bucketName, _alias, _path, _compress = false)
+    static AddWAVToBucket = function(_bucketName, _alias, _sourcePath, _compress = false)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
@@ -87,7 +87,7 @@ function BucketCommandList() constructor
         array_push(__commandArray, method({
             __bucket:   _bucket,
             __alias:    _alias,
-            __path:     _path,
+            __path:     _sourcePath,
             __compress: _compress,
         },
         function(_projectStruct, _datafilesDirectory)
@@ -98,7 +98,7 @@ function BucketCommandList() constructor
         }));
     }
     
-    static AddOGGToBucket = function(_bucketName, _alias, _path)
+    static AddOGGToBucket = function(_bucketName, _alias, _sourcePath)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
@@ -106,7 +106,7 @@ function BucketCommandList() constructor
         array_push(__commandArray, method({
             __bucket: _bucket,
             __alias:  _alias,
-            __path:   _path,
+            __path:   _sourcePath,
         },
         function(_projectStruct, _datafilesDirectory)
         {

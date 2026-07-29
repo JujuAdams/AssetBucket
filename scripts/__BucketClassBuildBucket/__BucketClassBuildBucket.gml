@@ -16,6 +16,8 @@ function __BucketClassBuildBucket(_name) constructor
     __soundsArray       = [];
     __textureGroupDict  = {};
     __aliasMetadataDict = {};
+    
+    __modifiedDatafileDict = {};
     __modifiedAliasDict = {};
     
     __queuedOGGArray = [];
@@ -24,6 +26,16 @@ function __BucketClassBuildBucket(_name) constructor
     
     
     
+    
+    static __SetDatafileAsModified = function(_alias)
+    {
+        if (struct_exists(__modifiedDatafileDict, _alias))
+        {
+            __BucketError($"Bucket alias \"{_alias}\" has already been modified by another command");
+        }
+        
+        __modifiedDatafileDict[$ _alias] = true;
+    }
     
     static __SetAliasAsModified = function(_alias)
     {

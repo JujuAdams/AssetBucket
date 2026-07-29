@@ -1,4 +1,4 @@
-function BucketPathDescription(_rootDirectory, _localPath) constructor
+function BucketFileDescription(_rootDirectory, _localPath) constructor
 {
     rootDirectory = _rootDirectory;
     localPath     = _localPath;

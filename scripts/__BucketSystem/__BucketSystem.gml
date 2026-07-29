@@ -1,3 +1,7 @@
+#macro __BUCKET_PATH_WILDCARD  ((os_type == os_windows)? "*.*" : "*")
+
+
+
 __BucketSystem();
 
 function __BucketSystem()
