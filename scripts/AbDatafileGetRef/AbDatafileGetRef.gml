@@ -1,5 +1,5 @@
 function AbDatafileGetRef(_originalPath)
 {
-    static _runtimeAbDatafileMap = __AbSystem().__runtimeBucketDatafileMap;
-    return _runtimeAbDatafileMap[? _originalPath];
+    static _runtimeBucketDatafileMap = __AbSystem().__runtimeBucketDatafileMap;
+    return _runtimeBucketDatafileMap[? _originalPath];
 }

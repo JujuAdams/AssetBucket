@@ -7,7 +7,7 @@ function __AbClassBuildAb(_name) constructor
     __name = _name;
     
     __hash          = md5_string_utf8(__name);
-    __headerFilename = $"ab_{__hash}_h.json";
+    __headerFilename = $"ab_{string_lower(string_replace_all(AsciiTransliterateNoSymbols(__name), " ", "_"))}.json";
     __coreFilename   = $"ab_{__hash}_0.bin";
     
     __coreBuffer = buffer_create(1024*1024, buffer_grow, 1);

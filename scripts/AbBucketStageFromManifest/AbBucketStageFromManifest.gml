@@ -1,4 +1,4 @@
-function AbManifestLoad(_path)
+function AbBucketStageFromManifest(_path)
 {
     static _system = __AbSystem();
     
@@ -6,16 +6,15 @@ function AbManifestLoad(_path)
     
     with(_system)
     {
-        var _manifestPath = __AbGetDatafilePath(AB_MANIFEST_FILENAME);
-        if (not file_exists(_manifestPath))
+        if (not file_exists(_path))
         {
-            __AbError($"Could not find manifest file at \"{_manifestPath}\"");
+            __AbError($"Could not find manifest file at \"{_path}\"");
         }
         
-        var _buffer = buffer_load(_manifestPath);
+        var _buffer = buffer_load(_path);
         if (not buffer_exists(_buffer))
         {
-            __AbError($"Failed to open manifest file \"{_manifestPath}\"");
+            __AbError($"Failed to open manifest file \"{_path}\"");
         }
         
         var _manifest = undefined;
@@ -27,7 +26,7 @@ function AbManifestLoad(_path)
         catch(_error)
         {
             show_debug_message(_error);
-            __AbError($"Failed to parse JSON in {_manifestPath}");
+            __AbError($"Failed to parse JSON in {_path}");
         }
         
         var _manifestBucketArray = _manifest.buckets;
@@ -45,7 +44,7 @@ function AbManifestLoad(_path)
         var _i = 0;
         repeat(array_length(_manifestBucketArray))
         {
-            array_push(_outputBucketArray, AbBucketLoad($"{_directory}{_manifestBucketArray[_i].filename}"));
+            array_push(_outputBucketArray, AbBucketStage($"{_directory}{_manifestBucketArray[_i].filename}").__name);
             ++_i;
         }
     }

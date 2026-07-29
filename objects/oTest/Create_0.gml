@@ -72,9 +72,8 @@ function(_fileDesc)
 
 _commandList.SaveToProject(GM_project_filename);
 
-AbBucketLoad("ab_4582a72d1450f5e8816521ea5a808b06_h.json");
-
-AbManifestLoadAndFetch(AB_MANIFEST_FILENAME);
+AbBucketStageAndLoadFromManifest(AB_MANIFEST_FILENAME);
+show_debug_message(AbDatafileGetString("localization/english.txt"));
 
 //AbLoad("bucketDefault");
 //texturegroup_load("bucketDefault");

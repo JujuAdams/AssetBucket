@@ -30,6 +30,15 @@ function __AbClassRuntimeBucket(_headerPath) constructor
         __AbError($"Header JSON object type is not \"bucket header v1\" (was \"{__header[$ "type"]}\")");
     }
     
+    var _textureGroupArray = __header.textureGroups;
+    __textureGroupNameArray = array_create(array_length(_textureGroupArray), undefined);
+    var _i = 0;
+    repeat(array_length(_textureGroupArray))
+    {
+        __textureGroupNameArray[@ _i] = _textureGroupArray[_i].name;
+        ++_i;
+    }
+    
     __name = __header.name;
     
     __coreBuffer = -1;
@@ -45,35 +54,25 @@ function __AbClassRuntimeBucket(_headerPath) constructor
     __datafileNameArray = [];
     __soundNameArray    = [];
     
-    __fetched = false;
+    __loaded = false;
     
     
     
     
     
-    static Destroy = function()
+    static __Destroy = function()
     {
-        Unfetch();
+        __Unload();
         
         ds_map_delete(_projectBucketMap, __name);
         var _index = array_get_index(_projectBucketArray, self);
         if (_index >= 0) array_delete(_projectBucketArray, _index, 1);
     }
     
-    static GetName = function()
+    static __Unload = function()
     {
-        return __name;
-    }
-    
-    static GetFetched = function()
-    {
-        return __fetched;
-    }
-    
-    static Unfetch = function()
-    {
-        if (not __fetched) return;
-        __fetched = false;
+        if (not __loaded) return;
+        __loaded = false;
         
         array_foreach(__wavArray, audio_free_buffer_sound);
         array_foreach(__oggArray, audio_destroy_stream);
@@ -107,13 +106,13 @@ function __AbClassRuntimeBucket(_headerPath) constructor
         __datafileNameArray = [];
         __soundNameArray    = [];
         
-        __fetched = false;
+        __loaded = false;
     }
     
-    static Fetch = function()
+    static __Load = function()
     {
-        if (__fetched) return;
-        __fetched = true;
+        if (__loaded) return;
+        __loaded = true;
         
         __datafileDict             = __header[$ "datafiles"];
         var _soundsDefinitionArray = __header[$ "sounds"];
@@ -146,9 +145,9 @@ function __AbClassRuntimeBucket(_headerPath) constructor
         
         struct_foreach(__datafileDict, function(_name, _value)
         {
-            static _runtimeAbDatafileMap = __AbSystem().__runtimeBucketDatafileMap;
+            static _runtimeBucketDatafileMap = __AbSystem().__runtimeBucketDatafileMap;
             _value.buffer = __coreBuffer;
-            _runtimeAbDatafileMap[? _name] = _value;
+            _runtimeBucketDatafileMap[? _name] = _value;
         });
         
         //Set up sounds
@@ -209,7 +208,7 @@ function __AbClassRuntimeBucket(_headerPath) constructor
                     var _j = 0;
                     repeat(array_length(_tgroupPagePathArray))
                     {
-                        var _path = __AbGetDatafilePath(_tgroupPagePathArray[_j]);
+                        var _path = __directory + _tgroupPagePathArray[_j];
                         if (not file_exists(_path))
                         {
                             __AbError($"Could not find \"{_path}\"");

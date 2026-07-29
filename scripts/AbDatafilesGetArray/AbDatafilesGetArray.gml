@@ -1,20 +1,34 @@
 /// @param bucketName
+/// @param [outputArray]
 
-function AbDatafilesGetArray(_bucketName)
+function AbDatafilesGetArray(_bucketName, _outputArray = undefined)
 {
-    static _runtimeBucketMap = __AbSystem().__runtimeBucketMap;
+    static _runtimeBucketMap = __AbSystem().__runtimeBucketMap
     
     var _bucket = _runtimeBucketMap[? _bucketName];
-    
-    if (not is_struct(_bucket))
+    if (_bucket == undefined)
     {
-        __AbError($"Ab \"{_bucketName}\" not found");
+        if (_outputArray == undefined)
+        {
+            _outputArray = [];
+        }
+        else
+        {
+            array_resize(_outputArray, 0);
+        }
+    }
+    else
+    {
+        if (_outputArray == undefined)
+        {
+            _outputArray = variable_clone(_bucket.__datafileNameArray);
+        }
+        else
+        {
+            array_resize(_outputArray, 0);
+            array_copy(_outputArray, 0, _bucket.__datafileNameArray, 0, array_length(_bucket.__datafileNameArray));
+        }
     }
     
-    if (not _bucket.__fetched)
-    {
-        __AbError($"Ab \"{_bucketName}\" not loaded");
-    }
-    
-    return _bucket.__datafileNameArray;
+    return _outputArray;
 }
