@@ -2,14 +2,14 @@ function __BucketAddSprite(_absolutePath)
 {
     var _sprite = -1;
     
-    if (is_struct(_path))
+    if (is_struct(_absolutePath))
     {
-        var _surface = surface_create(_path.width, _path.height);
-        buffer_set_surface(_path.buffer, _surface, _path[$ "offset"] ?? 0);
-        var _sprite = sprite_create_from_surface(_surface, 0, 0, _path.width, _path.height, false, false, 0, 0);
+        var _surface = surface_create(_absolutePath.width, _absolutePath.height);
+        buffer_set_surface(_absolutePath.buffer, _surface, _absolutePath[$ "offset"] ?? 0);
+        var _sprite = sprite_create_from_surface(_surface, 0, 0, _absolutePath.width, _absolutePath.height, false, false, 0, 0);
         surface_free(_surface);
     }
-    else if (is_struct(_path))
+    else if (is_string(_absolutePath))
     {
         if (filename_ext(_absolutePath) != ".psd")
         {

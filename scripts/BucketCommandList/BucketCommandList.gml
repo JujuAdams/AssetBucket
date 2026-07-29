@@ -79,6 +79,8 @@ function BucketCommandList() constructor
     
     static __AddSpriteToBucket = function(_bucketName, _alias, _pathOrArray, _textureGroup)
     {
+        _pathOrArray = __BucketEnsureArray(_pathOrArray);
+        
         var _bucket = __GetBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
@@ -203,14 +205,16 @@ function BucketCommandList() constructor
         }));
     }
     
-    static __AddSpriteToProject = function(_assetName, _pathArray, _projectFolder, _textureGroup)
+    static __AddSpriteToProject = function(_assetName, _pathOrArray, _projectFolder, _textureGroup)
     {
+        _pathOrArray = __BucketEnsureArray(_pathOrArray);
+        
         __hasProjectCommands = true;
         __SetProjectAssetAsMmodified(_assetName);
         
         array_push(__commandArray, method({
             __assetName:     _assetName,
-            __pathArray:     _pathArray,
+            __pathArray:     _pathOrArray,
             __projectFolder: _projectFolder,
             __textureGroup:  _textureGroup,
         },

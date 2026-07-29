@@ -129,8 +129,8 @@ function __BucketClassBuildTextureGroup(_parent, _name) constructor
                 
                 if (_j == 0)
                 {
-                    _spriteDesc.width  = sprite_get_width(_sprite);
-                    _spriteDesc.height = sprite_get_height(_sprite);
+                    _spriteDesc.width  = int64(sprite_get_width(_sprite));
+                    _spriteDesc.height = int64(sprite_get_height(_sprite));
                 }
                 
                 _smallestWidth  = min(_smallestWidth,  _bboxWidth );
@@ -138,12 +138,13 @@ function __BucketClassBuildTextureGroup(_parent, _name) constructor
                 
                 var _frameDesc = {
                     __sprite: _sprite,
-                    w: _bboxWidth,
-                    h: _bboxHeight,
-                    x_offset: _bboxLeft,
-                    y_offset: _bboxTop,
-                    crop_width: _bboxWidth, //Don't know why we need this as well as w/h above
-                    crop_height: _bboxHeight,
+                    
+                    w:           int64(_bboxWidth),
+                    h:           int64(_bboxHeight),
+                    x_offset:    int64(_bboxLeft),
+                    y_offset:    int64(_bboxTop),
+                    crop_width:  int64(_bboxWidth), //Don't know why we need this as well as w/h above
+                    crop_height: int64(_bboxHeight),
                 };
                 
                 array_push(_frameDescArray,      _frameDesc);
@@ -207,9 +208,9 @@ function __BucketClassBuildTextureGroup(_parent, _name) constructor
             {
                 with(_frameDesc)
                 {
-                    x  = _foundBox.__left;
-                    y  = _foundBox.__top;
-                    tp = _foundBox.__surfaceIndex;
+                    x  = int64(_foundBox.__left);
+                    y  = int64(_foundBox.__top);
+                    tp = int64(_foundBox.__surfaceIndex);
                 }
                 
                 with(_foundBox)
@@ -243,9 +244,9 @@ function __BucketClassBuildTextureGroup(_parent, _name) constructor
             {
                 with(_frameDesc)
                 {
-                    x  = _imageBorder;
-                    y  = _imageBorder;
-                    tp = _surfaceCount;
+                    x  = int64(_imageBorder);
+                    y  = int64(_imageBorder);
+                    tp = int64(_surfaceCount);
                 }
                 
                 array_push(_boxArray, {

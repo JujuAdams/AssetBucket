@@ -32,7 +32,7 @@ function __BucketClassWorker() constructor
         __commandList.__AddDatafileToBucket(_bucketName, _alias, _path);
     }
     
-    static AddSpriteToBucket = function(_bucketName, _alias, _pathOrArray, _textureGroup = _bucketName)
+    static AddSpriteToBucket = function(_bucketName, _alias, _pathOrArray, _textureGroup = "Default")
     {
         __commandList.__AddSpriteToBucket(_bucketName, _alias, _pathOrArray, _textureGroup);
     }
