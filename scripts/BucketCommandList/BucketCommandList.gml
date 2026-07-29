@@ -3,6 +3,7 @@ function BucketCommandList() constructor
     __hasProjectCommands = false;
     
     __commandArray = [];
+    __bucketArray  = [];
     __bucketDict   = {};
     
     __projectDatafileModified = {};
@@ -25,9 +26,15 @@ function BucketCommandList() constructor
         repeat(array_length(_bucketNameOrArray))
         {
             var _bucketName = _bucketNameOrArray[_i];
-            __bucketDict[$ _bucketName] = new __BucketClassBuildBucket(_bucketName);
+            
+            var _bucketStruct = new __BucketClassBuildBucket(_bucketName);
+            __bucketDict[$ _bucketName] = _bucketStruct;
+            array_push(__bucketArray, _bucketStruct);
+            
             ++_i;
         }
+        
+        return self;
     }
     
     static __GetBucket = function(_bucketName)
@@ -62,7 +69,7 @@ function BucketCommandList() constructor
             __alias:  _alias,
             __path:   _path,
         },
-        function(_projectPath, _datafilesDirectory)
+        function(_projectStruct, _datafilesDirectory)
         {
             var _buffer = buffer_load(__path);
             __bucket.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
@@ -81,7 +88,7 @@ function BucketCommandList() constructor
             __pathOrArray:  _pathOrArray,
             __textureGroup: _textureGroup,
         },
-        function(_projectPath, _datafilesDirectory)
+        function(_projectStruct, _datafilesDirectory)
         {
             __bucket.__AddSprite(__alias, __pathOrArray, __textureGroup);
         }));
@@ -98,7 +105,7 @@ function BucketCommandList() constructor
             __path:     _path,
             __compress: _compress,
         },
-        function(_projectPath, _datafilesDirectory)
+        function(_projectStruct, _datafilesDirectory)
         {
             var _buffer = buffer_load(__path);
             __bucket.__AddWAV(__alias, __path, _buffer, 0, __compress);
@@ -116,7 +123,7 @@ function BucketCommandList() constructor
             __alias:  _alias,
             __path:   _path,
         },
-        function(_projectPath, _datafilesDirectory)
+        function(_projectStruct, _datafilesDirectory)
         {
             __bucket.__AddOGG(__alias, __path);
         }));
@@ -132,7 +139,7 @@ function BucketCommandList() constructor
             __alias:            _alias,
             __bufferDescription: _bufferDescription,
         },
-        function(_projectPath, _datafilesDirectory)
+        function(_projectStruct, _datafilesDirectory)
         {
             with(__bufferDescription)
             {
@@ -189,7 +196,7 @@ function BucketCommandList() constructor
             __localDatafilePath:  _localDatafilePath,
             __absoluteSourcePath: _absoluteSourcePath,
         },
-        function(_projectPath, _datafilesDirectory)
+        function(_projectStruct, _datafilesDirectory)
         {
             __EnsureProjectDatafile(__localDatafilePath);
             file_copy(__absoluteSourcePath, _datafilesDirectory + __localDatafilePath);
@@ -207,12 +214,8 @@ function BucketCommandList() constructor
             __projectFolder: _projectFolder,
             __textureGroup:  _textureGroup,
         },
-        function(_projectPath, _datafilesDirectory)
+        function(_projectStruct, _datafilesDirectory)
         {
-            __EnsureProjectSprite(__spriteName);
-            __EnsureProjectFolder(__projectFolder);
-            __EnsureProjectTextureGroup(__textureGroup);
-            
             if (is_struct(__pathArray[0]))
             {
                 var _width  = __pathArray[0].width;
@@ -225,10 +228,10 @@ function BucketCommandList() constructor
                 var _height = _fileInfo.__GetHeight();
             }
             
-            __BucketYYWriteSpriteFile(_system.__currentYYPDirectory, BUCKET_PROJECT_NAME,
-                                      _rootDirectory, __pathArray,
-                                      __spriteName, _width, _height,
-                                      __projectFolder, __textureGroup);
+            __EnsureProjectSprite(__spriteName);
+            __EnsureProjectFolder(__projectFolder);
+            __EnsureProjectTextureGroup(__textureGroup);
+            _projectStruct.__SaveSprite(__pathArray, __assetName, _width, _height, __projectFolder, __textureGroup);
         }));
     }
     
@@ -243,16 +246,12 @@ function BucketCommandList() constructor
             __projectFolder: _projectFolder,
             __audioGroup:    _audioGroup,
         },
-        function(_projectPath, _datafilesDirectory)
+        function(_projectStruct, _datafilesDirectory)
         {
-            __EnsureProjectSound(__soundName);
+            __EnsureProjectSound(__assetName);
             __EnsureProjectFolder(__projectFolder);
             __EnsureProjectAudioGroup(__audioGroup);
-            
-            __BucketYYWriteSoundFile(_system.__currentYYPDirectory, BUCKET_PROJECT_NAME,
-                                     _rootDirectory + __path,
-                                     __assetName, __projectFolder,
-                                     __audioGroup);
+            _projectStruct.__SaveSound(__path, __assetName, __projectFolder, __audioGroup);
         }));
     }
     
@@ -265,7 +264,7 @@ function BucketCommandList() constructor
             __localDatafilePath: _localDatafilePath,
             __bufferDescription:  _bufferDescription,
         },
-        function(_projectPath, _datafilesDirectory)
+        function(_projectStruct, _datafilesDirectory)
         {
             static _system = __BucketSystem();
             
@@ -326,11 +325,11 @@ function BucketCommandList() constructor
     
     
     
-    static ExecuteBucketsOnly = function(_directory)
+    static SaveBucketsToDirectory = function(_directory)
     {
         if (__hasProjectCommands)
         {
-            __BucketWarning("Called `ExecuteBucketsOnly()` but command list has project commands. Project commands will be ignored");
+            __BucketWarning("Called `SaveBucketsToDirectory()` but command list has project commands. Project commands will be ignored");
         }
         
         var _commandArray = __commandArray;
@@ -374,21 +373,17 @@ function BucketCommandList() constructor
         return _bucketExportArray;
     }
     
-    static Execute = function(_projectPath)
+    static SaveToProject = function(_projectPath)
     {
-        if (file_exists(_projectPath))
-        {
-            __BucketError($"Could not find \"{_projectPath}\"");
-        }
-        
-        var _datafilesDirectory = $"{filename_dir(_projectPath)}/datafiles/";
+        var _projectStruct = new __BucketClassProject(_projectPath);
+        var _datafilesDirectory = _projectStruct.__datafilesDirectory;
         
         //Execute all commands
         var _commandArray = __commandArray;
         var _i = 0;
         repeat(array_length(_commandArray))
         {
-            _commandArray[_i](_projectPath, _datafilesDirectory);
+            _commandArray[_i](_projectStruct, _datafilesDirectory);
             ++_i;
         }
         
@@ -410,233 +405,12 @@ function BucketCommandList() constructor
             __EnsureProjectDatafile(BUCKET_MANIFEST_FILENAME);
         }
         
-        //Skip .yyp modification if we have nothing to add
-        if ((struct_names_count(__ensureAudioGroupDict) <= 0)
-        &&  (struct_names_count(__ensureFolderDict) <= 0)
-        &&  (struct_names_count(__ensureDatafileDict) <= 0)
-        &&  (struct_names_count(__ensureResourceDict) <= 0)
-        &&  (struct_names_count(__ensureTextureGroupDict) <= 0))
-        {
-            return;
-        }
-        
-        //Load the base project .yy
-        file_copy(_projectPath, $"{_projectPath}.old");
-        var _yypString = __BucketLoadString(_projectPath);
-        var _oldYYPString = _yypString;
-        
-        //Extract arrays as strings from the .yyp
-        var _audioGroupsContent   = __BucketYYPExtract(_yypString, "AudioGroups");
-        var _foldersContent       = __BucketYYPExtract(_yypString, "Folders");
-        var _datafilesContent     = __BucketYYPExtract(_yypString, "IncludedFiles");
-        var _resourcesContent     = __BucketYYPExtract(_yypString, "resources");
-        var _textureGroupsContent = __BucketYYPExtract(_yypString, "TextureGroups");
-        
-        if (_audioGroupsContent.__error)
-        {
-            __BucketError($"Failed to extract audio groups from \"{_projectPath}\"");
-        }
-        
-        if (_foldersContent.__error)
-        {
-            __BucketError($"Failed to extract IDE folders from \"{_projectPath}\"");
-        }
-        
-        if (_datafilesContent.__error)
-        {
-            __BucketError($"Failed to extract datafiles from \"{_projectPath}\"");
-        }
-        
-        if (_resourcesContent.__error)
-        {
-            __BucketError($"Failed to extract resources from \"{_projectPath}\"");
-        }
-        
-        if (_textureGroupsContent.__error)
-        {
-            __BucketError($"Failed to extract texture groups from \"{_projectPath}\"");
-        }
-        
-        //Unpack arrays into dictionaries for faster lookups
-        var _yypAudioGroupsDict = {};
-        var _yypAudioGroupsArray = _audioGroupsContent.__array;
-        var _i = 0;
-        repeat(array_length(_yypAudioGroupsArray))
-        {
-            _yypAudioGroupsDict[$ _yypAudioGroupsArray[_i].name] = true;
-            ++_i;
-        }
-        
-        var _yypFoldersDict = {};
-        var _yypFoldersArray = _foldersContent.__array;
-        var _i = 0;
-        repeat(array_length(_yypFoldersArray))
-        {
-            _yypFoldersDict[$ string_delete(filename_change_ext(_yypFoldersArray[_i].folderPath, ""), 1, 8)] = true;
-            ++_i;
-        }
-        
-        var _yypDatafilesDict = {};
-        var _yypDatafilesArray = _datafilesContent.__array;
-        var _i = 0;
-        repeat(array_length(_yypDatafilesArray))
-        {
-            _yypDatafilesDict[$ _yypDatafilesArray[_i].name] = true;
-            ++_i;
-        }
-        
-        var _yypResourcesDict = {};
-        var _yypResourcesArray = _resourcesContent.__array;
-        var _i = 0;
-        repeat(array_length(_yypResourcesArray))
-        {
-            _yypResourcesDict[$ _yypResourcesArray[_i].id.name] = true;
-            ++_i;
-        }
-        
-        var _yypTextureGroupsDict = {};
-        var _yypTextureGroupsArray = _textureGroupsContent.__array;
-        var _i = 0;
-        repeat(array_length(_yypTextureGroupsArray))
-        {
-            _yypTextureGroupsDict[$ _yypTextureGroupsArray[_i][$ "%Name"]] = true;
-            ++_i;
-        }
-        
-        //Expand folder paths
-        var _ensureFolderDict = __ensureFolderDict;
-        var _ensureFolderArray = struct_get_names(__ensureFolderDict);
-        
-        var _i = 0;
-        repeat(array_length(_ensureFolderArray))
-        {
-            var _path = _ensureFolderArray[_i];
-            while(_path != "")
-            {
-                _ensureFolderDict[$ _path] = true;
-                _path = filename_dir(_path);
-            }
-            
-            ++_i;
-        }
-        
-        //Add new entries to each array-string
-        var _newAudioGroupsString   = _audioGroupsContent.__string;
-        var _newFoldersString       = _foldersContent.__string;
-        var _newDatafilesString     = _datafilesContent.__string;
-        var _newResourcesString     = _resourcesContent.__string;
-        var _newTextureGroupsString = _textureGroupsContent.__string;
-        
-        _newAudioGroupsString   = _funcContentBuild(       _newAudioGroupsString,   _audioGroupsContent.__emptyArray,   __ensureAudioGroupDict,   _yypAudioGroupsDict,   _audioGroupTemplate                 );
-        _newFoldersString       = _funcContentBuildFolders(_newFoldersString,       _foldersContent.__emptyArray,       __ensureFolderDict,       _yypFoldersDict,       _folderTemplate                     );
-        _newDatafilesString     = _funcContentBuild(       _newDatafilesString,     _datafilesContent.__emptyArray,     __ensureDatafileDict,     _yypDatafilesDict,     _datafileTemplate                   );
-        _newResourcesString     = _funcContentBuildExt(    _newResourcesString,     _resourcesContent.__emptyArray,     __ensureResourceDict,     _yypResourcesDict,     _resourceTemplate,    "resourceType");
-        _newTextureGroupsString = _funcContentBuild(       _newTextureGroupsString, _textureGroupsContent.__emptyArray, __ensureTextureGroupDict, _yypTextureGroupsDict, _textureGroupTemplate               );
-        
-        static _funcContentBuild = function(_string, _isEmptyArray, _ensureDict, _existingDict, _templateString)
-        {
-            var _ensureArray = struct_get_names(_ensureDict);
-            var _addedContent = false;
-            var _i = 0;
-            repeat(array_length(_ensureArray))
-            {
-                var _newName = _ensureArray[_i];
-                if (not struct_exists(_existingDict, _newName))
-                {
-                    if ((not _addedContent) && _isEmptyArray)
-                    {
-                        _string += "\n";
-                    }
-                    
-                    _addedContent = true;
-                    _string += string_replace_all(_templateString, "%name%", _newName);
-                }
-                
-                ++_i;
-            }
-            if (_addedContent && _isEmptyArray) _string += "  ";
-            
-            return _string;
-        }
-        
-        static _funcContentBuildFolders = function(_string, _isEmptyArray, _ensureDict, _existingDict, _templateString, _replaceExt)
-        {
-            var _ensureArray = struct_get_names(_ensureDict);
-            var _addedContent = false;
-            var _i = 0;
-            repeat(array_length(_ensureArray))
-            {
-                var _path = _ensureArray[_i];
-                if (not struct_exists(_existingDict, _path))
-                {
-                    if ((not _addedContent) && _isEmptyArray)
-                    {
-                        _string += "\n";
-                    }
-                    
-                    _addedContent = true;
-                    _string += string_replace_all(string_replace_all(_templateString, "%name%", filename_name(_path)), "%path%", _path);
-                }
-                
-                ++_i;
-            }
-            if (_addedContent && _isEmptyArray) _string += "  ";
-            
-            return _string;
-        }
-        
-        static _funcContentBuildExt = function(_string, _isEmptyArray, _ensureDict, _existingDict, _templateString, _replaceExt)
-        {
-            var _replaceExtSubstring = $"%{_replaceExt}%";
-            
-            var _ensureArray = struct_get_names(_ensureDict);
-            var _addedContent = false;
-            var _i = 0;
-            repeat(array_length(_ensureArray))
-            {
-                var _newName = _ensureArray[_i];
-                var _newExt  = _ensureDict[$ _newName];
-                
-                if (not struct_exists(_existingDict, _newName))
-                {
-                    if ((not _addedContent) && _isEmptyArray)
-                    {
-                        _string += "\n";
-                    }
-                    
-                    _addedContent = true;
-                    _string += string_replace_all(string_replace_all(_templateString, "%name%", _newName), _replaceExtSubstring, _newExt);
-                }
-                
-                ++_i;
-            }
-            if (_addedContent && _isEmptyArray) _string += "  ";
-            
-            return _string;
-        }
-        
-        //Inject strings back into the .yyp
-        // N.B. Order is important here!
-        _yypString = __BucketYYPInject(_yypString, _textureGroupsContent, _newTextureGroupsString);
-        _yypString = __BucketYYPInject(_yypString, _resourcesContent,     _newResourcesString);
-        _yypString = __BucketYYPInject(_yypString, _datafilesContent,     _newDatafilesString);
-        _yypString = __BucketYYPInject(_yypString, _foldersContent,       _newFoldersString);
-        _yypString = __BucketYYPInject(_yypString, _audioGroupsContent,   _newAudioGroupsString);
-        
-        if (_yypString != _oldYYPString)
-        {
-            //Save the .yyp if anything's changed
-            __BucketSaveString(_yypString, _projectPath);
-        }
+        //Save new project references
+        _projectStruct.__SaveYY(__ensureAudioGroupDict,
+                                __ensureFolderDict,
+                                __ensureDatafileDict,
+                                __ensureResourceDict,
+                                __ensureTextureGroupDict);
+        _projectStruct.__Destroy();
     }
-    
-    static _audioGroupTemplate = "    {\"$GMAudioGroup\":\"v1\",\"%Name\":\"%name%\",\"exportDir\":\"\",\"name\":\"%name%\",\"resourceType\":\"GMAudioGroup\",\"resourceVersion\":\"2.0\",\"targets\":-1,},\n";
-    
-    static _folderTemplate = "    {\"$GMFolder\":\"\",\"%Name\":\"%name%\",\"folderPath\":\"folders/%path%.yy\",\"name\":\"%name%\",\"resourceType\":\"GMFolder\",\"resourceVersion\":\"2.0\",},\n";
-    
-    static _datafileTemplate = "    {\"$GMIncludedFile\":\"\",\"%Name\":\"%name%\",\"CopyToMask\":-1,\"filePath\":\"datafiles\",\"name\":\"%name%\",\"resourceType\":\"GMIncludedFile\",\"resourceVersion\":\"2.0\",},\n";
-    
-    static _resourceTemplate = "    {\"id\":{\"name\":\"%name%\",\"path\":\"%resourceType%/%name%/%name%.yy\",},},\n";
-    
-    static _textureGroupTemplate = "    {\"$GMTextureGroup\":\"\",\"%Name\":\"%name%\",\"autocrop\":true,\"border\":2,\"compressFormat\":\"bz2\",\"customOptions\":\"\",\"directory\":\"\",\"groupParent\":null,\"isScaled\":true,\"loadType\":\"default\",\"mipsToGenerate\":0,\"name\":\"%name%\",\"resourceType\":\"GMTextureGroup\",\"resourceVersion\":\"2.0\",\"targets\":-1,},\n";
 }

@@ -125,7 +125,7 @@ function __BucketClassWorker() constructor
     
     
     
-    static Execute = function(_fileList, _commandList)
+    static SendToCommandList = function(_commandList, _fileList)
     {
         __commandList = _commandList;
         

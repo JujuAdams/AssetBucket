@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__BucketClassFileData",
+  "%Name":"__BucketClassPathDescription",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__BucketClassFileData",
+  "name":"__BucketClassPathDescription",
   "parent":{
     "name":"AssetBucket",
     "path":"AssetBucket.yyp",

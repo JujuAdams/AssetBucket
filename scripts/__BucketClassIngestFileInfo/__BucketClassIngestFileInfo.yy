@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__BucketClassIngestFileInfo",
   "parent":{
-    "name":"Ingest",
-    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Classes/Ingest.yy",
+    "name":"Classes",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Classes.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

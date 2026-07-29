@@ -1,4 +1,4 @@
-function __BucketClassFileData(_rootDirectory, _localPath) constructor
+function __BucketClassPathDescription(_rootDirectory, _localPath) constructor
 {
     rootDirectory = _rootDirectory;
     localPath     = _localPath;
