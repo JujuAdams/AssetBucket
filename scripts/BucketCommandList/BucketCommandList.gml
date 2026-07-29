@@ -32,13 +32,17 @@ function BucketCommandList() constructor
         return _bucketStruct;
     }
     
-    static __SetBucketMetadata = function(_bucketName, _key, _value)
+    static SetBucketMetadata = function(_value)
     {
-        if (_value == undefined) return;
+        __EnsureBucket(_bucketName).__metadata = _value;
+    }
+    
+    static SetBucketAliasMetadata = function(_bucketName, _key, _value)
+    {
         __EnsureBucket(_bucketName).__SetMetadata(_key, _value);
     }
     
-    static __AddDatafileToBucket = function(_bucketName, _alias, _path)
+    static AddDatafileToBucket = function(_bucketName, _alias, _path)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
@@ -56,7 +60,7 @@ function BucketCommandList() constructor
         }));
     }
     
-    static __AddSpriteToBucket = function(_bucketName, _alias, _pathOrArray, _textureGroup)
+    static AddSpriteToBucket = function(_bucketName, _alias, _pathOrArray, _textureGroup = "Default")
     {
         _pathOrArray = __BucketEnsureArray(_pathOrArray);
         
@@ -75,7 +79,7 @@ function BucketCommandList() constructor
         }));
     }
     
-    static __AddWAVToBucket = function(_bucketName, _alias, _path, _compress)
+    static AddWAVToBucket = function(_bucketName, _alias, _path, _compress = false)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
@@ -94,7 +98,7 @@ function BucketCommandList() constructor
         }));
     }
     
-    static __AddOGGToBucket = function(_bucketName, _alias, _path)
+    static AddOGGToBucket = function(_bucketName, _alias, _path)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
@@ -110,8 +114,10 @@ function BucketCommandList() constructor
         }));
     }
     
-    static __AddBufferToBucket = function(_bucketName, _alias, _bufferDescription)
+    static AddBufferToBucket = function(_bucketName, _alias, _bufferDescription)
     {
+        _bufferDescription = __BucketEnsureBufferDescription(_bufferDescription);
+        
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
@@ -140,7 +146,7 @@ function BucketCommandList() constructor
     
     
     
-    static __SetProjectDatafileAsMmodified = function(_localDatafilePath)
+    static __SetProjectDatafileAsModified = function(_localDatafilePath)
     {
         if (struct_exists(__projectDatafileModified, _localDatafilePath))
         {
@@ -150,7 +156,7 @@ function BucketCommandList() constructor
         __projectDatafileModified[$ _localDatafilePath] = true;
     }
     
-    static __SetProjectAssetAsMmodified = function(_assetName)
+    static __SetProjectAssetAsModified = function(_assetName)
     {
         if (struct_exists(__projectAssetModified, _assetName))
         {
@@ -160,7 +166,7 @@ function BucketCommandList() constructor
         __projectAssetModified[$ _assetName] = true;
     }
     
-    static __SetProjectMetadata = function(_key, _value)
+    static SetProjectMetadata = function(_key, _value)
     {
         __hasProjectCommands = true;
         if (_value == undefined) return;
@@ -168,34 +174,36 @@ function BucketCommandList() constructor
         __projectMetadata[$ _key] = _value;
     }
     
-    static __AddDatafileToProject = function(_localDatafilePath, _absoluteSourcePath)
+    static AddDatafileToProject = function(_localDatafilePath, _absoluteSourcePath)
     {
         __hasProjectCommands = true;
-        __SetProjectDatafileAsMmodified(_localDatafilePath);
+        __SetProjectDatafileAsModified(_localDatafilePath);
         
         array_push(__commandArray, method({
             __localDatafilePath:  _localDatafilePath,
             __absoluteSourcePath: _absoluteSourcePath,
+            __commandList:        other,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __EnsureProjectDatafile(__localDatafilePath);
+            __commandList.__EnsureProjectDatafile(__localDatafilePath);
             file_copy(__absoluteSourcePath, _datafilesDirectory + __localDatafilePath);
         }));
     }
     
-    static __AddSpriteToProject = function(_assetName, _pathOrArray, _projectFolder, _textureGroup)
+    static AddSpriteToProject = function(_assetName, _pathOrArray, _projectFolder, _textureGroup = "Default")
     {
         _pathOrArray = __BucketEnsureArray(_pathOrArray);
         
         __hasProjectCommands = true;
-        __SetProjectAssetAsMmodified(_assetName);
+        __SetProjectAssetAsModified(_assetName);
         
         array_push(__commandArray, method({
             __assetName:     _assetName,
             __pathArray:     _pathOrArray,
             __projectFolder: _projectFolder,
             __textureGroup:  _textureGroup,
+            __commandList:   other,
         },
         function(_projectStruct, _datafilesDirectory)
         {
@@ -211,41 +219,45 @@ function BucketCommandList() constructor
                 var _height = _fileInfo.__GetHeight();
             }
             
-            __EnsureProjectSprite(__spriteName);
-            __EnsureProjectFolder(__projectFolder);
-            __EnsureProjectTextureGroup(__textureGroup);
+            __commandList.__EnsureProjectSprite(__assetName);
+            __commandList.__EnsureProjectFolder(__projectFolder);
+            __commandList.__EnsureProjectTextureGroup(__textureGroup);
             _projectStruct.__SaveSprite(__pathArray, __assetName, _width, _height, __projectFolder, __textureGroup);
         }));
     }
     
-    static __AddSoundToProject = function(_assetName, _path, _projectFolder, _audioGroup)
+    static AddSoundToProject = function(_assetName, _path, _projectFolder, _audioGroup = "audiogroup_default")
     {
         __hasProjectCommands = true;
-        __SetProjectAssetAsMmodified(_assetName);
+        __SetProjectAssetAsModified(_assetName);
         
         array_push(__commandArray, method({
             __assetName:     _assetName,
             __path:          _path,
             __projectFolder: _projectFolder,
             __audioGroup:    _audioGroup,
+            __commandList:   other,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __EnsureProjectSound(__assetName);
-            __EnsureProjectFolder(__projectFolder);
-            __EnsureProjectAudioGroup(__audioGroup);
+            __commandList.__EnsureProjectSound(__assetName);
+            __commandList.__EnsureProjectFolder(__projectFolder);
+            __commandList.__EnsureProjectAudioGroup(__audioGroup);
             _projectStruct.__SaveSound(__path, __assetName, __projectFolder, __audioGroup);
         }));
     }
     
-    static __AddDataBufferToProject = function(_localDatafilePath, _bufferDescription)
+    static AddDataBufferToProject = function(_localDatafilePath, _bufferDescription)
     {
+        _bufferDescription = __BucketEnsureBufferDescription(_bufferDescription);
+        
         __hasProjectCommands = true;
-        __SetProjectDatafileAsMmodified(_localDatafilePath);
+        __SetProjectDatafileAsModified(_localDatafilePath);
         
         array_push(__commandArray, method({
             __localDatafilePath: _localDatafilePath,
-            __bufferDescription:  _bufferDescription,
+            __bufferDescription: _bufferDescription,
+            __commandList:       other,
         },
         function(_projectStruct, _datafilesDirectory)
         {
@@ -345,9 +357,10 @@ function BucketCommandList() constructor
             __EnsureProjectDatafile(_bucket.__GetCoreFilename());
             
             array_push(_bucketExportArray, {
-                name:     _bucket.__name,
-                blobSize: int64(_bucket.__GetCoreSize()),
-                metadata: _bucket.__metadata,
+                name:          _bucket.__name,
+                blobSize:      int64(_bucket.__GetCoreSize()),
+                metadata:      _bucket.__metadata,
+                aliasMetadata: _bucket.__aliasMetadataDict,
             });
             
             ++_i;

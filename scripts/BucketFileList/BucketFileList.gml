@@ -205,12 +205,12 @@ function BucketFileList(_rootDirectory = "") constructor
                             _collectionDict[$ _basicName] = _pathArray;
                         }
                         
-                        _pathArray[@ _number] = _fileData;
+                        _pathArray[@ _number] = _fileData.absolutePath;
                         
                         if (_number == 0)
                         {
                             _fileData.suggestedName = string_copy(_filenameStripped, 1, _substringPos-1);
-                            _fileData.__linkedFileData = _pathArray;
+                            _fileData.linkedPaths = _pathArray;
                         }
                         else
                         {
@@ -222,6 +222,8 @@ function BucketFileList(_rootDirectory = "") constructor
             
             --_i;
         }
+        
+        return self;
     }
     
     static Duplicate = function()
@@ -230,5 +232,12 @@ function BucketFileList(_rootDirectory = "") constructor
         _new.__rootDirectory = __rootDirectory;
         _new.__fileDataArray = variable_clone(__fileDataArray);
         return _new;
+    }
+    
+    static Foreach = function(_method)
+    {
+        array_foreach(__fileDataArray, _method);
+        
+        return self;
     }
 }

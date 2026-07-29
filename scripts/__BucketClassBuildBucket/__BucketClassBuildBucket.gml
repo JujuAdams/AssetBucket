@@ -11,10 +11,11 @@ function __BucketClassBuildBucket(_name) constructor
     __accumulationBuffer = buffer_create(1024*1024, buffer_grow, 1);
     __coreSize = undefined;
     
+    __metadata          = undefined;
     __datafilesDict     = {};
     __soundsArray       = [];
     __textureGroupDict  = {};
-    __metadata          = {};
+    __aliasMetadataDict = {};
     __modifiedAliasDict = {};
     
     __queuedOGGArray = [];
@@ -38,7 +39,11 @@ function __BucketClassBuildBucket(_name) constructor
     {
         if (_value != undefined)
         {
-            __metadata[$ _key] = _value;
+            __aliasMetadataDict[$ _key] = _value;
+        }
+        else
+        {
+            struct_remove(__aliasMetadataDict, _key);
         }
     }
     

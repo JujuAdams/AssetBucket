@@ -252,7 +252,7 @@ function __BucketClassProject(_path) constructor
             _seqFrameArrayString += _seqFrameArraySubtring;
             
             //Record the paths for saving images
-            _framePathArray[@ _i] = [ $"{_directory}/{_frameUUID}.png", $"{_directory}/layers/{_frameUUID}/{_layerUUID}.png"];
+            _framePathArray[@ _i] = [ $"{_directory}{_frameUUID}.png", $"{_directory}layers/{_frameUUID}/{_layerUUID}.png"];
             
             ++_i;
         }

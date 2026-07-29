@@ -1,11 +1,10 @@
-function __BucketClassIngestFileInfo(_filePath) constructor
+function __BucketClassIngestFileInfo(_absolutePath) constructor
 {
     static _system = __BucketSystem();
     
-    __sourcePath = _filePath;
+    __absolutePath = _absolutePath;
     
-    __absolutePath = $"{_system.__currentYYPDirectory}{_system.__currentIngestStruct.__configStruct.__rootDirectory}{__sourcePath}";
-    if (not file_exists(__absolutePath))
+    if (not file_exists(_absolutePath))
     {
         __BucketError($"Could not find \"{__absolutePath}\"");
     }
