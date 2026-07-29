@@ -1,27 +1,46 @@
 /// @param name
-/// @param textureSize
-/// @param textureFormat
 
-function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) constructor
+function __BucketClassBuildBucket(_name) constructor
 {
     static _system = __BucketSystem();
     
-    __name          = _name;
-    __textureSize   = _textureSize;
-    __textureFormat = _textureFormat;
+    __name = _name;
     
     __hash = md5_string_utf8(__name);
     
     __accumulationBuffer = buffer_create(1024*1024, buffer_grow, 1);
+    __coreSize = undefined;
     
-    __datafilesDict    = {};
-    __soundsArray      = [];
-    __textureGroupDict = {};
+    __datafilesDict     = {};
+    __soundsArray       = [];
+    __textureGroupDict  = {};
+    __metadata          = {};
+    __modifiedAliasDict = {};
     
     __queuedOGGArray = [];
     __fileCount = 1;
     
     
+    
+    
+    
+    static __SetAliasAsModified = function(_alias)
+    {
+        if (struct_exists(__modifiedAliasDict, _alias))
+        {
+            __BucketError($"Bucket alias \"{_alias}\" has already been modified by another command");
+        }
+        
+        __modifiedAliasDict[$ _alias] = true;
+    }
+    
+    static __SetMetadata = function(_key, _value)
+    {
+        if (_value != undefined)
+        {
+            __metadata[$ _key] = _value;
+        }
+    }
     
     static __AddBuffer = function(_alias, _buffer, _offset, _size)
     {
@@ -37,27 +56,27 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         buffer_write(_accumulationBuffer, buffer_u8, 0x00);
     }
     
-    static __AddSprite = function(_textureGroupName, _imageArray, _alias)
+    static __AddSprite = function(_alias, _pathArray, _textureGroupName)
     {
         var _textureGroup = __textureGroupDict[$ _textureGroupName];
         if (not is_struct(_textureGroup))
         {
-            _textureGroup = new __BucketClassIngestTextureGroup(self, _textureGroupName);
+            _textureGroup = new __BucketClassBuildTextureGroup(self, _textureGroupName);
             __textureGroupDict[$ _textureGroupName] = _textureGroup;
         }
         
-        _textureGroup.__AddSprite(_imageArray, _alias);
+        _textureGroup.__AddSprite(_alias, _pathArray);
     }
     
-    static __AddOGG = function(_sourcePath, _alias)
+    static __AddOGG = function(_alias, _path)
     {
         array_push(__queuedOGGArray, {
-            __path: _sourcePath,
             __alias: _alias,
+            __path:  _path,
         });
     }
     
-    static __AddWAV = function(_sourcePath, _alias, _buffer, _offset, _compress)
+    static __AddWAV = function(_alias, _sourcePath, _buffer, _offset, _compress)
     {
         var _accumulationBuffer = __accumulationBuffer;
         
@@ -143,17 +162,28 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         buffer_seek(_accumulationBuffer, buffer_seek_relative, _bucketSize);
     }
     
+    
+    
+    
+    
     static __NewExportFilename = function()
     {
         ++__fileCount;
         return $"ab_{__hash}_{__fileCount-1}.ab";
     }
     
-    static __Save = function(_ingestStruct, _bucketExportArray)
+    static __GetCoreSize = function()
     {
-        var _rootDirectory = $"{_system.__currentYYPDirectory}{_ingestStruct.__configStruct.__rootDirectory}";
-        var _datafilesDirectory = $"{_system.__currentYYPDirectory}datafiles/";
-        
+        return __coreSize;
+    }
+    
+    static __GetCoreFilename = function()
+    {
+        return $"ab_{__hash}_0.ab";
+    }
+    
+    static __SaveToDirectory = function(_directory)
+    {
         //Save OGG files that have been added to the bucket
         var _soundsArray = __soundsArray;
         var _queuedOGGArray = __queuedOGGArray;
@@ -163,7 +193,7 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
             var _oggInfo = _queuedOGGArray[_i];
             
             var _filename = __NewExportFilename();
-            file_copy(_rootDirectory + _oggInfo.__path, _datafilesDirectory + _filename);
+            file_copy(_oggInfo.__path, _directory + _filename);
             
             array_push(_soundsArray, {
                 format:   BUCKET_AUDIO_FORMAT_OGG,
@@ -180,34 +210,28 @@ function __BucketClassIngestBucket(_name, _textureSize, _textureFormat) construc
         var _i = 0;
         repeat(array_length(_namesArray))
         {
-            array_push(_textureGroupArray, __textureGroupDict[$ _namesArray[_i]].__PackTextures(_ingestStruct));
+            array_push(_textureGroupArray, __textureGroupDict[$ _namesArray[_i]].__PackTextures(_directory));
             ++_i;
         }
         
         //Create a header and add it to the accumulated data
         var _buffer = buffer_create(1024*1024, buffer_grow, 1);
         buffer_write(_buffer, buffer_string, json_stringify({
-            version:   int64(BUCKET_CONTENTS_VERSION),
-            datafiles: __datafilesDict,
-            sounds:    __soundsArray,
-            tgroups:   _textureGroupArray,
-            fileCount: int64(__fileCount),
+            version:       int64(BUCKET_CONTENTS_VERSION),
+            datafiles:     __datafilesDict,
+            sounds:        __soundsArray,
+            textureGroups: _textureGroupArray,
+            fileCount:     int64(__fileCount),
         }));
         buffer_copy(__accumulationBuffer, 0, buffer_tell(__accumulationBuffer), _buffer, buffer_tell(_buffer));
         
         //Save out the buffer and clean up
-        var _filename = $"{_datafilesDirectory}ab_{__hash}_0.ab";
-        var _size = buffer_tell(__accumulationBuffer) + buffer_tell(_buffer);
-        buffer_save_ext(_buffer, _filename, 0, _size);
-        
+        __coreSize = buffer_tell(__accumulationBuffer) + buffer_tell(_buffer);
+        buffer_save_ext(_buffer, _directory + __GetCoreFilename(), 0, __coreSize);
         buffer_delete(_buffer);
+        
+        //TODO - Move to `.Destroy()` method
         buffer_delete(__accumulationBuffer);
-        
-        array_push(_bucketExportArray, {
-            name:     __name,
-            blobSize: int64(_size),
-        });
-        
-        return _filename;
+        __accumulationBuffer = undefined;
     }
 }

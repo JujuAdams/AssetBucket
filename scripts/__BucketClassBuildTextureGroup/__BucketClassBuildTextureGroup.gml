@@ -1,7 +1,7 @@
 /// @param parent
 /// @param name
 
-function __BucketClassIngestTextureGroup(_parent, _name) constructor
+function __BucketClassBuildTextureGroup(_parent, _name) constructor
 {
     static _system = __BucketSystem();
     
@@ -18,18 +18,18 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
     
     
     
-    static __AddSprite = function(_imageArray, _alias)
+    static __AddSprite = function(_alias, _imageArray)
     {
         array_push(__queuedSprites, {
-            __imageArray: _imageArray,
             __alias:      _alias,
+            __imageArray: _imageArray,
         });
     }
     
-    static __AddTexturePage = function(_surface)
+    static __AddTexturePage = function(_directory, _surface)
     {
         var _filename = __parent.__NewExportFilename();
-        var _destinationPath = $"{_system.__currentYYPDirectory}datafiles/{_filename}";
+        var _destinationPath = _directory + _filename;
         
         if ((__textureFormat == BUCKET_TEXTURE_FORMAT_RAW) || (__textureFormat == BUCKET_TEXTURE_FORMAT_ZLIB))
         {
@@ -57,13 +57,13 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         }
         else
         {
-            __BucketError($"Texture format \"{_textureFormat}\" unhandled for bucket \"{__name}\"");
+            __BucketError($"Texture format \"{__textureFormat}\" unhandled for bucket \"{__name}\"");
         }
         
         array_push(__texturePagePathArray, _filename);
     }
     
-    static __PackTextures = function(_ingestStruct)
+    static __PackTextures = function(_directory)
     {
         if (array_length(__queuedSprites) <= 0)
         {
@@ -73,8 +73,6 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                 description: {},
             };
         }
-        
-        var _rootDirectory = $"{_system.__currentYYPDirectory}{_ingestStruct.__configStruct.__rootDirectory}";
         
         var _surfaceWidth  = __textureSize;
         var _surfaceHeight = __textureSize;
@@ -111,7 +109,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
             repeat(array_length(_imageArray))
             {
                 var _path = _imageArray[_j];
-                var _sprite = __BucketAddSprite(_rootDirectory, _path);
+                var _sprite = __BucketAddSprite(_path);
                 
                 if (is_struct(_path))
                 {
@@ -294,7 +292,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
                 {
                     if (_currentIndex != undefined)
                     {
-                        other.__AddTexturePage(_surface);
+                        other.__AddTexturePage(_directory, _surface);
                     }
                     
                     _currentIndex = tp;
@@ -314,7 +312,7 @@ function __BucketClassIngestTextureGroup(_parent, _name) constructor
         
         if (_currentIndex != undefined)
         {
-            __AddTexturePage(_surface);
+            __AddTexturePage(_directory, _surface);
         }
         
         surface_reset_target();

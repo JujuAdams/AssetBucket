@@ -1,4 +1,4 @@
-function __BucketAddSprite(_rootDirectory, _path)
+function __BucketAddSprite(_absolutePath)
 {
     var _sprite = -1;
     
@@ -11,8 +11,6 @@ function __BucketAddSprite(_rootDirectory, _path)
     }
     else if (is_struct(_path))
     {
-        var _absolutePath = _rootDirectory + _path;
-        
         if (filename_ext(_absolutePath) != ".psd")
         {
             _sprite = sprite_add(_absolutePath, 0, false, false, 0, 0);

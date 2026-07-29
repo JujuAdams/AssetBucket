@@ -47,38 +47,38 @@ function __BucketClassWorker() constructor
         __commandList.__AddOGGToBucket(_bucketName, _alias, _path);
     }
     
-    static AddDataBufferToBucket = function(_bucketName, _alias, _bufferDescriptor)
+    static AddDataBufferToBucket = function(_bucketName, _alias, _bufferDescription)
     {
-        __commandList.__AddDataBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+        __commandList.__AddBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescription(_bufferDescription));
     }
     
-    //static AddSpriteBufferToBucket = function(_bucketName, _alias, _bufferDescriptor)
+    //static AddSpriteBufferToBucket = function(_bucketName, _alias, _bufferDescription)
     //{
-    //    __commandList.__AddSpriteBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+    //    __commandList.__AddSpriteBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescription(_bufferDescription));
     //}
     //
-    //static AddWAVBufferToBucket = function(_bucketName, _alias, _bufferDescriptor)
+    //static AddWAVBufferToBucket = function(_bucketName, _alias, _bufferDescription)
     //{
-    //    __commandList.__AddWAVBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+    //    __commandList.__AddWAVBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescription(_bufferDescription));
     //}
     //
-    //static AddOGGBufferToBucket = function(_bucketName, _alias, _bufferDescriptor)
+    //static AddOGGBufferToBucket = function(_bucketName, _alias, _bufferDescription)
     //{
-    //    __commandList.__AddOGGBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+    //    __commandList.__AddOGGBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescription(_bufferDescription));
     //}
     //
-    //static AddPCMBufferToBucket = function(_bucketName, _alias, _bufferDescriptor)
+    //static AddPCMBufferToBucket = function(_bucketName, _alias, _bufferDescription)
     //{
-    //    __commandList.__AddPCMBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+    //    __commandList.__AddPCMBufferToBucket(_bucketName, _alias, __BucketEnsureBufferDescription(_bufferDescription));
     //}
     
     
     
     
     
-    static SetProjectMetadata = function(_bucketName, _alias, _metadata)
+    static SetProjectMetadata = function(_bucketName, _key, _value)
     {
-        __commandList.__SetProjectMetadata(_bucketName, _alias, _metadata);
+        __commandList.__SetProjectMetadata(_bucketName, _key, _value);
     }
     
     static AddDatafileToProject = function(_localDatafilePath, _absoluteSourcePath)
@@ -96,29 +96,29 @@ function __BucketClassWorker() constructor
         __commandList.__AddSoundToProject(_assetName, _path, _audioGroup);
     }
     
-    static AddDataBufferToProject = function(_localDatafilePath, _bufferDescriptor)
+    static AddDataBufferToProject = function(_localDatafilePath, _bufferDescription)
     {
-        __commandList.__AddDataBufferToProject(_localDatafilePath, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+        __commandList.__AddDataBufferToProject(_localDatafilePath, __BucketEnsureBufferDescription(_bufferDescription));
     }
     
-    //static AddSpriteBufferToProject = function(_assetName, _bufferDescriptorOrArray)
+    //static AddSpriteBufferToProject = function(_assetName, _bufferDescriptionOrArray)
     //{
-    //    __commandList.__AddSpriteBufferToProject(_assetName, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+    //    __commandList.__AddSpriteBufferToProject(_assetName, __BucketEnsureBufferDescription(_bufferDescription));
     //}
     //
-    //static AddWAVBufferToBucket = function(_assetName, _bufferDescriptor)
+    //static AddWAVBufferToBucket = function(_assetName, _bufferDescription)
     //{
-    //    __commandList.__AddWAVBufferToBucket(_assetName, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+    //    __commandList.__AddWAVBufferToBucket(_assetName, __BucketEnsureBufferDescription(_bufferDescription));
     //}
     //
-    //static AddOGGBufferToBucket = function(_assetName, _bufferDescriptor)
+    //static AddOGGBufferToBucket = function(_assetName, _bufferDescription)
     //{
-    //    __commandList.__AddOGGBufferToBucket(_assetName, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+    //    __commandList.__AddOGGBufferToBucket(_assetName, __BucketEnsureBufferDescription(_bufferDescription));
     //}
     //
-    //static AddPCMBufferToBucket = function(_assetName, _bufferDescriptor)
+    //static AddPCMBufferToBucket = function(_assetName, _bufferDescription)
     //{
-    //    __commandList.__AddPCMBufferToBucket(_assetName, __BucketEnsureBufferDescriptor(_bufferDescriptor));
+    //    __commandList.__AddPCMBufferToBucket(_assetName, __BucketEnsureBufferDescription(_bufferDescription));
     //}
     
     

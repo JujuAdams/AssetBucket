@@ -115,7 +115,7 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
         var _version               = _bucketInfoStruct[$ "version"];
         __datafileDict             = _bucketInfoStruct[$ "datafiles"];
         var _soundsDefinitionArray = _bucketInfoStruct[$ "sounds"];
-        var _textureGroupArray     = _bucketInfoStruct[$ "tgroups"];
+        var _textureGroupArray     = _bucketInfoStruct[$ "textureGroups"];
         
         if (_version != BUCKET_CONTENTS_VERSION)
         {
