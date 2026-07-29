@@ -1,18 +1,18 @@
-function BucketLoad(_bucketName)
+function AbLoad(_bucketName)
 {
-    static _system = __BucketSystem();
+    static _system = __AbSystem();
     static _runtimeBucketMap = _system.__runtimeBucketMap;
     
     if (not _system.__manifestLoaded)
     {
-        __BucketError("Please call `BucketLoadManifest()` before `BucketLoad()`");
+        __AbError("Please call `AbLoadManifest()` before `AbLoad()`");
     }
     
     var _bucket = _runtimeBucketMap[? _bucketName];
     
     if (not is_struct(_bucket))
     {
-        __BucketError($"Bucket \"{_bucketName}\" not found");
+        __AbError($"Ab \"{_bucketName}\" not found");
     }
     
     _bucket.__Load();

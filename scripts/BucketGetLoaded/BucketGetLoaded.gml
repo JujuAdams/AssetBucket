@@ -1,16 +1,16 @@
 /// @param bucketName
 /// @param [strict=false]
 
-function BucketGetLoaded(_bucketName, _strict = false)
+function AbGetLoaded(_bucketName, _strict = false)
 {
-    static _system = __BucketSystem();
+    static _system = __AbSystem();
     static _runtimeBucketMap = _system.__runtimeBucketMap;
     
     if (not _system.__manifestLoaded)
     {
         if (_strict)
         {
-            __BucketError("Please call `BucketLoadManifest()` before `BucketGetLoaded()`");
+            __AbError("Please call `AbLoadManifest()` before `AbGetLoaded()`");
         }
         else
         {
@@ -24,7 +24,7 @@ function BucketGetLoaded(_bucketName, _strict = false)
     {
         if (_strict)
         {
-            __BucketError($"Bucket \"{_bucketName}\" not found");
+            __AbError($"Ab \"{_bucketName}\" not found");
         }
         else
         {

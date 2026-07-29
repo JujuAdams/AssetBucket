@@ -1,6 +1,6 @@
-function BucketSuggestCamelCase(_path, _prefix = "asset")
+function AbSuggestCamelCase(_path, _prefix = "asset")
 {
-    var _assetName = __BucketSuggestSafe(_path);
+    var _assetName = __AbSuggestSafe(_path);
     
     var _firstOrd = ord(string_char_at(_assetName, 1));
     if ((_prefix == "") && (_firstOrd >= ord("0")) && (_firstOrd <= ord("9")))

@@ -5,7 +5,7 @@
 /// @param [textureGroup="Default"]
 /// @param [metadata]
 
-function BucketClassSprite(_projectFolder, _spriteName, _width, _height, _textureGroup = "Default", _metadata = undefined)
+function AbClassSprite(_projectFolder, _spriteName, _width, _height, _textureGroup = "Default", _metadata = undefined)
 {
     __spriteName    = _spriteName;
     __projectFolder = _projectFolder;

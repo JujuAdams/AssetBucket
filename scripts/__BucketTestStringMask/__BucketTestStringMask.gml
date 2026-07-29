@@ -3,7 +3,7 @@
 /// @param string
 /// @param mask
 
-function __BucketTestStringMask(_string, _mask)
+function __AbTestStringMask(_string, _mask)
 {
     var _substringArray = string_split(_mask, "*", true);
     var _substringCount = array_length(_substringArray);

@@ -1,4 +1,4 @@
-function __BucketWarning(_string)
+function __AbWarning(_string)
 {
-    show_debug_message($"Bucket: Warning! {_string}");
+    show_debug_message($"AssetBucket: Warning! {_string}");
 }

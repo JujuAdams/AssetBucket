@@ -1,11 +1,11 @@
-function __BucketSoftError(_string)
+function __AbSoftError(_string)
 {
-    if (BUCKET_RUNNING_FROM_IDE)
+    if (AB_RUNNING_FROM_IDE)
     {
-        __BucketError(_string);
+        __AbError(_string);
     }
     else
     {
-        __BucketTrace(_string);
+        __AbTrace(_string);
     }
 }

@@ -1,6 +1,6 @@
-function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
+function __AbClassRuntimeAb(_bucketName, _blobSize) constructor
 {
-    static _system = __BucketSystem();
+    static _system = __AbSystem();
     
     __name     = _bucketName;
     __blobSize = _blobSize;
@@ -17,8 +17,6 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
     __oggArray          = [];
     __datafileNameArray = [];
     __soundNameArray    = [];
-    
-    __globalAssetOffset = 0;
     
     __loaded = false;
     
@@ -66,8 +64,6 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
         __datafileNameArray = [];
         __soundNameArray    = [];
         
-        __globalAssetOffset = 0;
-        
         __loaded = false;
     }
     
@@ -76,10 +72,10 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
         if (__loaded) return;
         __loaded = true;
         
-        var _path = __BucketGetDatafilePath($"ab_{md5_string_utf8(__name)}_0.ab");
+        var _path = __AbGetDatafilePath($"ab_{md5_string_utf8(__name)}_h.json");
         if (not file_exists(_path))
         {
-            __BucketError($"Could not find \"{_path}\"");
+            __AbError($"Could not find \"{_path}\"");
         }
         
         //Use a fixed buffer for the benefit of `audio_create_buffer_sound()`
@@ -89,11 +85,10 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
         
         if (not buffer_exists(_buffer))
         {
-            __BucketError($"Failed to load \"{_path}\"");
+            __AbError($"Failed to load \"{_path}\"");
         }
         
         var _json = buffer_read(_buffer, buffer_string);
-        __globalAssetOffset = buffer_tell(_buffer);
         
         var _bucketInfoStruct = undefined;
         try
@@ -103,13 +98,13 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
         catch(_error)
         {
             show_debug_message(_error);
-            __BucketError($"Failed to parse JSON\nPath was \"{_path}\"");
+            __AbError($"Failed to parse JSON\nPath was \"{_path}\"");
             return;
         }
         
         if (not is_struct(_bucketInfoStruct))
         {
-            __BucketError($"Parser expecting an object, got {typeof(_bucketInfoStruct)}\nPath was \"{_path}\"");
+            __AbError($"Parser expecting an object, got {typeof(_bucketInfoStruct)}\nPath was \"{_path}\"");
         }
         
         var _version               = _bucketInfoStruct[$ "version"];
@@ -117,69 +112,64 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
         var _soundsDefinitionArray = _bucketInfoStruct[$ "sounds"];
         var _textureGroupArray     = _bucketInfoStruct[$ "textureGroups"];
         
-        if (_version != BUCKET_CONTENTS_VERSION)
+        if (_version != AB_CONTENTS_VERSION)
         {
-            __BucketError($"\"{_path}\" was expecting version {BUCKET_CONTENTS_VERSION}, got {_version}");
+            __AbError($"\"{_path}\" was expecting version {AB_CONTENTS_VERSION}, got {_version}");
         }
         
         if (not is_struct(__datafileDict))
         {
-            __BucketError($"\"{_path}\" `.datafiles` not an object, got {typeof(__datafileDict)}");
+            __AbError($"\"{_path}\" `.datafiles` not an object, got {typeof(__datafileDict)}");
         }
         
         if (not is_array(_soundsDefinitionArray))
         {
-            __BucketError($"\"{_path}\" `.sounds` not an array, got {typeof(_soundsDefinitionArray)}");
+            __AbError($"\"{_path}\" `.sounds` not an array, got {typeof(_soundsDefinitionArray)}");
         }
         
         if (not is_array(_textureGroupArray))
         {
-            __BucketError($"\"{_path}\" `.tpages` not an array, got {typeof(_textureGroupArray)}");
+            __AbError($"\"{_path}\" `.tpages` not an array, got {typeof(_textureGroupArray)}");
         }
         
         struct_foreach(__datafileDict, function(_name, _value)
         {
-            static _runtimeBucketDatafileMap = __BucketSystem().__runtimeBucketDatafileMap;
+            static _runtimeAbDatafileMap = __AbSystem().__runtimeBucketDatafileMap;
             _value.buffer = __mainBuffer;
-            _value.offset += __globalAssetOffset;
-            _runtimeBucketDatafileMap[? _name] = _value;
+            _runtimeAbDatafileMap[? _name] = _value;
         });
         
         //Set up sounds
         var _runtimeBucketSoundMap = _system.__runtimeBucketSoundMap;
         var _wavArray = __wavArray;
         var _oggArray = __oggArray;
-        var _globalAssetOffset = __globalAssetOffset;
         var _soundsDict = __soundsDict;
         var _i = 0;
         repeat(array_length(_soundsDefinitionArray))
         {
             with(_soundsDefinitionArray[_i])
             {
-                if (format == BUCKET_AUDIO_FORMAT_WAV)
+                if (format == AB_AUDIO_FORMAT_WAV)
                 {
-                    if (compressed)
-                    {
-                        var _compressedBuffer = buffer_create(size, buffer_fixed, 1);
-                        buffer_copy(_buffer, _globalAssetOffset + offset, size, _compressedBuffer, 0);
-                        
-                        var _decompressedBuffer = buffer_decompress(_compressedBuffer);
-                        buffer_delete(_compressedBuffer);
-                        
-                        array_push(__ownedBufferArray, _decompressedBuffer);
-                        
-                        var _sound = audio_create_buffer_sound(_decompressedBuffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, 0, buffer_get_size(_decompressedBuffer), (channels == 2)? audio_stereo : audio_mono);
-                    }
-                    else
-                    {
-                        var _sound = audio_create_buffer_sound(_buffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, _globalAssetOffset + offset, size, (channels == 2)? audio_stereo : audio_mono);
-                    }
-                    
+                    var _sound = audio_create_buffer_sound(_buffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, offset, size, (channels == 2)? audio_stereo : audio_mono);
                     array_push(_wavArray, _sound);
                 }
-                else if (format == BUCKET_AUDIO_FORMAT_OGG)
+                else if (format == AB_AUDIO_FORMAT_WAV_ZLIB)
                 {
-                    var _sound = audio_create_stream(__BucketGetDatafilePath(filename));
+                    var _compressedBuffer = buffer_create(size, buffer_fixed, 1);
+                    buffer_copy(_buffer, offset, size, _compressedBuffer, 0);
+                    
+                    var _decompressedBuffer = buffer_decompress(_compressedBuffer);
+                    buffer_delete(_compressedBuffer);
+                    
+                    array_push(__ownedBufferArray, _decompressedBuffer);
+                    
+                    var _sound = audio_create_buffer_sound(_decompressedBuffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, 0, buffer_get_size(_decompressedBuffer), (channels == 2)? audio_stereo : audio_mono);
+                    array_push(_wavArray, _sound);
+                }
+                else if (format == AB_AUDIO_FORMAT_OGG)
+                {
+                    var _sound = audio_create_stream(__AbGetDatafilePath(filename));
                     array_push(_oggArray, _sound);
                 }
                 
@@ -204,27 +194,27 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
                 
                 var _tgroupBufferArray = [];
                 
-                if (_tgroupFormat == BUCKET_TEXTURE_FORMAT_ZLIB)
+                if (_tgroupFormat == AB_TEXTURE_FORMAT_ZLIB)
                 {
                     var _j = 0;
                     repeat(array_length(_tgroupPagePathArray))
                     {
-                        var _path = __BucketGetDatafilePath(_tgroupPagePathArray[_j]);
+                        var _path = __AbGetDatafilePath(_tgroupPagePathArray[_j]);
                         if (not file_exists(_path))
                         {
-                            __BucketError($"Could not find \"{_path}\"");
+                            __AbError($"Could not find \"{_path}\"");
                         }
                         
                         var _compressedBuffer = buffer_load(_path);
                         if (not buffer_exists(_compressedBuffer))
                         {
-                            __BucketError($"Failed to load \"{_path}\"");
+                            __AbError($"Failed to load \"{_path}\"");
                         }
                         
                         var _textureBuffer = buffer_decompress(_compressedBuffer);
                         if (not buffer_exists(_textureBuffer))
                         {
-                            __BucketError($"Failed to decompress \"{_path}\" using Zlib");
+                            __AbError($"Failed to decompress \"{_path}\" using Zlib");
                         }
                         
                         buffer_delete(_compressedBuffer);
@@ -240,16 +230,16 @@ function __BucketClassRuntimeBucket(_bucketName, _blobSize) constructor
                     var _j = 0;
                     repeat(array_length(_tgroupPagePathArray))
                     {
-                        var _path = __BucketGetDatafilePath(_tgroupPagePathArray[_j]);
+                        var _path = __AbGetDatafilePath(_tgroupPagePathArray[_j]);
                         if (not file_exists(_path))
                         {
-                            __BucketError($"Could not find \"{_path}\"");
+                            __AbError($"Could not find \"{_path}\"");
                         }
                         
                         var _textureBuffer = buffer_load(_path);
                         if (not buffer_exists(_textureBuffer))
                         {
-                            __BucketError($"Failed to load \"{_path}\"");
+                            __AbError($"Failed to load \"{_path}\"");
                         }
                         
                         _tgroupBufferArray[@ _j] = _textureBuffer;

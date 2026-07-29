@@ -1,7 +1,7 @@
 /// @param alias
 
-function BucketPackedDatafileGetMetadata(_alias)
+function AbPackedDatafileGetMetadata(_alias)
 {
-    static _system = __BucketSystem();
+    static _system = __AbSystem();
     return _system.__metadataBucketDatafileDict[$ _alias];
 }

@@ -1,4 +1,4 @@
-function __BucketTrace(_string)
+function __AbTrace(_string)
 {
-    show_debug_message($"Bucket: {_string}");
+    show_debug_message($"AssetBucket: {_string}");
 }

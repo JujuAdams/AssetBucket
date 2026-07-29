@@ -1,10 +1,10 @@
 /// @param path
 
-function __BucketClassProject(_path) constructor
+function __AbClassProject(_path) constructor
 {
     if (not file_exists(_path))
     {
-        __BucketError($"Could not find \"{_path}\"");
+        __AbError($"Could not find \"{_path}\"");
     }
     
     __path               = _path;
@@ -20,7 +20,7 @@ function __BucketClassProject(_path) constructor
     __yypResourcesDict     = {};
     __yypTextureGroupsDict = {};
     
-    __yypString = __BucketLoadString(_path);
+    __yypString = __AbLoadString(_path);
     
     //Extract arrays as strings from the .yyp
     __audioGroupsContent   = __YYPExtract(__yypString, "AudioGroups");
@@ -31,27 +31,27 @@ function __BucketClassProject(_path) constructor
     
     if (__audioGroupsContent.__error)
     {
-        __BucketError($"Failed to extract audio groups from \"{_path}\"");
+        __AbError($"Failed to extract audio groups from \"{_path}\"");
     }
     
     if (__foldersContent.__error)
     {
-        __BucketError($"Failed to extract IDE folders from \"{_path}\"");
+        __AbError($"Failed to extract IDE folders from \"{_path}\"");
     }
     
     if (__datafilesContent.__error)
     {
-        __BucketError($"Failed to extract datafiles from \"{_path}\"");
+        __AbError($"Failed to extract datafiles from \"{_path}\"");
     }
     
     if (__resourcesContent.__error)
     {
-        __BucketError($"Failed to extract resources from \"{_path}\"");
+        __AbError($"Failed to extract resources from \"{_path}\"");
     }
     
     if (__textureGroupsContent.__error)
     {
-        __BucketError($"Failed to extract texture groups from \"{_path}\"");
+        __AbError($"Failed to extract texture groups from \"{_path}\"");
     }
     
     //Unpack arrays into dictionaries for faster lookups
@@ -128,7 +128,7 @@ function __BucketClassProject(_path) constructor
         }
         else
         {
-            _folderInProject = __BucketTrimDirectory(_folderInProject);
+            _folderInProject = __AbTrimDirectory(_folderInProject);
             var _parentPath = $"folders/{_folderInProject}.yy";
             var _parentName = $"{filename_name(_folderInProject)}.yy";
         }
@@ -138,7 +138,7 @@ function __BucketClassProject(_path) constructor
         
         file_copy(_sourcePath, _directory + _soundFilename);
         
-        __BucketSaveString(_yyString, $"{_directory}{_soundName}.yy");
+        __AbSaveString(_yyString, $"{_directory}{_soundName}.yy");
         
         static _templateYY = @'{
   "$GMSound":"v2",
@@ -182,7 +182,7 @@ function __BucketClassProject(_path) constructor
             
             if (is_struct(_sourcePath))
             {
-                __BucketSaveBufferAsPNG(_savePathArray[0], _sourcePath.buffer, _sourcePath.width, _sourcePath.height, _sourcePath[$ "offset"] ?? 0);
+                __AbSaveBufferAsPNG(_savePathArray[0], _sourcePath.buffer, _sourcePath.width, _sourcePath.height, _sourcePath[$ "offset"] ?? 0);
             }
             else
             {
@@ -223,7 +223,7 @@ function __BucketClassProject(_path) constructor
         }
         else
         {
-            _folderInProject = __BucketTrimDirectory(_folderInProject);
+            _folderInProject = __AbTrimDirectory(_folderInProject);
             var _parentPath = $"folders/{_folderInProject}.yy";
             var _parentName = $"{filename_name(_folderInProject)}.yy";
         }
@@ -264,7 +264,7 @@ function __BucketClassProject(_path) constructor
         _yyString = string_replace_all(_yyString, "%frameArray%", _frameArrayString);
         _yyString = string_replace_all(_yyString, "%seqFrameArray%", _seqFrameArrayString);
         
-        __BucketSaveString(_yyString, $"{_directory}{_spriteName}.yy");
+        __AbSaveString(_yyString, $"{_directory}{_spriteName}.yy");
         
         return _framePathArray;
         
@@ -390,7 +390,7 @@ function __BucketClassProject(_path) constructor
         }
         else
         {
-            _folderInProject = __BucketTrimDirectory(_folderInProject);
+            _folderInProject = __AbTrimDirectory(_folderInProject);
             var _parentPath = $"folders/{_folderInProject}.yy";
             var _parentName = $"{filename_name(_folderInProject)}.yy";
         }
@@ -400,14 +400,14 @@ function __BucketClassProject(_path) constructor
         _yyString = string_replace_all(_yyString, "%folderName%", _parentName);
         _yyString = string_replace_all(_yyString, "%folderPath%", _parentPath);
     
-        __BucketSaveString(_string, $"{_directory}{_noteName}.txt")
-        __BucketSaveString(_yyString, $"{_directory}{_noteName}.yy");
+        __AbSaveString(_string, $"{_directory}{_noteName}.txt")
+        __AbSaveString(_yyString, $"{_directory}{_noteName}.yy");
         
         var _resourcesContent = __YYPExtract(__yypString, "resources");
         var _isEmptyArray = _resourcesContent.__emptyArray;
         if (_resourcesContent.__error)
         {
-            __BucketError($"Failed to extract resources from \"{__path}\"");
+            __AbError($"Failed to extract resources from \"{__path}\"");
         }
         
         var _yypResourcesDict = {};
@@ -431,7 +431,7 @@ function __BucketClassProject(_path) constructor
         if (_yypString != __yypString)
         {
             //Save the .yyp if anything's changed
-            __BucketSaveString(_yypString, GM_project_filename);
+            __AbSaveString(_yypString, GM_project_filename);
             __yypString = _yyString;
         }
         
@@ -588,7 +588,7 @@ function __BucketClassProject(_path) constructor
         if (_yypString != __yypString)
         {
             //Save the .yyp if anything's changed
-            __BucketSaveString(_yypString, __path);
+            __AbSaveString(_yypString, __path);
         }
         
         static _audioGroupTemplate = "    {\"$GMAudioGroup\":\"v1\",\"%Name\":\"%name%\",\"exportDir\":\"\",\"name\":\"%name%\",\"resourceType\":\"GMAudioGroup\",\"resourceVersion\":\"2.0\",\"targets\":-1,},\n";

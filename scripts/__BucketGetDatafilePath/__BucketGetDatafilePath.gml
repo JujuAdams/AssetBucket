@@ -1,6 +1,6 @@
 /// @param localPath
 
-function __BucketGetDatafilePath(_localPath)
+function __AbGetDatafilePath(_localPath)
 {
-    return BUCKET_RUNNING_FROM_IDE? $"{BUCKET_PROJECT_DIRECTORY}datafiles/{_localPath}" : _localPath;
+    return AB_RUNNING_FROM_IDE? $"{AB_PROJECT_DIRECTORY}datafiles/{_localPath}" : _localPath;
 }

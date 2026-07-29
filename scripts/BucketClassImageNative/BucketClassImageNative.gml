@@ -1,6 +1,6 @@
 /// @param path
 
-function BucketClassImageNative(_path)
+function AbClassImageNative(_path)
 {
     __parent = undefined;
     

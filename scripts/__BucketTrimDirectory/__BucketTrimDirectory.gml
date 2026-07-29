@@ -1,4 +1,4 @@
-function __BucketTrimDirectory(_path)
+function __AbTrimDirectory(_path)
 {
     if (_path == "")
     {

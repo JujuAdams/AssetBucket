@@ -1,5 +1,5 @@
-function BucketSoundGet(_alias)
+function AbSoundGet(_alias)
 {
-    static _runtimeBucketSoundMap = __BucketSystem().__runtimeBucketSoundMap;
+    static _runtimeBucketSoundMap = __AbSystem().__runtimeBucketSoundMap;
     return _runtimeBucketSoundMap[? _alias];
 }

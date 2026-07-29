@@ -1,19 +1,19 @@
 /// @param bucketName
 
-function BucketDatafilesGetArray(_bucketName)
+function AbDatafilesGetArray(_bucketName)
 {
-    static _runtimeBucketMap = __BucketSystem().__runtimeBucketMap;
+    static _runtimeBucketMap = __AbSystem().__runtimeBucketMap;
     
     var _bucket = _runtimeBucketMap[? _bucketName];
     
     if (not is_struct(_bucket))
     {
-        __BucketError($"Bucket \"{_bucketName}\" not found");
+        __AbError($"Ab \"{_bucketName}\" not found");
     }
     
     if (not _bucket.__loaded)
     {
-        __BucketError($"Bucket \"{_bucketName}\" not loaded");
+        __AbError($"Ab \"{_bucketName}\" not loaded");
     }
     
     return _bucket.__datafileNameArray;

@@ -1,15 +1,12 @@
 if (keyboard_check_pressed(vk_f5))
 {
-    BucketIngest();
-    BucketLoadManifest();
-    
-    BucketLoad("bucketDefault");
+    AbLoad("bucketDefault");
     texturegroup_load("bucketDefault");
     
-    show_debug_message(BucketDatafileGetString("datafiles/localization/english.txt"));
+    show_debug_message(AbDatafileGetString("datafiles/localization/english.txt"));
 }
 
 if (keyboard_check_pressed(vk_backspace))
 {
-    BucketUnload("bucketDefault");
+    AbUnload("bucketDefault");
 }

@@ -1,4 +1,4 @@
-function __BucketEnsureDirectory(_path)
+function __AbEnsureDirectory(_path)
 {
     if (_path == "")
     {

@@ -1,11 +1,11 @@
-function BucketFileList() constructor
+function AbFileList() constructor
 {
     __rootDirectory = "";
     __fileDataArray = [];
     
     static ChangeRootDirectory = function(_newRootDirectory)
     {
-        _newRootDirectory = __BucketEnsureDirectory(_newRootDirectory);
+        _newRootDirectory = __AbEnsureDirectory(_newRootDirectory);
         var _oldRootDirectory = __rootDirectory;
         
         if (_oldRootDirectory == _newRootDirectory) return;
@@ -47,12 +47,12 @@ function BucketFileList() constructor
     {
         var _rootDirectory = __rootDirectory;
         var _fileDescArray = __fileDataArray;
-        _pathOrArray = __BucketEnsureArray(_pathOrArray);
+        _pathOrArray = __AbEnsureArray(_pathOrArray);
         
         var _i = 0;
         repeat(array_length(_pathOrArray))
         {
-            array_push(_fileDescArray, new BucketFileDescription(_rootDirectory, __BucketEnsureDirectory(_pathOrArray[_i])));
+            array_push(_fileDescArray, new AbFileDescription(_rootDirectory, __AbEnsureDirectory(_pathOrArray[_i])));
             ++_i;
         }
         
@@ -62,12 +62,12 @@ function BucketFileList() constructor
     static AddAbsolutePath = function(_pathOrArray)
     {
         var _fileDescArray = __fileDataArray;
-        _pathOrArray = __BucketEnsureArray(_pathOrArray);
+        _pathOrArray = __AbEnsureArray(_pathOrArray);
         
         var _i = 0;
         repeat(array_length(_pathOrArray))
         {
-            array_push(_fileDescArray, new BucketFileDescription("", __BucketEnsureDirectory(_pathOrArray[_i])));
+            array_push(_fileDescArray, new AbFileDescription("", __AbEnsureDirectory(_pathOrArray[_i])));
             ++_i;
         }
         
@@ -76,7 +76,7 @@ function BucketFileList() constructor
     
     static PopulateFromSubdirectory = function(_path)
     {
-        _path = __BucketEnsureDirectory(_path);
+        _path = __AbEnsureDirectory(_path);
         
         var _rootDirectory = __rootDirectory;
         var _fileDescArray = __fileDataArray;
@@ -93,7 +93,7 @@ function BucketFileList() constructor
             {
                 //On Linux the attribute argument is ignored, and everything that we can read is returned (even directories with a proper pattern).
                 //This doesn't affect this function in particular but good to keep that in mind.
-                _file = (_file == undefined)? file_find_first(_rootDirectory + _directory + __BUCKET_PATH_WILDCARD, fa_directory) : file_find_next();
+                _file = (_file == undefined)? file_find_first(_rootDirectory + _directory + __AB_PATH_WILDCARD, fa_directory) : file_find_next();
                 if (_file == "") break;
                 
                 if (directory_exists(_rootDirectory + _directory + _file))
@@ -102,7 +102,7 @@ function BucketFileList() constructor
                 }
                 else
                 {
-                    array_push(_fileDescArray, new BucketFileDescription(_rootDirectory, _directory + _file));
+                    array_push(_fileDescArray, new AbFileDescription(_rootDirectory, _directory + _file));
                 }
             }
             
@@ -111,7 +111,7 @@ function BucketFileList() constructor
         
         //Iterate over all existing cached file info and check their hashes. Any file info that
         //fails the hash check has its variables wiped ready for recalculation
-        var _fileInfoDict = __BucketSystem().__fileInfoDict;
+        var _fileInfoDict = __AbSystem().__fileInfoDict;
         var _i = 0;
         repeat(array_length(_fileDescArray))
         {
@@ -134,7 +134,7 @@ function BucketFileList() constructor
         var _i = array_length(_fileDescArray)-1;
         repeat(array_length(_fileDescArray))
         {
-            if (not __BucketTestStringMaskAny(_fileDescArray[_i].localPath, _maskOrArray))
+            if (not __AbTestStringMaskAny(_fileDescArray[_i].localPath, _maskOrArray))
             {
                 array_delete(_fileDescArray, _i, 1);
             }
@@ -152,7 +152,7 @@ function BucketFileList() constructor
         var _i = array_length(_fileDescArray)-1;
         repeat(array_length(_fileDescArray))
         {
-            if (__BucketTestStringMaskAny(_fileDescArray[_i].localPath, _maskOrArray))
+            if (__AbTestStringMaskAny(_fileDescArray[_i].localPath, _maskOrArray))
             {
                 array_delete(_fileDescArray, _i, 1);
             }
@@ -224,7 +224,7 @@ function BucketFileList() constructor
     
     static Duplicate = function()
     {
-        var _new = new BucketFileList();
+        var _new = new AbFileList();
         _new.__rootDirectory = __rootDirectory;
         _new.__fileDataArray = variable_clone(__fileDataArray);
         return _new;

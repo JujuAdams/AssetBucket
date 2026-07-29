@@ -1,4 +1,4 @@
-function BucketCommandList() constructor
+function AbCommandList() constructor
 {
     __hasProjectCommands = false;
     
@@ -18,13 +18,13 @@ function BucketCommandList() constructor
     
     
     
-    static __EnsureBucket = function(_bucketName)
+    static __EnsureAb = function(_bucketName)
     {
         var _bucketStruct = __bucketDict[$ _bucketName];
         
         if (not is_struct(_bucketStruct))
         {
-            var _bucketStruct = new __BucketClassBuildBucket(_bucketName);
+            var _bucketStruct = new __AbClassBuildAb(_bucketName);
             __bucketDict[$ _bucketName] = _bucketStruct;
             array_push(__bucketArray, _bucketStruct);
         }
@@ -32,19 +32,19 @@ function BucketCommandList() constructor
         return _bucketStruct;
     }
     
-    static SetBucketMetadata = function(_value)
+    static SetAbMetadata = function(_value)
     {
-        __EnsureBucket(_bucketName).__metadata = _value;
+        __EnsureAb(_bucketName).__metadata = _value;
     }
     
-    static SetBucketAliasMetadata = function(_bucketName, _key, _value)
+    static SetAbAliasMetadata = function(_bucketName, _key, _value)
     {
-        __EnsureBucket(_bucketName).__SetMetadata(_key, _value);
+        __EnsureAb(_bucketName).__SetMetadata(_key, _value);
     }
     
     static AddDatafileToBucket = function(_bucketName, _alias, _sourcePath)
     {
-        var _bucket = __EnsureBucket(_bucketName);
+        var _bucket = __EnsureAb(_bucketName);
         _bucket.__SetDatafileAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -62,9 +62,9 @@ function BucketCommandList() constructor
     
     static AddSpriteToBucket = function(_bucketName, _alias, _sourcePathOrArray, _textureGroup = "Default")
     {
-        var _sourcePathArray = __BucketEnsureArray(_sourcePathOrArray);
+        var _sourcePathArray = __AbEnsureArray(_sourcePathOrArray);
         
-        var _bucket = __EnsureBucket(_bucketName);
+        var _bucket = __EnsureAb(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -79,46 +79,62 @@ function BucketCommandList() constructor
         }));
     }
     
-    static AddWAVToBucket = function(_bucketName, _alias, _sourcePath, _compress = false)
+    static AddSoundToBucket = function(_bucketName, _alias, _sourcePath, _forceFormat = undefined)
     {
-        var _bucket = __EnsureBucket(_bucketName);
+        var _bucket = __EnsureAb(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
-            __bucket:   _bucket,
-            __alias:    _alias,
-            __path:     _sourcePath,
-            __compress: _compress,
+            __bucket:      _bucket,
+            __alias:       _alias,
+            __path:        _sourcePath,
+            __forceFormat: _forceFormat,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            var _buffer = buffer_load(__path);
-            __bucket.__AddWAV(__alias, __path, _buffer, 0, __compress);
-            buffer_delete(_buffer);
-        }));
-    }
-    
-    static AddOGGToBucket = function(_bucketName, _alias, _sourcePath)
-    {
-        var _bucket = __EnsureBucket(_bucketName);
-        _bucket.__SetAliasAsModified(_alias);
-        
-        array_push(__commandArray, method({
-            __bucket: _bucket,
-            __alias:  _alias,
-            __path:   _sourcePath,
-        },
-        function(_projectStruct, _datafilesDirectory)
-        {
-            __bucket.__AddOGG(__alias, __path);
+            if (__forceFormat == undefined)
+            {
+                var _extension = filename_ext(__path);
+                if (_extension == ".wav")
+                {
+                    var _audioFormat = AB_AUDIO_FORMAT_WAV;
+                }
+                else if (_extension == ".ogg")
+                {
+                    var _audioFormat = AB_AUDIO_FORMAT_OGG;
+                }
+                else
+                {
+                    __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{__path}\"");
+                }
+            }
+            else
+            {
+                var _audioFormat = __forceFormat;
+            }
+            
+            if ((_audioFormat == AB_AUDIO_FORMAT_WAV) || (_audioFormat == AB_AUDIO_FORMAT_WAV_ZLIB))
+            {
+                var _buffer = buffer_load(__path);
+                __bucket.__AddWAV(__alias, __path, _buffer, 0, (_audioFormat == AB_AUDIO_FORMAT_WAV_ZLIB));
+                buffer_delete(_buffer);
+            }
+            else if (_audioFormat == AB_AUDIO_FORMAT_OGG)
+            {
+                __bucket.__AddOGG(__alias, __path);
+            }
+            else
+            {
+                __AbError($"Audio format \"{_audioFormat}\" not supported");
+            }
         }));
     }
     
     static AddBufferToBucket = function(_bucketName, _alias, _bufferDescription)
     {
-        _bufferDescription = __BucketEnsureBufferDescription(_bufferDescription);
+        _bufferDescription = __AbEnsureBufferDescription(_bufferDescription);
         
-        var _bucket = __EnsureBucket(_bucketName);
+        var _bucket = __EnsureAb(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -150,7 +166,7 @@ function BucketCommandList() constructor
     {
         if (struct_exists(__projectDatafileModified, _localDatafilePath))
         {
-            __BucketError($"Project datafile \"{_localDatafilePath}\" has already been modified by another command");
+            __AbError($"Project datafile \"{_localDatafilePath}\" has already been modified by another command");
         }
         
         __projectDatafileModified[$ _localDatafilePath] = true;
@@ -160,7 +176,7 @@ function BucketCommandList() constructor
     {
         if (struct_exists(__projectAssetModified, _assetName))
         {
-            __BucketError($"Project datafile \"{_assetName}\" has already been modified by another command");
+            __AbError($"Project datafile \"{_assetName}\" has already been modified by another command");
         }
         
         __projectAssetModified[$ _assetName] = true;
@@ -193,7 +209,7 @@ function BucketCommandList() constructor
     
     static AddSpriteToProject = function(_assetName, _pathOrArray, _projectFolder, _textureGroup = "Default")
     {
-        _pathOrArray = __BucketEnsureArray(_pathOrArray);
+        _pathOrArray = __AbEnsureArray(_pathOrArray);
         
         __hasProjectCommands = true;
         __SetProjectAssetAsModified(_assetName);
@@ -214,7 +230,7 @@ function BucketCommandList() constructor
             }
             else
             {
-                var _fileInfo = __BucketEnsureIngestFileInfo(__pathArray[0]);
+                var _fileInfo = __AbEnsureIngestFileInfo(__pathArray[0]);
                 var _width  = _fileInfo.__GetWidth();
                 var _height = _fileInfo.__GetHeight();
             }
@@ -249,7 +265,7 @@ function BucketCommandList() constructor
     
     static AddDataBufferToProject = function(_localDatafilePath, _bufferDescription)
     {
-        _bufferDescription = __BucketEnsureBufferDescription(_bufferDescription);
+        _bufferDescription = __AbEnsureBufferDescription(_bufferDescription);
         
         __hasProjectCommands = true;
         __SetProjectDatafileAsModified(_localDatafilePath);
@@ -261,7 +277,7 @@ function BucketCommandList() constructor
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            static _system = __BucketSystem();
+            static _system = __AbSystem();
             
             with(__bufferDescription)
             {
@@ -299,7 +315,7 @@ function BucketCommandList() constructor
     
     static __EnsureProjectFolder = function(_projectFolder)
     {
-        _projectFolder = __BucketTrimDirectory(_projectFolder);
+        _projectFolder = __AbTrimDirectory(_projectFolder);
         if (_projectFolder != "")
         {
             __ensureFolderDict[$ _projectFolder] = true;
@@ -320,11 +336,11 @@ function BucketCommandList() constructor
     
     
     
-    static SaveBucketsToDirectory = function(_directory)
+    static SaveAbsToDirectory = function(_directory)
     {
         if (__hasProjectCommands)
         {
-            __BucketWarning("Called `SaveBucketsToDirectory()` but command list has project commands. Project commands will be ignored");
+            __AbWarning("Called `SaveAbsToDirectory()` but command list has project commands. Project commands will be ignored");
         }
         
         var _commandArray = __commandArray;
@@ -341,11 +357,17 @@ function BucketCommandList() constructor
             ++_i;
         }
         
-        var _bucketExportArray = __SaveBuckets(_directory);
-        __BucketSaveString(json_stringify(_bucketExportArray), _directory + BUCKET_MANIFEST_FILENAME);
+        var _bucketExportArray = __SaveAbs(_directory);
+        
+        var _json = json_stringify({
+            type:    "loose manifest v1",
+            buckets: _bucketExportArray,
+        })
+        
+        __AbSaveString(_json, _directory + AB_MANIFEST_FILENAME);
     }
     
-    static __SaveBuckets = function(_directory)
+    static __SaveAbs = function(_directory)
     {
         var _bucketExportArray = [];
         
@@ -354,13 +376,11 @@ function BucketCommandList() constructor
         {
             var _bucket = __bucketArray[_i];
             _bucket.__SaveToDirectory(_directory);
-            __EnsureProjectDatafile(_bucket.__GetCoreFilename());
+            __EnsureProjectDatafile(_bucket.__coreFilename);
             
             array_push(_bucketExportArray, {
-                name:          _bucket.__name,
-                blobSize:      int64(_bucket.__GetCoreSize()),
-                metadata:      _bucket.__metadata,
-                aliasMetadata: _bucket.__aliasMetadataDict,
+                bucketName: _bucket.__name,
+                filename:   _bucket.__coreFilename,
             });
             
             ++_i;
@@ -371,7 +391,7 @@ function BucketCommandList() constructor
     
     static SaveToProject = function(_projectPath)
     {
-        var _projectStruct = new __BucketClassProject(_projectPath);
+        var _projectStruct = new __AbClassProject(_projectPath);
         var _datafilesDirectory = _projectStruct.__datafilesDirectory;
         
         //Execute all commands
@@ -384,21 +404,22 @@ function BucketCommandList() constructor
         }
         
         //Save buckets into the datafiles directory
-        var _bucketExportArray = __SaveBuckets(_datafilesDirectory);
+        var _bucketExportArray = __SaveAbs(_datafilesDirectory);
         
         //TODO - Find old manifest and clean up any old bucket files
-        file_delete(_datafilesDirectory + BUCKET_MANIFEST_FILENAME);
+        file_delete(_datafilesDirectory + AB_MANIFEST_FILENAME);
         
         //If we have any exported buckets or metadata then save that to the manifest
         if ((array_length(_bucketExportArray) > 0) || (struct_names_count(__projectMetadata) > 0))
         {
             var _json = json_stringify({
+                type:     "project manifest v1",
                 buckets:  _bucketExportArray,
                 metadata: __projectMetadata,
             });
             
-            __BucketSaveString(_json, _datafilesDirectory + BUCKET_MANIFEST_FILENAME);
-            __EnsureProjectDatafile(BUCKET_MANIFEST_FILENAME);
+            __AbSaveString(_json, _datafilesDirectory + AB_MANIFEST_FILENAME);
+            __EnsureProjectDatafile(AB_MANIFEST_FILENAME);
         }
         
         //Save new project references

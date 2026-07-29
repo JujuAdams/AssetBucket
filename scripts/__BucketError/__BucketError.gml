@@ -1,4 +1,4 @@
-function __BucketError(_string)
+function __AbError(_string)
 {
-    show_error($" \nBucket:\n{_string}\n ", true);
+    show_error($" \nAssetBucket:\n{_string}\n ", true);
 }

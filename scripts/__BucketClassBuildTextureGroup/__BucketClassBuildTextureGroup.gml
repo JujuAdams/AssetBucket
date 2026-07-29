@@ -1,9 +1,9 @@
 /// @param parent
 /// @param name
 
-function __BucketClassBuildTextureGroup(_parent, _name) constructor
+function __AbClassBuildTextureGroup(_parent, _name) constructor
 {
-    static _system = __BucketSystem();
+    static _system = __AbSystem();
     
     __parent = _parent;
     __name   = _name;
@@ -12,7 +12,7 @@ function __BucketClassBuildTextureGroup(_parent, _name) constructor
     
     __texturePagePathArray = [];
     
-    __textureFormat = BUCKET_TEXTURE_FORMAT_PNG;
+    __textureFormat = AB_TEXTURE_FORMAT_PNG;
     __textureSize   = 2048;
     __imageBorder   = 2;
     
@@ -31,7 +31,7 @@ function __BucketClassBuildTextureGroup(_parent, _name) constructor
         var _filename = __parent.__NewExportFilename();
         var _destinationPath = _directory + _filename;
         
-        if ((__textureFormat == BUCKET_TEXTURE_FORMAT_RAW) || (__textureFormat == BUCKET_TEXTURE_FORMAT_ZLIB))
+        if ((__textureFormat == AB_TEXTURE_FORMAT_RAW) || (__textureFormat == AB_TEXTURE_FORMAT_ZLIB))
         {
             var _buffer = buffer_create(16 + 4*surface_get_width(_surface)*surface_get_height(_surface), buffer_fixed, 1);
             buffer_write(_buffer, buffer_text, "RAW ");
@@ -40,7 +40,7 @@ function __BucketClassBuildTextureGroup(_parent, _name) constructor
             buffer_write(_buffer, buffer_s32,  0x00);
             buffer_get_surface(_buffer, _surface, 16);
             
-            if (__textureFormat == BUCKET_TEXTURE_FORMAT_RAW)
+            if (__textureFormat == AB_TEXTURE_FORMAT_RAW)
             {
                 var _compressedBuffer = buffer_compress(_buffer, 0, buffer_get_size(_buffer));
                 buffer_delete(_buffer);
@@ -50,14 +50,14 @@ function __BucketClassBuildTextureGroup(_parent, _name) constructor
             buffer_save(_buffer, _destinationPath);
             buffer_delete(_buffer);
         }
-        else if (__textureFormat == BUCKET_TEXTURE_FORMAT_PNG)
+        else if (__textureFormat == AB_TEXTURE_FORMAT_PNG)
         {
             surface_save(_surface, _destinationPath);
             surface_save(_surface, "test.png");
         }
         else
         {
-            __BucketError($"Texture format \"{__textureFormat}\" unhandled for bucket \"{__name}\"");
+            __AbError($"Texture format \"{__textureFormat}\" unhandled for bucket \"{__name}\"");
         }
         
         array_push(__texturePagePathArray, _filename);
@@ -109,7 +109,7 @@ function __BucketClassBuildTextureGroup(_parent, _name) constructor
             repeat(array_length(_imageArray))
             {
                 var _path = _imageArray[_j];
-                var _sprite = __BucketAddSprite(_path);
+                var _sprite = __AbAddSprite(_path);
                 
                 if (is_struct(_path))
                 {

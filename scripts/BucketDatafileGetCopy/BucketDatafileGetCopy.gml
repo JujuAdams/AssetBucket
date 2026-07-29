@@ -1,6 +1,6 @@
-function BucketDatafileGetCopy(_originalPath)
+function AbDatafileGetCopy(_originalPath)
 {
-    with(BucketDatafileGetRef(_originalPath))
+    with(AbDatafileGetRef(_originalPath))
     {
         var _buffer = buffer_create(size, buffer_fixed, 1);
         buffer_copy(buffer, offset, size, _buffer, 0);

@@ -1,95 +1,77 @@
-var _commandList = new BucketCommandList();
+var _commandList = new AbCommandList();
 
-var _baseFileList = (new BucketFileList())
-                    .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket")
+var _baseFileList = (new AbFileList())
+                    .ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket")
                     .PopulateFromSubdirectory("");
 
-_baseFileList.Duplicate()
-.ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/datafiles")
-.Foreach(method({
-    commandLine: _commandList,
-    bucketName: "bufferDefault",
-},
-function(_fileDesc)
-{
-    commandLine.AddDatafileToProject(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
-}));
+var _datafileFileList = _baseFileList.Duplicate()
+.ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/datafiles");
 
-_baseFileList.Duplicate()
-.ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/sprites")
-.IncludeLocalPaths("*.png")
-.CollectImageFrames()
-.Foreach(method({
-    commandLine: _commandList,
-    bucketName: "bufferDefault",
-},
-function(_fileDesc)
-{
-    commandLine.AddSpriteToProject(_fileDesc.suggestedName, _fileDesc.linkedPaths, "Sprites");
-}));
+var _spriteFileList = _baseFileList.Duplicate()
+.ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/sprites")
+.IncludeLocalPaths("*.png");
 
-_baseFileList.Duplicate()
-.ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/sounds")
-.IncludeLocalPaths(["*.wav", "*.ogg"])
-.Foreach(method({
-    commandLine: _commandList,
-    bucketName: "bufferDefault",
-},
-function(_fileDesc)
-{
-    commandLine.AddSoundToProject(_fileDesc.suggestedName, _fileDesc.absolutePath, "Sounds");
-}));
+var _soundFileList = _baseFileList.Duplicate()
+.ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/sounds")
+.IncludeLocalPaths(["*.wav", "*.ogg"]);
 
-//_baseFileList.Duplicate()
-//.ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/datafiles")
-//.Foreach(method({
+//_datafileFileList.Foreach(method({
 //    commandLine: _commandList,
 //    bucketName: "bufferDefault",
 //},
 //function(_fileDesc)
 //{
-//    commandLine.AddDatafileToBucket(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
+//    commandLine.AddDatafileToProject(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
 //}));
 //
-//_baseFileList.Duplicate()
-//.ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/sprites")
-//.IncludeLocalPaths("*.png")
-//.CollectImageFrames()
-//.Foreach(method({
+//_spriteFileList.Foreach(method({
 //    commandLine: _commandList,
 //    bucketName: "bufferDefault",
 //},
 //function(_fileDesc)
 //{
-//    commandLine.AddSpriteToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.linkedPaths);
+//    commandLine.AddSpriteToProject(_fileDesc.suggestedName, _fileDesc.linkedPaths, "Sprites");
 //}));
 //
-//_baseFileList.Duplicate()
-//.ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/sounds")
-//.IncludeLocalPaths(["*.wav", "*.ogg"])
-//.Foreach(method({
+//_soundFileList.Foreach(method({
 //    commandLine: _commandList,
 //    bucketName: "bufferDefault",
 //},
 //function(_fileDesc)
 //{
-//    if (_fileDesc.extension == ".wav")
-//    {
-//        commandLine.AddWAVToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.absolutePath);
-//    }
-//    else if (_fileDesc.extension == ".ogg")
-//    {
-//        commandLine.AddOGGToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.absolutePath);
-//    }
-//    else
-//    {
-//        __BucketError($"Sound file extension \"{_fileDesc.extension}\" is not supported\nPath was \"{_fileDesc.absolutePath}\"");
-//    }
+//    commandLine.AddSoundToProject(_fileDesc.suggestedName, _fileDesc.absolutePath, "Sounds");
 //}));
+
+_datafileFileList.Foreach(method({
+    commandLine: _commandList,
+    bucketName: "bufferDefault",
+},
+function(_fileDesc)
+{
+    commandLine.AddDatafileToBucket(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
+}));
+
+_spriteFileList.Foreach(method({
+    commandLine: _commandList,
+    bucketName: "bufferDefault",
+},
+function(_fileDesc)
+{
+    commandLine.AddSpriteToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.linkedPaths);
+}));
+
+_soundFileList.Foreach(method({
+    commandLine: _commandList,
+    bucketName: "bufferDefault",
+},
+function(_fileDesc)
+{
+    commandLine.AddSoundToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.absolutePath);
+}));
 
 _commandList.SaveToProject(GM_project_filename);
 
-//BucketLoad("bucketDefault");
+//AbLoad("bucketDefault");
 //texturegroup_load("bucketDefault");
 //
-//show_debug_message(BucketDatafileGetString("datafiles/localization/english.txt"));
+//show_debug_message(AbDatafileGetString("datafiles/localization/english.txt"));

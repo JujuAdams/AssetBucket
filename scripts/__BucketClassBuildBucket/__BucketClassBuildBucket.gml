@@ -1,15 +1,16 @@
 /// @param name
 
-function __BucketClassBuildBucket(_name) constructor
+function __AbClassBuildAb(_name) constructor
 {
-    static _system = __BucketSystem();
+    static _system = __AbSystem();
     
     __name = _name;
     
-    __hash = md5_string_utf8(__name);
+    __hash          = md5_string_utf8(__name);
+    __headerFilename = $"ab_{__hash}_h.json";
+    __coreFilename   = $"ab_{__hash}_0.bin";
     
-    __accumulationBuffer = buffer_create(1024*1024, buffer_grow, 1);
-    __coreSize = undefined;
+    __coreBuffer = buffer_create(1024*1024, buffer_grow, 1);
     
     __metadata          = undefined;
     __datafilesDict     = {};
@@ -31,7 +32,7 @@ function __BucketClassBuildBucket(_name) constructor
     {
         if (struct_exists(__modifiedDatafileDict, _alias))
         {
-            __BucketError($"Bucket alias \"{_alias}\" has already been modified by another command");
+            __AbError($"Ab alias \"{_alias}\" has already been modified by another command");
         }
         
         __modifiedDatafileDict[$ _alias] = true;
@@ -41,7 +42,7 @@ function __BucketClassBuildBucket(_name) constructor
     {
         if (struct_exists(__modifiedAliasDict, _alias))
         {
-            __BucketError($"Bucket alias \"{_alias}\" has already been modified by another command");
+            __AbError($"Ab alias \"{_alias}\" has already been modified by another command");
         }
         
         __modifiedAliasDict[$ _alias] = true;
@@ -61,7 +62,7 @@ function __BucketClassBuildBucket(_name) constructor
     
     static __AddBuffer = function(_alias, _buffer, _offset, _size)
     {
-        var _accumulationBuffer = __accumulationBuffer;
+        var _accumulationBuffer = __coreBuffer;
         
         __datafilesDict[$ _alias] = {
             offset: int64(buffer_tell(_accumulationBuffer)),
@@ -78,7 +79,7 @@ function __BucketClassBuildBucket(_name) constructor
         var _textureGroup = __textureGroupDict[$ _textureGroupName];
         if (not is_struct(_textureGroup))
         {
-            _textureGroup = new __BucketClassBuildTextureGroup(self, _textureGroupName);
+            _textureGroup = new __AbClassBuildTextureGroup(self, _textureGroupName);
             __textureGroupDict[$ _textureGroupName] = _textureGroup;
         }
         
@@ -95,12 +96,12 @@ function __BucketClassBuildBucket(_name) constructor
     
     static __AddWAV = function(_alias, _sourcePath, _buffer, _offset, _compress)
     {
-        var _accumulationBuffer = __accumulationBuffer;
+        var _accumulationBuffer = __coreBuffer;
         
         var _fileExtension = filename_ext(_sourcePath);
         if (_fileExtension != ".wav")
         {
-            __BucketError($"Audio file extension \"{_fileExtension}\" not supported\nPath was \"{_sourcePath}\"");
+            __AbError($"Audio file extension \"{_fileExtension}\" not supported\nPath was \"{_sourcePath}\"");
         }
         
         buffer_seek(_buffer, buffer_seek_start, _offset);
@@ -121,12 +122,12 @@ function __BucketClassBuildBucket(_name) constructor
         
         if (_subchunk2Size == 0)
         {
-            __BucketError($"Audio file is empty\nPath was \"{_sourcePath}\"");
+            __AbError($"Audio file is empty\nPath was \"{_sourcePath}\"");
         }
         
         if (_chunkFormat != 0x45564157) //WAVE, or 1163280727 in decimal‬
         {
-            __BucketError($"Chunk format not recognised\nPath was \"{_sourcePath}\"");
+            __AbError($"Chunk format not recognised\nPath was \"{_sourcePath}\"");
         }
     
         if (_bitsPerSample == 8)
@@ -139,17 +140,17 @@ function __BucketClassBuildBucket(_name) constructor
         }
         else
         {
-            __BucketError($"{_bitsPerSample} bits per sample is unsupported\nPath was \"{_sourcePath}\"");
+            __AbError($"{_bitsPerSample} bits per sample is unsupported\nPath was \"{_sourcePath}\"");
         }
         
         if ((_channels != 1) && (_channels != 2))
         {
-            __BucketError($"Unsupported number of channels {_channels}\nPath was \"{_sourcePath}\"");
+            __AbError($"Unsupported number of channels {_channels}\nPath was \"{_sourcePath}\"");
         }
     
         if (_blockAlignment != _channels*buffer_sizeof(_dataFormat))
         {
-            __BucketError($"Mismatch between block alignment ({_blockAlignment}) and data format ({buffer_sizeof(_dataFormat)})");
+            __AbError($"Mismatch between block alignment ({_blockAlignment}) and data format ({buffer_sizeof(_dataFormat)})");
         }
         
         if (_compress)
@@ -166,14 +167,14 @@ function __BucketClassBuildBucket(_name) constructor
         }
         
         array_push(__soundsArray, {
-            format:      BUCKET_AUDIO_FORMAT_WAV,
+            type:        "sound v1",
+            format:      _compress? AB_AUDIO_FORMAT_WAV_ZLIB : AB_AUDIO_FORMAT_WAV,
             alias:       _alias,
             offset:      int64(buffer_tell(_accumulationBuffer)),
             size:        int64(_bucketSize),
             sample16bit: bool(_bitsPerSample == 16),
             sampleRate:  int64(_sampleRate),
             channels:    int64(_channels),
-            compressed:  bool(_compress),
         });
         
         buffer_seek(_accumulationBuffer, buffer_seek_relative, _bucketSize);
@@ -186,17 +187,7 @@ function __BucketClassBuildBucket(_name) constructor
     static __NewExportFilename = function()
     {
         ++__fileCount;
-        return $"ab_{__hash}_{__fileCount-1}.ab";
-    }
-    
-    static __GetCoreSize = function()
-    {
-        return __coreSize;
-    }
-    
-    static __GetCoreFilename = function()
-    {
-        return $"ab_{__hash}_0.ab";
+        return $"ab_{__hash}_{__fileCount-1}.bin";
     }
     
     static __SaveToDirectory = function(_directory)
@@ -213,7 +204,8 @@ function __BucketClassBuildBucket(_name) constructor
             file_copy(_oggInfo.__path, _directory + _filename);
             
             array_push(_soundsArray, {
-                format:   BUCKET_AUDIO_FORMAT_OGG,
+                type:     "sound v1",
+                format:   AB_AUDIO_FORMAT_OGG,
                 alias:    _oggInfo.__alias,
                 filename: _filename,
             });
@@ -231,24 +223,27 @@ function __BucketClassBuildBucket(_name) constructor
             ++_i;
         }
         
+        //Save out the buffer and clean up
+        buffer_save_ext(__coreBuffer, _directory + __coreFilename, 0, buffer_tell(__coreBuffer));
+        
         //Create a header and add it to the accumulated data
-        var _buffer = buffer_create(1024*1024, buffer_grow, 1);
-        buffer_write(_buffer, buffer_string, json_stringify({
-            version:       int64(BUCKET_CONTENTS_VERSION),
+        var _json = json_stringify({
+            type:          "bucket header v1",
+            name:          __name,
             datafiles:     __datafilesDict,
             sounds:        __soundsArray,
             textureGroups: _textureGroupArray,
             fileCount:     int64(__fileCount),
-        }));
-        buffer_copy(__accumulationBuffer, 0, buffer_tell(__accumulationBuffer), _buffer, buffer_tell(_buffer));
+            coreFilename:  __coreFilename,
+            coreSize:      int64(buffer_tell(__coreBuffer)),
+            metadata:      __metadata,
+            aliasMetadata: __aliasMetadataDict,
+        });
         
-        //Save out the buffer and clean up
-        __coreSize = buffer_tell(__accumulationBuffer) + buffer_tell(_buffer);
-        buffer_save_ext(_buffer, _directory + __GetCoreFilename(), 0, __coreSize);
-        buffer_delete(_buffer);
+        __AbSaveString(_json, _directory + __headerFilename);
         
         //TODO - Move to `.Destroy()` method
-        buffer_delete(__accumulationBuffer);
-        __accumulationBuffer = undefined;
+        buffer_delete(__coreBuffer);
+        __coreBuffer = undefined;
     }
 }

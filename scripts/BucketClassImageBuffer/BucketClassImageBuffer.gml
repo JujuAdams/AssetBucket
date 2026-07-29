@@ -3,7 +3,7 @@
 /// @param size
 /// @param [ownsBuffer=true]
 
-function BucketClassImageBuffer(_buffer, _offset, _size, _ownsBuffer = true)
+function AbClassImageBuffer(_buffer, _offset, _size, _ownsBuffer = true)
 {
     __parent = undefined;
     

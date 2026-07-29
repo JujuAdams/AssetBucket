@@ -1,16 +1,16 @@
-#macro __BUCKET_PATH_WILDCARD  ((os_type == os_windows)? "*.*" : "*")
+#macro __AB_PATH_WILDCARD  ((os_type == os_windows)? "*.*" : "*")
 
 
 
-__BucketSystem();
+__AbSystem();
 
-function __BucketSystem()
+function __AbSystem()
 {
     static _system = (function()
     {
         with({})
         {
-            __BucketTrace($"Welcome to Asset Bucket by Juju Adams! This is version {BUCKET_VERSION}, {BUCKET_DATE}");
+            __AbTrace($"Welcome to Asset Bucket by Juju Adams! This is version {AB_VERSION}, {AB_DATE}");
             
             if (debug_mode)
             {

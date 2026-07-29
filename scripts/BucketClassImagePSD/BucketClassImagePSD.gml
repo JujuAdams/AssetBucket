@@ -1,6 +1,6 @@
 /// @param path
 
-function BucketClassImagePSD(_path)
+function AbClassImagePSD(_path)
 {
     __parent = undefined;
     
@@ -14,14 +14,14 @@ function BucketClassImagePSD(_path)
     {
         if (sprite_exists(__sprite)) return __sprite;
         
-        if (BUCKET_IMAGEMAGICK_PATH == undefined)
+        if (AB_IMAGEMAGICK_PATH == undefined)
         {
-            __BucketError($"`BUCKET_IMAGEMAGICK_PATH` must be defined before importing PSD files");
+            __AbError($"`AB_IMAGEMAGICK_PATH` must be defined before importing PSD files");
         }
         
-        if (not file_exists(BUCKET_IMAGEMAGICK_PATH))
+        if (not file_exists(AB_IMAGEMAGICK_PATH))
         {
-            __BucketError($"ImageMagick binary could not be found. Please check `BUCKET_IMAGEMAGICK_PATH`\nPath was {BUCKET_IMAGEMAGICK_PATH}");
+            __AbError($"ImageMagick binary could not be found. Please check `AB_IMAGEMAGICK_PATH`\nPath was {AB_IMAGEMAGICK_PATH}");
         }
         
         var _destinationPath = $"{game_save_id}convert.png";
@@ -33,10 +33,10 @@ function BucketClassImagePSD(_path)
         var _batchFileString = string_join("\n",
         "@echo off",
         $"echo Converting {__path} from PSD to PNG",
-        $"\"{BUCKET_IMAGEMAGICK_PATH}\" \"{__path}\"[0] \"{_destinationPath}\"");
+        $"\"{AB_IMAGEMAGICK_PATH}\" \"{__path}\"[0] \"{_destinationPath}\"");
         
-        __BucketSaveString(_batchFileString, _batchPath);
-        __BucketExecuteShell(_batchPath, "");
+        __AbSaveString(_batchFileString, _batchPath);
+        __AbExecuteShell(_batchPath, "");
         
         var _finished = false;
         var _overallTimer = current_time;
@@ -51,7 +51,7 @@ function BucketClassImagePSD(_path)
         
         if (not _finished)
         {
-            __BucketError($"ImageMagick conversion of \"{__path}\" failed");
+            __AbError($"ImageMagick conversion of \"{__path}\" failed");
         }
         else
         {

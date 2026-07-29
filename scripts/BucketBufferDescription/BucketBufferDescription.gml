@@ -3,7 +3,7 @@
 /// @param size
 /// @param [ownsBuffer=false]
 
-function BucketBufferDescription(_buffer, _offset, _size, _ownsBuffer = false) constructor
+function AbBufferDescription(_buffer, _offset, _size, _ownsBuffer = false) constructor
 {
     buffer     = _buffer;
     offset     = _offset;

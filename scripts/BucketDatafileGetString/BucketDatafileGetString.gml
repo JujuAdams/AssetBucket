@@ -1,7 +1,7 @@
 /// @param originalPath
 
-function BucketDatafileGetString(_originalPath)
+function AbDatafileGetString(_originalPath)
 {
-    var _ref = BucketDatafileGetRef(_originalPath);
+    var _ref = AbDatafileGetRef(_originalPath);
     return buffer_peek(_ref.buffer, _ref.offset, buffer_string);
 }

@@ -1,12 +1,12 @@
-function __BucketClassIngestFileInfo(_absolutePath) constructor
+function __AbClassIngestFileInfo(_absolutePath) constructor
 {
-    static _system = __BucketSystem();
+    static _system = __AbSystem();
     
     __absolutePath = _absolutePath;
     
     if (not file_exists(_absolutePath))
     {
-        __BucketError($"Could not find \"{__absolutePath}\"");
+        __AbError($"Could not find \"{__absolutePath}\"");
     }
     
     __hash = undefined;
@@ -41,7 +41,7 @@ function __BucketClassIngestFileInfo(_absolutePath) constructor
             var _buffer = buffer_load(__absolutePath);
             if (not buffer_exists(_buffer))
             {
-                __BucketError($"Failed to load \"{__absolutePath}\"");
+                __AbError($"Failed to load \"{__absolutePath}\"");
             }
             
             __bytes = buffer_get_size(_buffer);
@@ -83,10 +83,10 @@ function __BucketClassIngestFileInfo(_absolutePath) constructor
     
     static __GetSpriteDimensions = function()
     {
-        var _sprite = __BucketAddSprite(__absolutePath);
+        var _sprite = __AbAddSprite(__absolutePath);
         if (not sprite_exists(_sprite))
         {
-            __BucketError($"Failed to load \"{__absolutePath}\"");
+            __AbError($"Failed to load \"{__absolutePath}\"");
         }
         
         __width  = sprite_get_width(_sprite);

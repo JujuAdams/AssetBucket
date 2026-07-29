@@ -1,4 +1,4 @@
-function __BucketSaveString(_string, _path)
+function __AbSaveString(_string, _path)
 {
     static _buffer = buffer_create(1024, buffer_grow, 1);
     

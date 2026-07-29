@@ -1,4 +1,4 @@
-function __BucketAddSprite(_absolutePath)
+function __AbAddSprite(_absolutePath)
 {
     var _sprite = -1;
     
@@ -17,14 +17,14 @@ function __BucketAddSprite(_absolutePath)
         }
         else
         {
-            if (BUCKET_IMAGEMAGICK_PATH == undefined)
+            if (AB_IMAGEMAGICK_PATH == undefined)
             {
-                __BucketError($"`BUCKET_IMAGEMAGICK_PATH` must be defined before importing PSD files");
+                __AbError($"`AB_IMAGEMAGICK_PATH` must be defined before importing PSD files");
             }
         
-            if (not file_exists(BUCKET_IMAGEMAGICK_PATH))
+            if (not file_exists(AB_IMAGEMAGICK_PATH))
             {
-                __BucketError($"ImageMagick binary could not be found. Please check `BUCKET_IMAGEMAGICK_PATH`\nPath was {BUCKET_IMAGEMAGICK_PATH}");
+                __AbError($"ImageMagick binary could not be found. Please check `AB_IMAGEMAGICK_PATH`\nPath was {AB_IMAGEMAGICK_PATH}");
             }
         
             var _destinationPath = $"{game_save_id}convert.png";
@@ -36,10 +36,10 @@ function __BucketAddSprite(_absolutePath)
             var _batchFileString = string_join("\n",
             "@echo off",
             $"echo Converting {_absolutePath} from PSD to PNG",
-            $"\"{BUCKET_IMAGEMAGICK_PATH}\" \"{_absolutePath}\"[0] \"{_destinationPath}\"");
+            $"\"{AB_IMAGEMAGICK_PATH}\" \"{_absolutePath}\"[0] \"{_destinationPath}\"");
         
-            __BucketSaveString(_batchFileString, _batchPath);
-            __BucketExecuteShell(_batchPath, "");
+            __AbSaveString(_batchFileString, _batchPath);
+            __AbExecuteShell(_batchPath, "");
         
             var _finished = false;
             var _overallTimer = current_time;
@@ -54,7 +54,7 @@ function __BucketAddSprite(_absolutePath)
         
             if (not _finished)
             {
-                __BucketError($"ImageMagick conversion of \"{_absolutePath}\" failed");
+                __AbError($"ImageMagick conversion of \"{_absolutePath}\" failed");
             }
             else
             {
@@ -71,7 +71,7 @@ function __BucketAddSprite(_absolutePath)
     
     if (not sprite_exists(_sprite))
     {
-        __BucketError($"Failed to load \"{_absolutePath}\" as a sprite");
+        __AbError($"Failed to load \"{_absolutePath}\" as a sprite");
     }
     
     return _sprite;
