@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BucketFileList",
+  "%Name":"BucketPathDescription",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BucketFileList",
+  "name":"BucketPathDescription",
   "parent":{
     "name":"Constructors",
     "path":"folders/Asset Bucket/Constructors.yy",

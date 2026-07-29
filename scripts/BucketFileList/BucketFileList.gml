@@ -56,7 +56,7 @@ function BucketFileList(_rootDirectory = "") constructor
         var _i = 0;
         repeat(array_length(_pathOrArray))
         {
-            array_push(_fileDataArray, new __BucketClassPathDescription(_rootDirectory, __BucketEnsureDirectory(_pathOrArray[_i])));
+            array_push(_fileDataArray, new BucketPathDescription(_rootDirectory, __BucketEnsureDirectory(_pathOrArray[_i])));
             ++_i;
         }
         
@@ -71,7 +71,7 @@ function BucketFileList(_rootDirectory = "") constructor
         var _i = 0;
         repeat(array_length(_pathOrArray))
         {
-            array_push(_fileDataArray, new __BucketClassPathDescription("", __BucketEnsureDirectory(_pathOrArray[_i])));
+            array_push(_fileDataArray, new BucketPathDescription("", __BucketEnsureDirectory(_pathOrArray[_i])));
             ++_i;
         }
         
@@ -106,7 +106,7 @@ function BucketFileList(_rootDirectory = "") constructor
                 }
                 else
                 {
-                    array_push(_fileDataArray, new __BucketClassPathDescription(_rootDirectory, _directory + _file));
+                    array_push(_fileDataArray, new BucketPathDescription(_rootDirectory, _directory + _file));
                 }
             }
             

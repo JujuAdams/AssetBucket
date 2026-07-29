@@ -23,11 +23,11 @@ function __BucketClassProject(_path) constructor
     __yypString = __BucketLoadString(_path);
     
     //Extract arrays as strings from the .yyp
-    __audioGroupsContent   = __BucketYYPExtract(__yypString, "AudioGroups");
-    __foldersContent       = __BucketYYPExtract(__yypString, "Folders");
-    __datafilesContent     = __BucketYYPExtract(__yypString, "IncludedFiles");
-    __resourcesContent     = __BucketYYPExtract(__yypString, "resources");
-    __textureGroupsContent = __BucketYYPExtract(__yypString, "TextureGroups");
+    __audioGroupsContent   = __YYPExtract(__yypString, "AudioGroups");
+    __foldersContent       = __YYPExtract(__yypString, "Folders");
+    __datafilesContent     = __YYPExtract(__yypString, "IncludedFiles");
+    __resourcesContent     = __YYPExtract(__yypString, "resources");
+    __textureGroupsContent = __YYPExtract(__yypString, "TextureGroups");
     
     if (__audioGroupsContent.__error)
     {
@@ -202,9 +202,9 @@ function __BucketClassProject(_path) constructor
         var _framePathArray = array_create(_frameCount, undefined);
         
         //Generate UUIDs
-        var _frameUUIDArray = array_create_ext(_frameCount, __BucketGenerateUUID);
-        var _layerUUID    = __BucketGenerateUUID();
-        var _seqFrameUUID = __BucketGenerateUUID();
+        var _frameUUIDArray = array_create_ext(_frameCount, __GenerateUUID);
+        var _layerUUID    = __GenerateUUID();
+        var _seqFrameUUID = __GenerateUUID();
         
         //Grab the template and do some basic replacements
         var _yyString = _templateYY;
@@ -248,7 +248,7 @@ function __BucketClassProject(_path) constructor
             _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%resourceName%", _spriteName);
             _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%frameUUID%", _frameUUID);
             _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%frameIndex%", _i);
-            _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%seqFrameUUID%", __BucketGenerateUUID());
+            _seqFrameArraySubtring = string_replace_all(_seqFrameArraySubtring, "%seqFrameUUID%", __GenerateUUID());
             _seqFrameArrayString += _seqFrameArraySubtring;
             
             //Record the paths for saving images
@@ -366,6 +366,18 @@ function __BucketClassProject(_path) constructor
 }';
     }
     
+    static __GenerateUUID = function()
+    {
+        //UUIDv4 as per https://www.cryptosys.net/pki/uuid-rfc4122.html
+        
+        var _UUID = md5_string_unicode(string(irandom(0xFFFFFFFF)) + string(irandom(0xFFFFFFFF)) + string(irandom(0xFFFFFFFF)) + string(irandom(0xFFFFFFFF)));
+        _UUID = string_set_byte_at(_UUID, 13, ord("4"));
+        _UUID = string_set_byte_at(_UUID, 17, ord(choose("8", "9", "a", "b")));
+        _UUID = string_copy(_UUID, 1, 8) + "-" + string_copy(_UUID, 9, 4) + "-" + string_copy(_UUID, 13, 4) + "-" + string_copy(_UUID, 17, 4) + "-" + string_copy(_UUID, 21, 12);
+        
+        return _UUID;
+    }
+    
     static __SaveNoteImmediate = function(_noteName, _folderInProject, _string)
     {
         var _directory = $"{__directory}notes/{_noteName}/";
@@ -391,7 +403,7 @@ function __BucketClassProject(_path) constructor
         __BucketSaveString(_string, $"{_directory}{_noteName}.txt")
         __BucketSaveString(_yyString, $"{_directory}{_noteName}.yy");
         
-        var _resourcesContent = __BucketYYPExtract(__yypString, "resources");
+        var _resourcesContent = __YYPExtract(__yypString, "resources");
         var _isEmptyArray = _resourcesContent.__emptyArray;
         if (_resourcesContent.__error)
         {
@@ -415,7 +427,7 @@ function __BucketClassProject(_path) constructor
             if (_isEmptyArray) _resourcesString += "  ";
         }
         
-        var _yypString = __BucketYYPInject(__yypString, _resourcesContent, _resourcesString);
+        var _yypString = __YYPInject(__yypString, _resourcesContent, _resourcesString);
         if (_yypString != __yypString)
         {
             //Save the .yyp if anything's changed
@@ -567,11 +579,11 @@ function __BucketClassProject(_path) constructor
         
         //Inject strings back into the .yyp
         // N.B. Order is important here!
-        _yypString = __BucketYYPInject(_yypString, __textureGroupsContent, _newTextureGroupsString);
-        _yypString = __BucketYYPInject(_yypString, __resourcesContent,     _newResourcesString);
-        _yypString = __BucketYYPInject(_yypString, __datafilesContent,     _newDatafilesString);
-        _yypString = __BucketYYPInject(_yypString, __foldersContent,       _newFoldersString);
-        _yypString = __BucketYYPInject(_yypString, __audioGroupsContent,   _newAudioGroupsString);
+        _yypString = __YYPInject(_yypString, __textureGroupsContent, _newTextureGroupsString);
+        _yypString = __YYPInject(_yypString, __resourcesContent,     _newResourcesString);
+        _yypString = __YYPInject(_yypString, __datafilesContent,     _newDatafilesString);
+        _yypString = __YYPInject(_yypString, __foldersContent,       _newFoldersString);
+        _yypString = __YYPInject(_yypString, __audioGroupsContent,   _newAudioGroupsString);
         
         if (_yypString != __yypString)
         {
@@ -588,5 +600,93 @@ function __BucketClassProject(_path) constructor
         static _resourceTemplate = "    {\"id\":{\"name\":\"%name%\",\"path\":\"%resourceType%/%name%/%name%.yy\",},},\n";
         
         static _textureGroupTemplate = "    {\"$GMTextureGroup\":\"\",\"%Name\":\"%name%\",\"autocrop\":true,\"border\":2,\"compressFormat\":\"bz2\",\"customOptions\":\"\",\"directory\":\"\",\"groupParent\":null,\"isScaled\":true,\"loadType\":\"default\",\"mipsToGenerate\":0,\"name\":\"%name%\",\"resourceType\":\"GMTextureGroup\",\"resourceVersion\":\"2.0\",\"targets\":-1,},\n";
+    }
+    
+    static __YYPExtract = function(_yypString, _propertyName)
+    {
+        var _substring = $"  \"{_propertyName}\":[\r\n";
+        var _startPos = string_pos(_substring, _yypString);
+        if (_startPos > 0)
+        {
+            _startPos += string_length(_substring);
+        }
+        else
+        {
+            _substring = $"  \"{_propertyName}\":[\n";
+            _startPos = string_pos(_substring, _yypString);
+        
+            if (_startPos > 0)
+            {
+                _startPos += string_length(_substring);
+            }
+            else
+            {
+                _substring = $"  \"{_propertyName}\":[],";
+                _startPos = string_pos(_substring, _yypString);
+                if (_startPos > 0)
+                {
+                    _startPos += string_length(_substring) - 2;
+                
+                    return {
+                        __array:      [],
+                        __string:     "",
+                        __startPos:   _startPos,
+                        __endPos:     _startPos,
+                        __emptyArray: true,
+                        __error:      false,
+                    };
+                }
+            }
+        }
+    
+        if (_startPos > 0)
+        {
+            var _endPos = string_pos_ext("   ],\r\n", _yypString, _startPos);
+            if (_endPos <= 0)
+            {
+                _endPos = string_pos_ext("  ],\n", _yypString, _startPos);
+            }
+        
+            if (_endPos > 0)
+            {
+                with({})
+                {
+                    __string     = string_copy(_yypString, _startPos, _endPos - _startPos);
+                    __startPos   = _startPos;
+                    __endPos     = _endPos;
+                    __emptyArray = false;
+                
+                    try
+                    {
+                        __array = json_parse($"[{__string}]");
+                        __error = false;
+                    }
+                    catch(_error)
+                    {
+                        show_debug_message(_error);
+                        __array = [];
+                        __error = true;
+                    }
+                
+                    return self;
+                }
+            }
+        }
+    
+        return {
+            __array:      [],
+            __string:     "",
+            __startPos:   _startPos,
+            __endPos:     _startPos,
+            __emptyArray: false,
+            __error:      true,
+        }
+    }
+    
+    static __YYPInject = function(_yypString, _contentStruct, _string)
+    {
+        _yypString = string_delete(_yypString, _contentStruct.__startPos, _contentStruct.__endPos - _contentStruct.__startPos);
+        _yypString = string_insert(_string, _yypString, _contentStruct.__startPos);
+        return _yypString;
     }
 }

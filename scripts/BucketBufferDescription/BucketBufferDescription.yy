@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BucketBufferDescription",
   "parent":{
-    "name":"AssetBucket",
-    "path":"AssetBucket.yyp",
+    "name":"Constructors",
+    "path":"folders/Asset Bucket/Constructors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
