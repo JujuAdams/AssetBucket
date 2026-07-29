@@ -233,7 +233,6 @@ function __AbClassBuildAb(_name) constructor
             datafiles:     __datafilesDict,
             sounds:        __soundsArray,
             textureGroups: _textureGroupArray,
-            fileCount:     int64(__fileCount),
             coreFilename:  __coreFilename,
             coreSize:      int64(buffer_tell(__coreBuffer)),
             metadata:      __metadata,

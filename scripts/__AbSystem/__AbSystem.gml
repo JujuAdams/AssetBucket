@@ -17,9 +17,12 @@ function __AbSystem()
                 global.__Bucket = self;
             }
             
-            __manifestLoaded = false;
-            
             __fileInfoDict = {};
+            
+            __projectMetadata = undefined;
+            
+            __projectBucketArray = [];
+            __projectBucketMap   = ds_map_create();
             
             __runtimeBucketArray = [];
             __runtimeBucketMap   = ds_map_create();

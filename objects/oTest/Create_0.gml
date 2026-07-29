@@ -40,6 +40,7 @@ var _soundFileList = _baseFileList.Duplicate()
 //function(_fileDesc)
 //{
 //    commandLine.AddSoundToProject(_fileDesc.suggestedName, _fileDesc.absolutePath, "Sounds");
+//
 //}));
 
 _datafileFileList.Foreach(method({
@@ -70,6 +71,10 @@ function(_fileDesc)
 }));
 
 _commandList.SaveToProject(GM_project_filename);
+
+AbBucketLoad("ab_4582a72d1450f5e8816521ea5a808b06_h.json");
+
+AbManifestLoadAndFetch(AB_MANIFEST_FILENAME);
 
 //AbLoad("bucketDefault");
 //texturegroup_load("bucketDefault");

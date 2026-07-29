@@ -1,11 +1,38 @@
-function __AbClassRuntimeAb(_bucketName, _blobSize) constructor
+/// @param headerPath
+
+function __AbClassRuntimeBucket(_headerPath) constructor
 {
-    static _system = __AbSystem();
+    static _system             = __AbSystem();
+    static _projectBucketArray = _system.__projectBucketArray;
+    static _projectBucketMap   = _system.__projectBucketMap;
     
-    __name     = _bucketName;
-    __blobSize = _blobSize;
+    __headerPath = _headerPath;
+    __directory = $"{filename_dir(__headerPath)}/";
     
-    __mainBuffer = -1;
+    var _json = __AbLoadString(_headerPath);
+    try
+    {
+        __header = json_parse(_json);
+    }
+    catch(_error)
+    {
+        show_debug_message(_error);
+        __header = undefined;
+    }
+    
+    if (not is_struct(__header))
+    {
+        __AbError($"Header is not a JSON object");
+    }
+    
+    if (__header[$ "type"] != "bucket header v1")
+    {
+        __AbError($"Header JSON object type is not \"bucket header v1\" (was \"{__header[$ "type"]}\")");
+    }
+    
+    __name = __header.name;
+    
+    __coreBuffer = -1;
     
     __datafileDict = {};
     __soundsDict   = {};
@@ -18,19 +45,35 @@ function __AbClassRuntimeAb(_bucketName, _blobSize) constructor
     __datafileNameArray = [];
     __soundNameArray    = [];
     
-    __loaded = false;
+    __fetched = false;
     
     
     
-    static __Destroy = function()
+    
+    
+    static Destroy = function()
     {
-        __Unload();
+        Unfetch();
+        
+        ds_map_delete(_projectBucketMap, __name);
+        var _index = array_get_index(_projectBucketArray, self);
+        if (_index >= 0) array_delete(_projectBucketArray, _index, 1);
     }
     
-    static __Unload = function()
+    static GetName = function()
     {
-        if (not __loaded) return;
-        __loaded = false;
+        return __name;
+    }
+    
+    static GetFetched = function()
+    {
+        return __fetched;
+    }
+    
+    static Unfetch = function()
+    {
+        if (not __fetched) return;
+        __fetched = false;
         
         array_foreach(__wavArray, audio_free_buffer_sound);
         array_foreach(__oggArray, audio_destroy_stream);
@@ -40,10 +83,10 @@ function __AbClassRuntimeAb(_bucketName, _blobSize) constructor
             texturegroup_delete(__name);
         }
         
-        if (buffer_exists(__mainBuffer))
+        if (buffer_exists(__coreBuffer))
         {
-            buffer_delete(__mainBuffer);
-            __mainBuffer = -1;
+            buffer_delete(__coreBuffer);
+            __coreBuffer = -1;
         }
         
         var _i = 0;
@@ -64,58 +107,17 @@ function __AbClassRuntimeAb(_bucketName, _blobSize) constructor
         __datafileNameArray = [];
         __soundNameArray    = [];
         
-        __loaded = false;
+        __fetched = false;
     }
     
-    static __Load = function()
+    static Fetch = function()
     {
-        if (__loaded) return;
-        __loaded = true;
+        if (__fetched) return;
+        __fetched = true;
         
-        var _path = __AbGetDatafilePath($"ab_{md5_string_utf8(__name)}_h.json");
-        if (not file_exists(_path))
-        {
-            __AbError($"Could not find \"{_path}\"");
-        }
-        
-        //Use a fixed buffer for the benefit of `audio_create_buffer_sound()`
-        __mainBuffer = buffer_create(__blobSize, buffer_fixed, 1);
-        buffer_load_ext(__mainBuffer, _path, 0);
-        var _buffer = __mainBuffer;
-        
-        if (not buffer_exists(_buffer))
-        {
-            __AbError($"Failed to load \"{_path}\"");
-        }
-        
-        var _json = buffer_read(_buffer, buffer_string);
-        
-        var _bucketInfoStruct = undefined;
-        try
-        {
-            _bucketInfoStruct = json_parse(_json);
-        }
-        catch(_error)
-        {
-            show_debug_message(_error);
-            __AbError($"Failed to parse JSON\nPath was \"{_path}\"");
-            return;
-        }
-        
-        if (not is_struct(_bucketInfoStruct))
-        {
-            __AbError($"Parser expecting an object, got {typeof(_bucketInfoStruct)}\nPath was \"{_path}\"");
-        }
-        
-        var _version               = _bucketInfoStruct[$ "version"];
-        __datafileDict             = _bucketInfoStruct[$ "datafiles"];
-        var _soundsDefinitionArray = _bucketInfoStruct[$ "sounds"];
-        var _textureGroupArray     = _bucketInfoStruct[$ "textureGroups"];
-        
-        if (_version != AB_CONTENTS_VERSION)
-        {
-            __AbError($"\"{_path}\" was expecting version {AB_CONTENTS_VERSION}, got {_version}");
-        }
+        __datafileDict             = __header[$ "datafiles"];
+        var _soundsDefinitionArray = __header[$ "sounds"];
+        var _textureGroupArray     = __header[$ "textureGroups"];
         
         if (not is_struct(__datafileDict))
         {
@@ -132,10 +134,20 @@ function __AbClassRuntimeAb(_bucketName, _blobSize) constructor
             __AbError($"\"{_path}\" `.tpages` not an array, got {typeof(_textureGroupArray)}");
         }
         
+        //Use a fixed buffer for the benefit of `audio_create_buffer_sound()`
+        __coreBuffer = buffer_create(__header.coreSize, buffer_fixed, 1);
+        buffer_load_ext(__coreBuffer, __directory + __header.coreFilename, 0);
+        var _buffer = __coreBuffer;
+        
+        if (not buffer_exists(_buffer))
+        {
+            __AbError($"Failed to load core \"{_path}\"");
+        }
+        
         struct_foreach(__datafileDict, function(_name, _value)
         {
             static _runtimeAbDatafileMap = __AbSystem().__runtimeBucketDatafileMap;
-            _value.buffer = __mainBuffer;
+            _value.buffer = __coreBuffer;
             _runtimeAbDatafileMap[? _name] = _value;
         });
         
@@ -149,27 +161,25 @@ function __AbClassRuntimeAb(_bucketName, _blobSize) constructor
         {
             with(_soundsDefinitionArray[_i])
             {
-                if (format == AB_AUDIO_FORMAT_WAV)
+                if ((format == AB_AUDIO_FORMAT_WAV) || (format == AB_AUDIO_FORMAT_WAV_ZLIB))
                 {
+                    if (format == AB_AUDIO_FORMAT_WAV_ZLIB)
+                    {
+                        var _compressedBuffer = buffer_create(size, buffer_fixed, 1);
+                        buffer_copy(_buffer, offset, size, _compressedBuffer, 0);
+                        
+                        var _decompressedBuffer = buffer_decompress(_compressedBuffer);
+                        buffer_delete(_compressedBuffer);
+                        
+                        array_push(__ownedBufferArray, _decompressedBuffer);
+                    }
+                    
                     var _sound = audio_create_buffer_sound(_buffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, offset, size, (channels == 2)? audio_stereo : audio_mono);
-                    array_push(_wavArray, _sound);
-                }
-                else if (format == AB_AUDIO_FORMAT_WAV_ZLIB)
-                {
-                    var _compressedBuffer = buffer_create(size, buffer_fixed, 1);
-                    buffer_copy(_buffer, offset, size, _compressedBuffer, 0);
-                    
-                    var _decompressedBuffer = buffer_decompress(_compressedBuffer);
-                    buffer_delete(_compressedBuffer);
-                    
-                    array_push(__ownedBufferArray, _decompressedBuffer);
-                    
-                    var _sound = audio_create_buffer_sound(_decompressedBuffer, sample16bit? buffer_s16 : buffer_u8, sampleRate, 0, buffer_get_size(_decompressedBuffer), (channels == 2)? audio_stereo : audio_mono);
                     array_push(_wavArray, _sound);
                 }
                 else if (format == AB_AUDIO_FORMAT_OGG)
                 {
-                    var _sound = audio_create_stream(__AbGetDatafilePath(filename));
+                    var _sound = audio_create_stream(other.__directory + filename);
                     array_push(_oggArray, _sound);
                 }
                 
@@ -230,7 +240,7 @@ function __AbClassRuntimeAb(_bucketName, _blobSize) constructor
                     var _j = 0;
                     repeat(array_length(_tgroupPagePathArray))
                     {
-                        var _path = __AbGetDatafilePath(_tgroupPagePathArray[_j]);
+                        var _path = __directory + _tgroupPagePathArray[_j];
                         if (not file_exists(_path))
                         {
                             __AbError($"Could not find \"{_path}\"");

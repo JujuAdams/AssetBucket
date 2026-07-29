@@ -357,7 +357,7 @@ function AbCommandList() constructor
             ++_i;
         }
         
-        var _bucketExportArray = __SaveAbs(_directory);
+        var _bucketExportArray = __SaveBuckets(_directory);
         
         var _json = json_stringify({
             type:    "loose manifest v1",
@@ -367,7 +367,7 @@ function AbCommandList() constructor
         __AbSaveString(_json, _directory + AB_MANIFEST_FILENAME);
     }
     
-    static __SaveAbs = function(_directory)
+    static __SaveBuckets = function(_directory)
     {
         var _bucketExportArray = [];
         
@@ -380,7 +380,7 @@ function AbCommandList() constructor
             
             array_push(_bucketExportArray, {
                 bucketName: _bucket.__name,
-                filename:   _bucket.__coreFilename,
+                filename:   _bucket.__headerFilename,
             });
             
             ++_i;
@@ -404,7 +404,7 @@ function AbCommandList() constructor
         }
         
         //Save buckets into the datafiles directory
-        var _bucketExportArray = __SaveAbs(_datafilesDirectory);
+        var _bucketExportArray = __SaveBuckets(_datafilesDirectory);
         
         //TODO - Find old manifest and clean up any old bucket files
         file_delete(_datafilesDirectory + AB_MANIFEST_FILENAME);
@@ -413,9 +413,9 @@ function AbCommandList() constructor
         if ((array_length(_bucketExportArray) > 0) || (struct_names_count(__projectMetadata) > 0))
         {
             var _json = json_stringify({
-                type:     "project manifest v1",
-                buckets:  _bucketExportArray,
-                metadata: __projectMetadata,
+                type:            "project manifest v1",
+                buckets:         _bucketExportArray,
+                projectMetadata: __projectMetadata,
             });
             
             __AbSaveString(_json, _datafilesDirectory + AB_MANIFEST_FILENAME);

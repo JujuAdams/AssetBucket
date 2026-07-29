@@ -11,7 +11,7 @@ function AbSoundsGetArray(_bucketName)
         __AbError($"Ab \"{_bucketName}\" not found");
     }
     
-    if (not _bucket.__loaded)
+    if (not _bucket.__fetched)
     {
         __AbError($"Ab \"{_bucketName}\" not loaded");
     }
