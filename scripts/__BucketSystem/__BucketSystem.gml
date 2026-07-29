@@ -16,8 +16,6 @@ function __BucketSystem()
             __manifestLoaded = false;
             
             __fileInfoDict = {};
-            __currentYYPDirectory = undefined;
-            __currentIngestStruct = undefined;
             
             __runtimeBucketArray = [];
             __runtimeBucketMap   = ds_map_create();

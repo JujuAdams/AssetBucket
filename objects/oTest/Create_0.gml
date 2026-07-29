@@ -1,8 +1,6 @@
 var _commandList = new BucketCommandList();
 
-var _baseFileList = (new BucketFileList())
-                    .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket")
-                    .PopulateFromSubdirectory("");
+var _baseFileList = BucketQuickFileList(BUCKET_PROJECT_DIRECTORY + "asset_bucket");
 
 _baseFileList.Duplicate()
 .ChangeRootDirectory(BUCKET_PROJECT_DIRECTORY + "asset_bucket/datafiles")
