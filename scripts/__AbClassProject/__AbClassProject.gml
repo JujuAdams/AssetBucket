@@ -109,7 +109,7 @@ function __AbClassProject(_path) constructor
         // TODO
     }
     
-    static __SaveSound = function(_sourcePath, _soundName, _folderInProject, _audioGroupName)
+    static __SaveSound = function(_sourcePath, _soundName, _folderInProject, _compressionSetting, _audioGroupName)
     {
         var _directory = $"{__directory}sounds/{_soundName}/";
         var _soundFilename = filename_name(_sourcePath);
@@ -119,6 +119,7 @@ function __AbClassProject(_path) constructor
         _yyString = string_replace_all(_yyString, "%resourceName%", _soundName);
         _yyString = string_replace_all(_yyString, "%audioGroupName%", _audioGroupName);
         _yyString = string_replace_all(_yyString, "%soundFilename%", _soundFilename);
+        _yyString = string_replace_all(_yyString, "%compressionSetting%", _compressionSetting);
         
         //Set the in-project folder path
         if (_folderInProject == "")
@@ -148,8 +149,8 @@ function __AbClassProject(_path) constructor
     "path":"audiogroups/%audioGroupName%",
   },
   "bitDepth":1,
-  "channelFormat":0,
-  "compression":0,
+  "channelFormat":1,
+  "compression":%compressionSetting%,
   "compressionQuality":4,
   "conversionMode":0,
   "duration":0.0,
@@ -183,6 +184,10 @@ function __AbClassProject(_path) constructor
             if (is_struct(_sourcePath))
             {
                 __AbSaveBufferAsPNG(_savePathArray[0], _sourcePath.buffer, _sourcePath.width, _sourcePath.height, _sourcePath[$ "offset"] ?? 0);
+            }
+            else if (is_handle(_sourcePath) && buffer_exists(_sourcePath))
+            {
+                __AbSaveBufferAsPNG(_savePathArray[0], _sourcePath, _width, _height, 0);
             }
             else
             {

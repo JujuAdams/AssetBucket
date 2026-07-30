@@ -60,7 +60,7 @@ function AbCommandList() constructor
         }));
     }
     
-    static AddSpriteToBucket = function(_bucketName, _alias, _sourcePathOrArray, _textureGroup = "Default")
+    static AddSpriteToBucket = function(_bucketName, _alias, _sourcePathOrArray, _textureGroup = _bucketName)
     {
         var _sourcePathArray = __AbEnsureArray(_sourcePathOrArray);
         
@@ -207,7 +207,7 @@ function AbCommandList() constructor
         }));
     }
     
-    static AddSpriteToProject = function(_assetName, _pathOrArray, _projectFolder, _textureGroup = "Default")
+    static AddSpriteToProject = function(_assetName, _pathOrArray, _width, _height, _projectFolder, _textureGroup = "Default")
     {
         _pathOrArray = __AbEnsureArray(_pathOrArray);
         
@@ -217,49 +217,54 @@ function AbCommandList() constructor
         array_push(__commandArray, method({
             __assetName:     _assetName,
             __pathArray:     _pathOrArray,
+            __width:         _width,
+            __height:        _height,
             __projectFolder: _projectFolder,
             __textureGroup:  _textureGroup,
             __commandList:   other,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            if (is_struct(__pathArray[0]))
-            {
-                var _width  = __pathArray[0].width;
-                var _height = __pathArray[0].height;
-            }
-            else
-            {
-                var _fileInfo = __AbEnsureIngestFileInfo(__pathArray[0]);
-                var _width  = _fileInfo.__GetWidth();
-                var _height = _fileInfo.__GetHeight();
-            }
-            
             __commandList.__EnsureProjectSprite(__assetName);
             __commandList.__EnsureProjectFolder(__projectFolder);
             __commandList.__EnsureProjectTextureGroup(__textureGroup);
-            _projectStruct.__SaveSprite(__pathArray, __assetName, _width, _height, __projectFolder, __textureGroup);
+            _projectStruct.__SaveSprite(__pathArray, __assetName, __width, __height, __projectFolder, __textureGroup);
         }));
     }
     
-    static AddSoundToProject = function(_assetName, _path, _projectFolder, _audioGroup = "audiogroup_default")
+    static AddSoundToProject = function(_assetName, _path, _projectFolder, _compressionSetting = undefined, _audioGroup = "audiogroup_default")
     {
         __hasProjectCommands = true;
         __SetProjectAssetAsModified(_assetName);
         
+        var _extension = filename_ext(_path);
+        if (_extension == ".wav")
+        {
+            _compressionSetting ??= AB_COMPRESSION_SETTING_UNCOMPRESSED;
+        }
+        else if (_extension == ".ogg")
+        {
+            _compressionSetting ??= AB_COMPRESSION_SETTING_COMPRESSED;
+        }
+        else
+        {
+            __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_path}\"");
+        }
+        
         array_push(__commandArray, method({
-            __assetName:     _assetName,
-            __path:          _path,
-            __projectFolder: _projectFolder,
-            __audioGroup:    _audioGroup,
-            __commandList:   other,
+            __assetName:          _assetName,
+            __path:               _path,
+            __projectFolder:      _projectFolder,
+            __audioGroup:         _audioGroup,
+            __compressionSetting: _compressionSetting,
+            __commandList:        other,
         },
         function(_projectStruct, _datafilesDirectory)
         {
             __commandList.__EnsureProjectSound(__assetName);
             __commandList.__EnsureProjectFolder(__projectFolder);
             __commandList.__EnsureProjectAudioGroup(__audioGroup);
-            _projectStruct.__SaveSound(__path, __assetName, __projectFolder, __audioGroup);
+            _projectStruct.__SaveSound(__path, __assetName, __projectFolder, __compressionSetting, __audioGroup);
         }));
     }
     

@@ -9,39 +9,12 @@ var _datafileFileList = _baseFileList.Duplicate()
 
 var _spriteFileList = _baseFileList.Duplicate()
 .ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/sprites")
-.IncludeLocalPaths("*.png");
+.IncludeLocalPaths(["*.png", "*.ase", "*.aseprite"])
+.CollectImageFrames();
 
 var _soundFileList = _baseFileList.Duplicate()
 .ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/sounds")
 .IncludeLocalPaths(["*.wav", "*.ogg"]);
-
-//_datafileFileList.Foreach(method({
-//    commandLine: _commandList,
-//    bucketName: "bufferDefault",
-//},
-//function(_fileDesc)
-//{
-//    commandLine.AddDatafileToProject(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
-//}));
-//
-//_spriteFileList.Foreach(method({
-//    commandLine: _commandList,
-//    bucketName: "bufferDefault",
-//},
-//function(_fileDesc)
-//{
-//    commandLine.AddSpriteToProject(_fileDesc.suggestedName, _fileDesc.linkedPaths, "Sprites");
-//}));
-//
-//_soundFileList.Foreach(method({
-//    commandLine: _commandList,
-//    bucketName: "bufferDefault",
-//},
-//function(_fileDesc)
-//{
-//    commandLine.AddSoundToProject(_fileDesc.suggestedName, _fileDesc.absolutePath, "Sounds");
-//
-//}));
 
 _datafileFileList.Foreach(method({
     commandLine: _commandList,
@@ -51,7 +24,7 @@ function(_fileDesc)
 {
     commandLine.AddDatafileToBucket(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
 }));
-
+    
 _spriteFileList.Foreach(method({
     commandLine: _commandList,
     bucketName: "bufferDefault",
@@ -72,10 +45,6 @@ function(_fileDesc)
 
 _commandList.SaveToProject(GM_project_filename);
 
-AbBucketStageAndLoadFromManifest(AB_MANIFEST_FILENAME);
-show_debug_message(AbDatafileGetString("localization/english.txt"));
-
-//AbLoad("bucketDefault");
-//texturegroup_load("bucketDefault");
-//
-//show_debug_message(AbDatafileGetString("datafiles/localization/english.txt"));
+//AbBucketStageAndLoadFromManifest(AbGetDatafilePath(AB_MANIFEST_FILENAME));
+//show_debug_message(AbBucketGetTextureGroups("bucketDefault"));
+//show_debug_message(AbDatafileGetString("localization/english.txt"));

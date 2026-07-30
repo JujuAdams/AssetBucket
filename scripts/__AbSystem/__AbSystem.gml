@@ -24,8 +24,7 @@ function __AbSystem()
             __projectBucketArray = [];
             __projectBucketMap   = ds_map_create();
             
-            __runtimeBucketArray = [];
-            __runtimeBucketMap   = ds_map_create();
+            __runtimeBucketMap  = ds_map_create();
             
             __runtimeBucketDatafileMap = ds_map_create();
             __runtimeBucketSoundMap    = ds_map_create();
