@@ -7,10 +7,22 @@ function __AbEnsureDirectory(_path)
     
     _path = string_replace_all(_path, "\\", "/");
     
-    if (string_char_at(_path, string_length(_path)) != "/")
+    var _splitArray = string_split(_path, "/", true);
+    var _i = array_length(_splitArray)-1;
+    while(_i > 0)
     {
-        _path += "/";
+        if (_splitArray[_i] == ".")
+        {
+            array_delete(_splitArray, _i, 1);
+        }
+        else if (_splitArray[_i] == "..")
+        {
+            array_delete(_splitArray, _i-1, 2);
+            --_i;
+        }
+        
+        --_i;
     }
     
-    return _path;
+    return string_join_ext("/", _splitArray) + "/";
 }

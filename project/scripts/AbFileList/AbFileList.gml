@@ -6,6 +6,11 @@ function AbFileList() constructor
     static ChangeRootDirectory = function(_newRootDirectory)
     {
         _newRootDirectory = __AbEnsureDirectory(_newRootDirectory);
+        if (not directory_exists(_newRootDirectory))
+        {
+            __AbError($"Directory \"{_newRootDirectory}\" doesn't exist");
+        }
+        
         var _oldRootDirectory = __rootDirectory;
         
         if (_oldRootDirectory == _newRootDirectory) return;

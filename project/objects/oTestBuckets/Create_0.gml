@@ -1,19 +1,20 @@
 var _commandList = new AbCommandList();
 
 var _baseFileList = (new AbFileList())
-                    .ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket")
+                    .ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket")
                     .PopulateFromSubdirectory("");
 
 var _datafileFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/datafiles");
+.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles");
 
 var _spriteFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/sprites")
-.IncludeLocalPaths(["*.png", "*.ase", "*.aseprite"])
-.CollectImageFrames();
+.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites")
+.IncludeLocalPaths(["*.png", "*.ase", "*.aseprite"]);
+
+_spriteFileList.CollectImageFrames();
 
 var _soundFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/sounds")
+.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds")
 .IncludeLocalPaths(["*.wav", "*.ogg"]);
 
 _datafileFileList.Foreach(method({

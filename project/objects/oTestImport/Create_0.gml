@@ -5,18 +5,18 @@ var _commandList = new AbCommandList();
 //have their local path relative to this root directory. The local path will be used later to
 //create a folder structure inside the GameMaker project
 var _baseFileList = (new AbFileList())
-                    .ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket")
+                    .ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket")
                     .PopulateFromSubdirectory("");
 
 //Createa a new file list from the base file list. We change the root directory which will
 //automatically reject any file not found inside the `datafiles/` directory
 var _datafileFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/datafiles");
+.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles");
 
 //As above but for sprites. This file list filters out anything that's not a supported image file
 var _spriteFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/sprites")
-.IncludeLocalPaths(["*.png", "*.psd", "*.ase", "*.aseprite"]);
+.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites")
+.IncludeLocalPaths(["*.png", "*.ase", "*.aseprite"]);
 
 //This special method will collect together image files that have the following pattern:
 //    sprite_name_frame0.png
@@ -30,7 +30,7 @@ _spriteFileList.CollectImageFrames();
 
 //As above but for sounds. This file list filters out anything that's not a supported audio file
 var _soundFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory(AB_PROJECT_DIRECTORY + "asset_bucket/sounds")
+.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds")
 .IncludeLocalPaths(["*.wav", "*.ogg"]);
 
 //Iterate over every datafile and add it to the project
