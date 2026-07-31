@@ -36,7 +36,6 @@ var _soundFileList = _baseFileList.Duplicate()
 //Iterate over every datafile and add it to the project
 _datafileFileList.Foreach(method({
     commandLine: _commandList,
-    bucketName: "bufferDefault",
 },
 function(_fileDesc)
 {
@@ -47,7 +46,6 @@ function(_fileDesc)
 //Iterate over every image file and add it to the project
 _spriteFileList.Foreach(method({
     commandLine: _commandList,
-    bucketName: "bufferDefault",
 },
 function(_fileDesc)
 {
@@ -129,7 +127,6 @@ function(_fileDesc)
 //Iterate over every datafile and add it to the project
 _soundFileList.Foreach(method({
     commandLine: _commandList,
-    bucketName: "bufferDefault",
 },
 function(_fileDesc)
 {

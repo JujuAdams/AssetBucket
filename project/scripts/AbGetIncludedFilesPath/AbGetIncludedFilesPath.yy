@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbSuggestSnakeCase",
+  "%Name":"AbGetIncludedFilesPath",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbSuggestSnakeCase",
+  "name":"AbGetIncludedFilesPath",
   "parent":{
     "name":"Miscellaneous",
     "path":"folders/Asset Bucket/Miscellaneous.yy",

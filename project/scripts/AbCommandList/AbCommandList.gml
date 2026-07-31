@@ -341,11 +341,11 @@ function AbCommandList() constructor
     
     
     
-    static SaveAbsToDirectory = function(_directory)
+    static SaveBucketsToDirectory = function(_directory)
     {
         if (__hasProjectCommands)
         {
-            __AbWarning("Called `SaveAbsToDirectory()` but command list has project commands. Project commands will be ignored");
+            __AbWarning("Called `SaveBucketsToDirectory()` but command list has project commands. Project commands will be ignored");
         }
         
         var _commandArray = __commandArray;

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"AbSuggestCamelCase",
   "parent":{
-    "name":"Asset Bucket",
-    "path":"folders/Asset Bucket.yy",
+    "name":"Miscellaneous",
+    "path":"folders/Asset Bucket/Miscellaneous.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

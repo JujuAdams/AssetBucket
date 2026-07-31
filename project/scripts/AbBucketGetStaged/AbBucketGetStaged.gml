@@ -2,7 +2,7 @@
 
 function AbBucketGetStaged(_bucketName)
 {
-    static _runtimeBucketMap = __AbSystem().__runtimeBucketMap
+    static _projectBucketMap = __AbSystem().__projectBucketMap
     
-    return ds_map_exists(_runtimeBucketMap, _bucketName);
+    return ds_map_exists(_projectBucketMap, _bucketName);
 }

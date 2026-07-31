@@ -19,7 +19,7 @@ var _soundFileList = _baseFileList.Duplicate()
 
 _datafileFileList.Foreach(method({
     commandLine: _commandList,
-    bucketName: "bufferDefault",
+    bucketName: "bucketDefault",
 },
 function(_fileDesc)
 {
@@ -28,7 +28,7 @@ function(_fileDesc)
     
 _spriteFileList.Foreach(method({
     commandLine: _commandList,
-    bucketName: "bufferDefault",
+    bucketName: "bucketDefault",
 },
 function(_fileDesc)
 {
@@ -37,7 +37,7 @@ function(_fileDesc)
 
 _soundFileList.Foreach(method({
     commandLine: _commandList,
-    bucketName: "bufferDefault",
+    bucketName: "bucketDefault",
 },
 function(_fileDesc)
 {
@@ -46,6 +46,6 @@ function(_fileDesc)
 
 _commandList.SaveToProject(GM_project_filename);
 
-//AbBucketStageAndLoadFromManifest(AbGetDatafilePath(AB_MANIFEST_FILENAME));
-//show_debug_message(AbBucketGetTextureGroups("bucketDefault"));
-//show_debug_message(AbDatafileGetString("localization/english.txt"));
+AbBucketStageAndLoadFromManifest(AbGetIncludedFilesPath(AB_MANIFEST_FILENAME));
+AbBucketTextureGroupsFetch("bucketDefault");
+AbBucketSoundPlay("sndChickenNuggets", true);

@@ -183,7 +183,7 @@ function __AbClassRuntimeBucket(_headerPath) constructor
                 }
                 
                 _soundsDict[$ alias] = _sound;
-                _runtimeBucketSoundMap[$ alias] = _sound;
+                _runtimeBucketSoundMap[? alias] = _sound;
             }
             
             ++_i;
