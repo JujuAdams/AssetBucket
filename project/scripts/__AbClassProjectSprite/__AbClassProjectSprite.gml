@@ -125,17 +125,17 @@ function __AbClassProjectSprite() constructor
         
         if (_width != undefined)
         {
-            __width = _width;
+            width = _width;
         }
         
         if (_height != undefined)
         {
-            __height = _height;
+            height = _height;
         }
         
         if (_textureGroupName != undefined)
         {
-            __textureGroupName = _textureGroupName;
+            textureGroupName = _textureGroupName;
         }
         
         return self;
@@ -144,20 +144,6 @@ function __AbClassProjectSprite() constructor
     static __Save = function(_yyPath)
     {
         var _yyDirectory = filename_dir(_yyPath) + "/";
-        
-        if (__sourceFilePath == undefined)
-        {
-            __AbError($"Sound source file not set for asset \"{__assetName}\"");
-        }
-        else if (__sourceFilePath != __GetExpectedSoundFilePath(_yyPath))
-        {
-            if (not file_exists(__sourceFilePath))
-            {
-                __AbError($"Sound source file \"{__sourceFilePath}\" could not be found (asset \"{__assetName}\")");
-            }
-            
-            file_copy(__sourceFilePath, __GetExpectedSoundFilePath(_yyPath));
-        }
         
         var _buffer = buffer_create(1024, buffer_grow, 1);
         
@@ -176,10 +162,11 @@ function __AbClassProjectSprite() constructor
         __AbBufferWritePair(_buffer, 2, "For3D",              bool(for3D));
         
         __AbBufferWriteLine(_buffer, "  \"frames\":[");
+        var _layerUUID = layer.layerUUID;
         var _i = 0;
         repeat(array_length(framesArray))
         {
-            framesArray[_i].__Save(_buffer, _yyDirectory, layerUUID);
+            framesArray[_i].__Save(_buffer, _yyDirectory, _layerUUID);
             ++_i;
         }
         __AbBufferWriteLine(_buffer, "  ],");
@@ -197,8 +184,8 @@ function __AbClassProjectSprite() constructor
         __AbBufferWritePair(_buffer, 2, "nineSlice", nineSlice);
         __AbBufferWritePair(_buffer, 2, "origin",    origin);
         __AbBufferWriteLine(_buffer, "  \"parent\":{");
-        __AbBufferWriteLine(_buffer, $"    \"name\":\"{__folderInfo.__name}\",");
-        __AbBufferWriteLine(_buffer, $"    \"path\":\"{__folderInfo.__path}\",");
+        __AbBufferWriteLine(_buffer, $"    \"name\":\"{folderInfo.__name}\",");
+        __AbBufferWriteLine(_buffer, $"    \"path\":\"{folderInfo.__path}\",");
         __AbBufferWriteLine(_buffer, "  },");
         __AbBufferWritePair(_buffer, 2, "preMultiplyAlpha", bool(preMultiplyAlpha));
         __AbBufferWritePair(_buffer, 2, "resourceType",     "GMSprite");

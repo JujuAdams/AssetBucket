@@ -184,13 +184,17 @@ function AbProject(_path) constructor
                                 .__Deserialize(_yyPath)
                                 .__Overwrite(_pathArray, self, _width, _height, _folderInProject, _textureGroupName);
         }
-        //else
-        //{
-        //    var _spriteStruct = (new __AbClassProjectSprite())
-        //                        .__Template(_pathArray, self, _spriteName, _width, _height, _folderInProject, _textureGroupName);
-        //}
-        //
-        //_spriteStruct.__Save(_yyPath);
+        else
+        {
+            var _spriteStruct = (new __AbClassProjectSprite())
+                                .__Template(_pathArray, self, _spriteName, _width, _height, _folderInProject, _textureGroupName);
+        }
+        
+        _spriteStruct.__Save(_yyPath);
+        
+        return;
+        
+        
         
         
         var _frameCount = array_length(_pathArray);

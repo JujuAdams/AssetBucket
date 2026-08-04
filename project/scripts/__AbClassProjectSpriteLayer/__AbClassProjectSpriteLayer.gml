@@ -8,6 +8,8 @@ function __AbClassProjectSpriteLayer() constructor
         isLocked    = false;
         opacity     = 100;
         visible     = true;
+        
+        return self;
     }
     
     static __Deserialize = function(_yyStruct)

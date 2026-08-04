@@ -20,7 +20,7 @@ function __AbClassProjectSpriteFrame() constructor
     
     static __GetExpectedImageFilePath = function(_yyDirectory, _layerUUID)
     {
-        return $"{_yyDirectory}layers/{frameUUID}/{_layerUUID}.png";
+        return $"{_yyDirectory}{frameUUID}.png";
     }
     
     static __Overwrite = function(_sourceFilePath)
@@ -34,10 +34,11 @@ function __AbClassProjectSpriteFrame() constructor
     {
         buffer_write(_buffer, buffer_text, $"    \{\"$GMSpriteFrame\":\"v1\",\"%Name\":\"{frameUUID}\",\"name\":\"{frameUUID}\",\"resourceType\":\"GMSpriteFrame\",\"resourceVersion\":\"2.0\",\},\n");
         
-        var _imagePath = __GetExpectedImageFilePath();
+        var _imagePath = __GetExpectedImageFilePath(_yyDirectory, _layerUUID);
         if (__sourceFilePath != _imagePath)
         {
             file_copy(__sourceFilePath, _imagePath);
+            file_copy(__sourceFilePath, $"{_yyDirectory}layers/{frameUUID}/{_layerUUID}.png");
         }
     }
 }

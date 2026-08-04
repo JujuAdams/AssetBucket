@@ -10,9 +10,9 @@ function __AbClassProjectSpriteSequence() constructor
         backdropXOffset      = 0;
         backdropYOffset      = 0;
         eventStubScript      = undefined;
-        eventToFunction      = undefined;
-        length               = undefined;
-        lockOrigin           = undefined;
+        eventToFunction      = {};
+        length               = 1.0;
+        lockOrigin           = false;
         name                 = _assetName;
         playback             = 1;
         playbackSpeed        = 30;
@@ -89,31 +89,31 @@ function __AbClassProjectSpriteSequence() constructor
         __AbBufferWritePair(_buffer, 4, "$GMSequence", "v1");
         __AbBufferWritePair(_buffer, 4, "%Name", "%resourceName%");
         __AbBufferWritePair(_buffer, 4, "autoRecord", bool(autoRecord));
-        __AbBufferWritePair(_buffer, 4, "backdropHeight", autoRecord);
+        __AbBufferWritePair(_buffer, 4, "backdropHeight", backdropHeight);
         __AbBufferWritePair(_buffer, 4, "backdropImageOpacity", backdropImageOpacity);
         __AbBufferWritePair(_buffer, 4, "backdropImagePath", backdropImagePath);
         __AbBufferWritePair(_buffer, 4, "backdropWidth", backdropWidth);
         __AbBufferWritePair(_buffer, 4, "backdropXOffset", backdropXOffset);
         __AbBufferWritePair(_buffer, 4, "backdropYOffset", backdropYOffset);
         
-        __AbBufferWriteLine(_buffer, "    \"events\":{");
-        __AbBufferWriteLine(_buffer, "      \"$KeyframeStore<MessageEventKeyframe>\":\"\",");
-        __AbBufferWriteLine(_buffer, "      \"Keyframes\":[],");
-        __AbBufferWriteLine(_buffer, "      \"resourceType\":\"KeyframeStore<MessageEventKeyframe>\",");
-        __AbBufferWriteLine(_buffer, "      \"resourceVersion\":\"2.0\",");
-        __AbBufferWriteLine(_buffer, "    },");
+        __AbBufferWriteLine(_buffer, "      \"events\":{");
+        __AbBufferWriteLine(_buffer, "        \"$KeyframeStore<MessageEventKeyframe>\":\"\",");
+        __AbBufferWriteLine(_buffer, "        \"Keyframes\":[],");
+        __AbBufferWriteLine(_buffer, "        \"resourceType\":\"KeyframeStore<MessageEventKeyframe>\",");
+        __AbBufferWriteLine(_buffer, "        \"resourceVersion\":\"2.0\",");
+        __AbBufferWriteLine(_buffer, "      },");
         
         __AbBufferWritePair(_buffer, 4, "eventStubScript", eventStubScript);
-        __AbBufferWritePair(_buffer, 4, "eventToFunction", "{}");
+        __AbBufferWriteLine(_buffer, "      \"eventToFunction\":{},"); //TODO
         __AbBufferWritePair(_buffer, 4, "length", length);
         __AbBufferWritePair(_buffer, 4, "lockOrigin", bool(lockOrigin));
         
-        __AbBufferWriteLine(_buffer, "    \"moments\":{");
-        __AbBufferWriteLine(_buffer, "        \"$KeyframeStore<MomentsEventKeyframe>\":\"\",");
-        __AbBufferWriteLine(_buffer, "        \"Keyframes\":[],");
-        __AbBufferWriteLine(_buffer, "        \"resourceType\":\"KeyframeStore<MomentsEventKeyframe>\",");
-        __AbBufferWriteLine(_buffer, "        \"resourceVersion\":\"2.0\",");
-        __AbBufferWriteLine(_buffer, "    },");
+        __AbBufferWriteLine(_buffer, "      \"moments\":{");
+        __AbBufferWriteLine(_buffer, "          \"$KeyframeStore<MomentsEventKeyframe>\":\"\",");
+        __AbBufferWriteLine(_buffer, "          \"Keyframes\":[],");
+        __AbBufferWriteLine(_buffer, "          \"resourceType\":\"KeyframeStore<MomentsEventKeyframe>\",");
+        __AbBufferWriteLine(_buffer, "          \"resourceVersion\":\"2.0\",");
+        __AbBufferWriteLine(_buffer, "      },");
         
         __AbBufferWritePair(_buffer, 4, "name", name);
         __AbBufferWritePair(_buffer, 4, "playback", playback);
@@ -125,7 +125,7 @@ function __AbClassProjectSpriteSequence() constructor
         __AbBufferWritePair(_buffer, 4, "showBackdropImage", bool(showBackdropImage));
         __AbBufferWritePair(_buffer, 4, "timeUnits", timeUnits);
         
-        __AbBufferWriteLine(_buffer, "    \"tracks\":[");
+        __AbBufferWriteLine(_buffer, "      \"tracks\":[");
         __AbBufferWriteLine(_buffer, "        {\"$GMSpriteFramesTrack\":\"\",\"builtinName\":0,\"events\":[],\"inheritsTrackColour\":true,\"interpolation\":1,\"isCreationTrack\":false,\"keyframes\":{\"$KeyframeStore<SpriteFrameKeyframe>\":\"\",\"Keyframes\":[");
         
         //Ensure we have enough sequence frame UUIDs
@@ -138,13 +138,13 @@ function __AbClassProjectSpriteSequence() constructor
         repeat(array_length(_framesArray))
         {
             __AbBufferWriteLine(_buffer,  "            {\"$Keyframe<SpriteFrameKeyframe>\":\"\",\"Channels\":{");
-            __AbBufferWriteLine(_buffer, $"                \"0\":\{\"$SpriteFrameKeyframe\":\"\",\"Id\":\{\"name\":\"{_framesArray[_i].frameUUID}\",\"path\":\"sprites/{_assetName}/{_assetName}.yy\",\},\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"2.0\",\},\"");
-            __AbBufferWriteLine(_buffer, $"              \},\"Disabled\":false,\"id\":\"{__AbGenerateUUID()}\",\"IsCreationKey\":false,\"Key\":{_i}.0,\"Length\":1.0,\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"2.0\",\"Stretch\":false,\},");
+            __AbBufferWriteLine(_buffer, $"                \"0\":\{\"$SpriteFrameKeyframe\":\"\",\"Id\":\{\"name\":\"{_framesArray[_i].frameUUID}\",\"path\":\"sprites/{_assetName}/{_assetName}.yy\",\},\"resourceType\":\"SpriteFrameKeyframe\",\"resourceVersion\":\"2.0\",\},");
+            __AbBufferWriteLine(_buffer, $"              \},\"Disabled\":false,\"id\":\"{seqFrameUUIDArray[_i]}\",\"IsCreationKey\":false,\"Key\":{_i}.0,\"Length\":1.0,\"resourceType\":\"Keyframe<SpriteFrameKeyframe>\",\"resourceVersion\":\"2.0\",\"Stretch\":false,\},");
             ++_i;
         }
         
         __AbBufferWriteLine(_buffer, "            ],\"resourceType\":\"KeyframeStore<SpriteFrameKeyframe>\",\"resourceVersion\":\"2.0\",},\"modifiers\":[],\"name\":\"frames\",\"resourceType\":\"GMSpriteFramesTrack\",\"resourceVersion\":\"2.0\",\"spriteId\":null,\"trackColour\":0,\"tracks\":[],\"traits\":0,},");
-        __AbBufferWriteLine(_buffer, "    ],");
+        __AbBufferWriteLine(_buffer, "      ],");
         
         __AbBufferWritePair(_buffer, 4, "visibleRange", visibleRange);
         __AbBufferWritePair(_buffer, 4, "volume", volume);
