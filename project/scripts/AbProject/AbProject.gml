@@ -177,6 +177,22 @@ function AbProject(_path) constructor
     
     static __SaveSprite = function(_pathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)
     {
+        var _yyPath = $"{__directory}sprites/{_spriteName}/{_spriteName}.yy";
+        if (file_exists(_yyPath))
+        {
+            var _spriteStruct = (new __AbClassProjectSprite())
+                                .__Deserialize(_yyPath)
+                                .__Overwrite(_sourcePath, self, _width, _height, _folderInProject, _textureGroupName);
+        }
+        //else
+        //{
+        //    var _spriteStruct = (new __AbClassProjectSprite())
+        //                        .__Template(_sourcePath, self, _spriteName, _width, _height, _folderInProject, _textureGroupName);
+        //}
+        //
+        //_spriteStruct.__Save(_yyPath);
+        
+        
         var _frameCount = array_length(_pathArray);
         
         var _framePathArray = __SaveSpriteYY(_spriteName, _frameCount, _width, _height, _folderInProject, _textureGroupName);

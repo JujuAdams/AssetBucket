@@ -11,7 +11,7 @@ function __AbClassProjectSound() constructor
     __conversionMode     = undefined;
     __duration           = undefined;
     __exportDir          = undefined;
-    __folderInfo         = undefined;
+    __folderInfo         = {};
     __preload            = undefined;
     __sampleRate         = undefined;
     __soundFilename      = undefined;
@@ -48,7 +48,7 @@ function __AbClassProjectSound() constructor
         __conversionMode     = 0;
         __duration           = 0;
         __exportDir          = "";
-        __folderInfo         = __AbMakeProjectFolderInfo(_projectFolder);
+        __folderInfo         = __AbMakeProjectFolderInfo(_projectFolder, _projectStruct, __folderInfo);
         __preload            = false;
         __sampleRate         = 44100;
         __soundFilename      = filename_name(_sourcePath);

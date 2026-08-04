@@ -28,6 +28,10 @@ function __AbBufferWritePair(_buffer, _key, _value)
         
         buffer_write(_buffer, buffer_text, ",\n");
     }
+    else if (is_undefined(_value))
+    {
+        buffer_write(_buffer, buffer_text, "null,\n");
+    }
     else
     {
         __AbError($"Datatype not supported ({typeof(_value)})");
