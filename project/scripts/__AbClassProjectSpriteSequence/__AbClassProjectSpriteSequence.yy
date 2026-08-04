@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__AbClassProjectSpriteSequence",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__AbClassProjectSpriteSequence",
+  "parent":{
+    "name":"Project",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Classes/Project.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

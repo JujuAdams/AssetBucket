@@ -152,7 +152,7 @@ function AbProject(_path) constructor
         return _folder;
     }
     
-    static __SaveSound = function(_sourcePath, _soundName, _folderInProject, _compressionSetting = undefined, _audioGroupName = undefined)
+    static __SaveSound = function(_sourcePath, _soundName, _folderInProject, _compression = undefined, _audioGroupName = undefined)
     {
         var _extension = filename_ext(_sourcePath);
         if ((_extension == ".wav") && (_extension == ".ogg"))
@@ -160,114 +160,20 @@ function AbProject(_path) constructor
             __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
         }
         
-        var _directory = $"{__directory}sounds/{_soundName}/";
-        
-        if (directory_exists(_directory))
+        var _yyPath = $"{__directory}sounds/{_soundName}/{_soundName}.yy";
+        if (file_exists(_yyPath))
         {
-            __AbTrace($"Sound asset \"{_soundName}\" already exists");
-            __SaveSoundOverwrite(_sourcePath, _soundName, _folderInProject, _compressionSetting, _audioGroupName);
+            var _soundStruct = (new __AbClassProjectSound())
+                               .__Deserialize(_yyPath)
+                               .__Overwrite(_sourcePath, self, _folderInProject, _compression, _audioGroupName);
         }
         else
         {
-            __SaveSoundNew(_sourcePath, _soundName, _folderInProject, _compressionSetting, _audioGroupName);
-        }
-    }
-    
-    static __SaveSoundOverwrite = function(_sourcePath, _soundName, _folderInProject, _compressionSetting = undefined, _audioGroupName = undefined)
-    {
-        var _directory = $"{__directory}sounds/{_soundName}/";
-        var _soundFilename = filename_name(_sourcePath);
-        
-        var _yyPath = $"{_directory}{_soundName}.yy";
-        var _yyString = __AbLoadString(_yyPath);
-        
-        _yyString = __AbReplaceStringInJSON(_yyString, "soundFile", _soundFilename);
-        
-        if (_compressionSetting != undefined)
-        {
-            _yyString = __AbReplaceNumberInJSON(_yyString, "compression", _compressionSetting);
+            var _soundStruct = (new __AbClassProjectSound())
+                               .__Template(_sourcePath, self, _soundName, _folderInProject, _compression, _audioGroupName);
         }
         
-        if (_audioGroupName != undefined)
-        {
-            _yyString = __AbReplaceStructInJSON(_yyString, "audioGroupId", $"    \"name\":\"{_audioGroupName}\",\n    \"path\":\"audiogroups/{_audioGroupName}\",\n");
-        }
-        
-        file_copy(_sourcePath, _directory + _soundFilename);
-        __AbSaveString(_yyString, _yyPath);
-    }
-    
-    static __SaveSoundNew = function(_sourcePath, _soundName, _folderInProject, _compressionSetting = undefined, _audioGroupName = "audiogroup_default")
-    {
-        var _extension = filename_ext(_sourcePath);
-        if (_extension == ".wav")
-        {
-            _compressionSetting ??= AB_COMPRESSION_SETTING_UNCOMPRESSED;
-        }
-        else if (_extension == ".ogg")
-        {
-            _compressionSetting ??= AB_COMPRESSION_SETTING_COMPRESSED;
-        }
-        else
-        {
-            __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
-        }
-        
-        var _directory = $"{__directory}sounds/{_soundName}/";
-        var _soundFilename = filename_name(_sourcePath);
-        
-        //Grab the template and do some basic replacements
-        var _yyString = _templateYY;
-        _yyString = string_replace_all(_yyString, "%resourceName%", _soundName);
-        _yyString = string_replace_all(_yyString, "%audioGroupName%", _audioGroupName);
-        _yyString = string_replace_all(_yyString, "%soundFilename%", _soundFilename);
-        _yyString = string_replace_all(_yyString, "%compressionSetting%", _compressionSetting);
-        
-        //Set the in-project folder path
-        if (_folderInProject == "")
-        {
-            var _parentName = __projectName;
-            var _parentPath = __projectFilename;
-        }
-        else
-        {
-            _folderInProject = __AbTrimDirectory(_folderInProject);
-            var _parentPath = $"folders/{_folderInProject}.yy";
-            var _parentName = $"{filename_name(_folderInProject)}.yy";
-        }
-        
-        _yyString = string_replace_all(_yyString, "%folderName%", _parentName);
-        _yyString = string_replace_all(_yyString, "%folderPath%", _parentPath);
-        
-        file_copy(_sourcePath, _directory + _soundFilename);
-        __AbSaveString(_yyString, $"{_directory}{_soundName}.yy");
-        
-        static _templateYY = @'{
-  "$GMSound":"v2",
-  "%Name":"%resourceName%",
-  "audioGroupId":{
-    "name":"%audioGroupName%",
-    "path":"audiogroups/%audioGroupName%",
-  },
-  "bitDepth":1,
-  "channelFormat":1,
-  "compression":%compressionSetting%,
-  "compressionQuality":4,
-  "conversionMode":0,
-  "duration":0.0,
-  "exportDir":"",
-  "name":"%resourceName%",
-  "parent":{
-    "name":"%folderName%",
-    "path":"%folderPath%",
-  },
-  "preload":false,
-  "resourceType":"GMSound",
-  "resourceVersion":"2.0",
-  "sampleRate":44100,
-  "soundFile":"%soundFilename%",
-  "volume":1.0,
-}';
+        _soundStruct.__Save(_yyPath);
     }
     
     static __SaveSprite = function(_pathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)
