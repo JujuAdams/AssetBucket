@@ -152,16 +152,68 @@ function AbProject(_path) constructor
         return _folder;
     }
     
-    static __SaveSound = function(_sourcePath, _soundName, _folderInProject, _compressionSetting, _audioGroupName)
+    static __SaveSound = function(_sourcePath, _soundName, _folderInProject, _compressionSetting = undefined, _audioGroupName = undefined)
     {
+        var _extension = filename_ext(_sourcePath);
+        if ((_extension == ".wav") && (_extension == ".ogg"))
+        {
+            __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
+        }
+        
         var _directory = $"{__directory}sounds/{_soundName}/";
         
         if (directory_exists(_directory))
         {
-            __AbTrace($"Sound asset directory \"{_directory}\" already exists; deleting and recreating");
-            directory_destroy(_directory);
+            __AbTrace($"Sound asset \"{_soundName}\" already exists");
+            __SaveSoundOverwrite(_sourcePath, _soundName, _folderInProject, _compressionSetting, _audioGroupName);
+        }
+        else
+        {
+            __SaveSoundNew(_sourcePath, _soundName, _folderInProject, _compressionSetting, _audioGroupName);
+        }
+    }
+    
+    static __SaveSoundOverwrite = function(_sourcePath, _soundName, _folderInProject, _compressionSetting = undefined, _audioGroupName = undefined)
+    {
+        var _directory = $"{__directory}sounds/{_soundName}/";
+        var _soundFilename = filename_name(_sourcePath);
+        
+        var _yyPath = $"{_directory}{_soundName}.yy";
+        var _yyString = __AbLoadString(_yyPath);
+        
+        _yyString = __AbReplaceStringInJSON(_yyString, "soundFile", _soundFilename);
+        
+        if (_compressionSetting != undefined)
+        {
+            _yyString = __AbReplaceNumberInJSON(_yyString, "compression", _compressionSetting);
         }
         
+        if (_audioGroupName != undefined)
+        {
+            _yyString = __AbReplaceStructInJSON(_yyString, "audioGroupId", $"    \"name\":\"{_audioGroupName}\",\n    \"path\":\"audiogroups/{_audioGroupName}\",\n");
+        }
+        
+        file_copy(_sourcePath, _directory + _soundFilename);
+        __AbSaveString(_yyString, _yyPath);
+    }
+    
+    static __SaveSoundNew = function(_sourcePath, _soundName, _folderInProject, _compressionSetting = undefined, _audioGroupName = "audiogroup_default")
+    {
+        var _extension = filename_ext(_sourcePath);
+        if (_extension == ".wav")
+        {
+            _compressionSetting ??= AB_COMPRESSION_SETTING_UNCOMPRESSED;
+        }
+        else if (_extension == ".ogg")
+        {
+            _compressionSetting ??= AB_COMPRESSION_SETTING_COMPRESSED;
+        }
+        else
+        {
+            __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
+        }
+        
+        var _directory = $"{__directory}sounds/{_soundName}/";
         var _soundFilename = filename_name(_sourcePath);
         
         //Grab the template and do some basic replacements
@@ -188,7 +240,6 @@ function AbProject(_path) constructor
         _yyString = string_replace_all(_yyString, "%folderPath%", _parentPath);
         
         file_copy(_sourcePath, _directory + _soundFilename);
-        
         __AbSaveString(_yyString, $"{_directory}{_soundName}.yy");
         
         static _templateYY = @'{

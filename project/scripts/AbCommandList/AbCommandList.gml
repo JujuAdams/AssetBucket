@@ -232,24 +232,10 @@ function AbCommandList() constructor
         }));
     }
     
-    static AddSoundToProject = function(_assetName, _path, _projectFolder, _compressionSetting = undefined, _audioGroup = "audiogroup_default")
+    static AddSoundToProject = function(_assetName, _path, _projectFolder, _compressionSetting = undefined, _audioGroup = undefined)
     {
         __hasProjectCommands = true;
         __SetProjectAssetAsModified(_assetName);
-        
-        var _extension = filename_ext(_path);
-        if (_extension == ".wav")
-        {
-            _compressionSetting ??= AB_COMPRESSION_SETTING_UNCOMPRESSED;
-        }
-        else if (_extension == ".ogg")
-        {
-            _compressionSetting ??= AB_COMPRESSION_SETTING_COMPRESSED;
-        }
-        else
-        {
-            __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_path}\"");
-        }
         
         array_push(__commandArray, method({
             __assetName:          _assetName,
@@ -263,7 +249,12 @@ function AbCommandList() constructor
         {
             __commandList.__EnsureProjectSound(__assetName);
             __commandList.__EnsureProjectFolder(__projectFolder);
-            __commandList.__EnsureProjectAudioGroup(__audioGroup);
+            
+            if (__audioGroup != undefined)
+            {
+                __commandList.__EnsureProjectAudioGroup(__audioGroup);
+            }
+            
             _projectStruct.__SaveSound(__path, __assetName, __projectFolder, __compressionSetting, __audioGroup);
         }));
     }
