@@ -394,9 +394,8 @@ function AbCommandList() constructor
         return _bucketExportArray;
     }
     
-    static SaveToProject = function(_projectPath)
+    static SaveToProject = function(_projectStruct)
     {
-        var _projectStruct = new __AbClassProject(_projectPath);
         var _datafilesDirectory = _projectStruct.__datafilesDirectory;
         
         //Execute all commands

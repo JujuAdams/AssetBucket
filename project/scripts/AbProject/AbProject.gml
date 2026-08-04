@@ -1,6 +1,6 @@
 /// @param path
 
-function __AbClassProject(_path) constructor
+function AbProject(_path) constructor
 {
     if (not file_exists(_path))
     {
@@ -19,8 +19,10 @@ function __AbClassProject(_path) constructor
     __yypDatafilesDict     = {};
     __yypResourcesDict     = {};
     __yypTextureGroupsDict = {};
+    __assetFolderDict      = {};
     
     __yypString = __AbLoadString(_path);
+    __yypData   = json_parse(__yypString);
     
     //Extract arrays as strings from the .yyp
     __audioGroupsContent   = __YYPExtract(__yypString, "AudioGroups");
@@ -87,7 +89,8 @@ function __AbClassProject(_path) constructor
     var _i = 0;
     repeat(array_length(_yypResourcesArray))
     {
-        _yypResourcesDict[$ _yypResourcesArray[_i].id.name] = true;
+        var _resource = _yypResourcesArray[_i].id;
+        _yypResourcesDict[$ _resource.name] = _resource.path;
         ++_i;
     }
     
@@ -109,9 +112,56 @@ function __AbClassProject(_path) constructor
         // TODO
     }
     
+    static GetAssetExists = function(_assetName)
+    {
+        return struct_exists(__yypResourcesDict, _assetName);
+    }
+    
+    static GetAssetFolder = function(_assetName)
+    {
+        var _folder = __assetFolderDict[$ _assetName];
+        if (is_string(_folder))
+        {
+            return _folder;
+        }
+        
+        var _localPath = __yypResourcesDict[$ _assetName];
+        if (not struct_exists(__yypResourcesDict, _assetName))
+        {
+            return undefined;
+        }
+        
+        var _assetData = __AbLoadJSON(__directory + _localPath);
+        _folder = _assetData.parent.path;
+        
+        if (string_copy(_folder, 1, 8) == "folders/")
+        {
+            _folder = string_delete(_folder, 1, 8);
+            
+            if (string_copy(_folder, string_length(_folder)-2, 3) == ".yy")
+            {
+                _folder = string_copy(_folder, 1, string_length(_folder)-3);
+            }
+        }
+        else if (_folder == __projectFilename)
+        {
+            _folder = "";
+        }
+        
+        __assetFolderDict[$ _assetName] = _folder;
+        return _folder;
+    }
+    
     static __SaveSound = function(_sourcePath, _soundName, _folderInProject, _compressionSetting, _audioGroupName)
     {
         var _directory = $"{__directory}sounds/{_soundName}/";
+        
+        if (directory_exists(_directory))
+        {
+            __AbTrace($"Sound asset directory \"{_directory}\" already exists; deleting and recreating");
+            directory_destroy(_directory);
+        }
+        
         var _soundFilename = filename_name(_sourcePath);
         
         //Grab the template and do some basic replacements
@@ -198,12 +248,18 @@ function __AbClassProject(_path) constructor
             
             ++_i;
         }
-        
     }
     
     static __SaveSpriteYY = function(_spriteName, _frameCount, _width, _height, _folderInProject, _textureGroupName)
     {
         var _directory = $"{__directory}sprites/{_spriteName}/";
+        
+        if (directory_exists(_directory))
+        {
+            __AbTrace($"Sprite asset directory \"{_directory}\" already exists; deleting and recreating");
+            directory_destroy(_directory);
+        }
+        
         var _framePathArray = array_create(_frameCount, undefined);
         
         //Generate UUIDs
@@ -451,7 +507,7 @@ function __AbClassProject(_path) constructor
     "resourceType":"GMNotes",
     "resourceVersion":"2.0",
 }';
-    
+        
         static _resourceTemplate = "    {\"id\":{\"name\":\"%name%\",\"path\":\"notes/%name%/%name%.yy\",},},\n";
     }
     

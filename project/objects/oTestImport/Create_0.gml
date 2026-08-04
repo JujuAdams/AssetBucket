@@ -1,3 +1,5 @@
+var _project = new AbProject(GM_project_filename);
+
 //Create a command list. The command list holds operations that modify a project file
 var _commandList = new AbCommandList();
 
@@ -35,6 +37,7 @@ var _soundFileList = _baseFileList.Duplicate()
 
 //Iterate over every datafile and add it to the project
 _datafileFileList.Foreach(method({
+    project: _project,
     commandLine: _commandList,
 },
 function(_fileDesc)
@@ -45,12 +48,13 @@ function(_fileDesc)
 
 //Iterate over every image file and add it to the project
 _spriteFileList.Foreach(method({
+    project: _project,
     commandLine: _commandList,
 },
 function(_fileDesc)
 {
-    //Create a project folder path using the folder structure found in the source directory
-    var _projectFolder = $"Sprites/{filename_dir(_fileDesc.localPath)}";
+    //Use the suggested asset name as the asset name
+    var _assetName = _fileDesc.suggestedName;
     
     //If this sprite is from Aseprite then try importing each tag as a separate sprite
     var _extension = filename_ext(_fileDesc.absolutePath);
@@ -70,8 +74,9 @@ function(_fileDesc)
         var _tagArray = _aseStruct.tagArray;
         if (array_length(_tagArray) >= 1) //We have some tags
         {
-            //Organise all imported tags into a folder in the project
-            _projectFolder += "/" + _fileDesc.suggestedName;
+            //If we don't have an existing project folder, organise all imported tags into a separate
+            //folder in the project
+            var _fallbackProjectFolder = $"Sprites/{filename_dir(_fileDesc.localPath)}/{_fileDesc.suggestedName}";
             
             var _i = 0;
             repeat(array_length(_tagArray))
@@ -88,8 +93,11 @@ function(_fileDesc)
                     ++_j;
                 }
                 
+                //Try to reuse the existing folder, otherwise fall back on what we decided earlier
+                var _projectFolder = project.GetAssetFolder(_assetName) ?? _fallbackProjectFolder;
+                
                 //Add the sprite to the project using a modified asset name using the tag name
-                commandLine.AddSpriteToProject($"{_fileDesc.suggestedName}_{_tagName}", _frameBufferArray, _width, _height, _projectFolder);
+                commandLine.AddSpriteToProject($"{_assetName}_{_tagName}", _frameBufferArray, _width, _height, _projectFolder);
                 
                 ++_i;
             }
@@ -106,12 +114,20 @@ function(_fileDesc)
                 ++_i;
             }
             
+            //Try to reuse the same project folder as before, otherwise create a project folder path using
+            //the folder structure found in the source directory
+            var _projectFolder = project.GetAssetFolder(_assetName) ?? $"Sprites/{filename_dir(_fileDesc.localPath)}";
+            
             //Add the sprite to the project
-            commandLine.AddSpriteToProject(_fileDesc.suggestedName, _frameBufferArray, _width, _height, _projectFolder);
+            commandLine.AddSpriteToProject(_assetName, _frameBufferArray, _width, _height, _projectFolder);
         }
     }
     else //Not an Aseprite file
     {
+        //Try to reuse the same project folder as before, otherwise create a project folder path using
+        //the folder structure found in the source directory
+        var _projectFolder = project.GetAssetFolder(_assetName) ?? $"Sprites/{filename_dir(_fileDesc.localPath)}";
+        
         //This is some ugly legacy code. This is necessary for now but will get removed later
         var _fileInfo = __AbEnsureIngestFileInfo(_fileDesc.absolutePath);
         var _width  = _fileInfo.__GetWidth();
@@ -126,13 +142,20 @@ function(_fileDesc)
 
 //Iterate over every datafile and add it to the project
 _soundFileList.Foreach(method({
+    project: _project,
     commandLine: _commandList,
 },
 function(_fileDesc)
 {
-    //Add a sound to the project using the suggested asset name
-    commandLine.AddSoundToProject(_fileDesc.suggestedName, _fileDesc.absolutePath, "Sounds");
+    //Use the suggested asset name as the asset name
+    var _assetName = _fileDesc.suggestedName;
+    
+    //Try to reuse the same project folder as before, otherwise put the asset into the "Sounds" folder in the IDE
+    var _projectFolder = project.GetAssetFolder(_assetName) ?? "Sounds";
+    
+    //Add the sound
+    commandLine.AddSoundToProject(_assetName, _fileDesc.absolutePath, _projectFolder);
 }));
 
 //Execute the command list. This is that method call that actually affects the project on disk
-_commandList.SaveToProject(GM_project_filename);
+_commandList.SaveToProject(_project);

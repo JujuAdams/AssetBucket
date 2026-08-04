@@ -1,3 +1,5 @@
+var _project = new AbProject(GM_project_filename);
+
 var _commandList = new AbCommandList();
 
 var _baseFileList = (new AbFileList())
@@ -40,7 +42,7 @@ function(_fileDesc)
     commandLine.AddSoundToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.absolutePath);
 }));
 
-_commandList.SaveToProject(GM_project_filename);
+_commandList.SaveToProject(_project);
 
 AbBucketStageAndLoadFromManifest(AbGetIncludedFilesPath(AB_MANIFEST_FILENAME));
 AbBucketTextureGroupsFetch("bucketDefault");
