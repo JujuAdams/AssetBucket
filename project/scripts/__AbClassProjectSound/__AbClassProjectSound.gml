@@ -1,26 +1,5 @@
 function __AbClassProjectSound() constructor
 {
-    __sourceFilePath = undefined;
-    
-    __assetName          = undefined;
-    __audioGroupName     = undefined;
-    __bitDepth           = undefined;
-    __channelFormat      = undefined;
-    __compression        = undefined;
-    __compressionQuality = undefined;
-    __conversionMode     = undefined;
-    __duration           = undefined;
-    __exportDir          = undefined;
-    __folderInfo         = {};
-    __preload            = undefined;
-    __sampleRate         = undefined;
-    __soundFilename      = undefined;
-    __volume             = undefined;
-    
-    
-    
-    
-    
     static __Template = function(_sourcePath, _projectStruct, _assetName, _projectFolder = "", _compression = undefined, _audioGroupName = "audiogroup_default")
     {
         var _extension = filename_ext(_sourcePath);
@@ -48,7 +27,7 @@ function __AbClassProjectSound() constructor
         __conversionMode     = 0;
         __duration           = 0;
         __exportDir          = "";
-        __folderInfo         = __AbMakeProjectFolderInfo(_projectFolder, _projectStruct, __folderInfo);
+        __folderInfo         = __AbMakeProjectFolderInfo(_projectFolder, _projectStruct);
         __preload            = false;
         __sampleRate         = 44100;
         __soundFilename      = filename_name(_sourcePath);
@@ -132,30 +111,30 @@ function __AbClassProjectSound() constructor
         var _buffer = buffer_create(1024, buffer_grow, 1);
         
         __AbBufferWriteLine(_buffer, "{");
-        __AbBufferWritePair(_buffer, "$GMSound", "v2");
-        __AbBufferWritePair(_buffer, "%Name", __assetName);
+        __AbBufferWritePair(_buffer, 2, "$GMSound", "v2");
+        __AbBufferWritePair(_buffer, 2, "%Name", __assetName);
         __AbBufferWriteLine(_buffer, "  \"audioGroupId\":{");
         __AbBufferWriteLine(_buffer, $"    \"name\":\"{__audioGroupName}\",");
         __AbBufferWriteLine(_buffer, $"    \"path\":\"audiogroups/{__audioGroupName}\",");
         __AbBufferWriteLine(_buffer, "  },");
-        __AbBufferWritePair(_buffer, "bitDepth", __bitDepth);
-        __AbBufferWritePair(_buffer, "channelFormat", __channelFormat);
-        __AbBufferWritePair(_buffer, "compression", __compression);
-        __AbBufferWritePair(_buffer, "compressionQuality", __compressionQuality);
-        __AbBufferWritePair(_buffer, "conversionMode", __conversionMode);
-        __AbBufferWritePair(_buffer, "duration", __duration);
-        __AbBufferWritePair(_buffer, "exportDir", __exportDir);
-        __AbBufferWritePair(_buffer, "name", __assetName);
+        __AbBufferWritePair(_buffer, 2, "bitDepth", __bitDepth);
+        __AbBufferWritePair(_buffer, 2, "channelFormat", __channelFormat);
+        __AbBufferWritePair(_buffer, 2, "compression", __compression);
+        __AbBufferWritePair(_buffer, 2, "compressionQuality", __compressionQuality);
+        __AbBufferWritePair(_buffer, 2, "conversionMode", __conversionMode);
+        __AbBufferWritePair(_buffer, 2, "duration", __duration);
+        __AbBufferWritePair(_buffer, 2, "exportDir", __exportDir);
+        __AbBufferWritePair(_buffer, 2, "name", __assetName);
         __AbBufferWriteLine(_buffer, "  \"parent\":{");
         __AbBufferWriteLine(_buffer, $"    \"name\":\"{__folderInfo.__name}\",");
         __AbBufferWriteLine(_buffer, $"    \"path\":\"{__folderInfo.__path}\",");
         __AbBufferWriteLine(_buffer, "  },");
-        __AbBufferWritePair(_buffer, "preload", bool(__preload));
-        __AbBufferWritePair(_buffer, "resourceType", "GMSound");
-        __AbBufferWritePair(_buffer, "resourceVersion", "2.0"); //Needs to be a string
-        __AbBufferWritePair(_buffer, "sampleRate", __sampleRate);
-        __AbBufferWritePair(_buffer, "soundFile", __soundFilename);
-        __AbBufferWritePair(_buffer, "volume", __volume);
+        __AbBufferWritePair(_buffer, 2, "preload", bool(__preload));
+        __AbBufferWritePair(_buffer, 2, "resourceType", "GMSound");
+        __AbBufferWritePair(_buffer, 2, "resourceVersion", "2.0"); //Needs to be a string
+        __AbBufferWritePair(_buffer, 2, "sampleRate", __sampleRate);
+        __AbBufferWritePair(_buffer, 2, "soundFile", __soundFilename);
+        __AbBufferWritePair(_buffer, 2, "volume", __volume);
         __AbBufferWriteLine(_buffer, "}");
         
         buffer_save_ext(_buffer, _yyPath, 0, buffer_tell(_buffer));

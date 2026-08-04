@@ -1,5 +1,6 @@
-function __AbBufferWritePair(_buffer, _key, _value)
+function __AbBufferWritePair(_buffer, _spacing, _key, _value)
 {
+    repeat(_spacing) buffer_write(_buffer, buffer_text, " ");
     buffer_write(_buffer, buffer_text, "  \"");
     buffer_write(_buffer, buffer_text, _key);
     buffer_write(_buffer, buffer_text, "\":");

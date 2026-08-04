@@ -1,4 +1,0 @@
-function __AbClassProjectSpriteSequenceFrame() constructor
-{
-    
-}

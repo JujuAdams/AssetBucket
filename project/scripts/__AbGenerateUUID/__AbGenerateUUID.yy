@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__AbClassProjectSpriteSequenceFrame",
+  "%Name":"__AbGenerateUUID",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__AbClassProjectSpriteSequenceFrame",
+  "name":"__AbGenerateUUID",
   "parent":{
     "name":"Project",
     "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Classes/Project.yy",
