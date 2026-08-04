@@ -151,7 +151,7 @@ function(_fileDesc)
     var _assetName = _fileDesc.suggestedName;
     
     //Try to reuse the same project folder as before, otherwise put the asset into the "Sounds" folder in the IDE
-    var _projectFolder = project.GetAssetFolder(_assetName) ?? "Sounds";
+    var _projectFolder = project.GetAssetExists(_assetName)? undefined : "Sounds";
     
     //Add the sound
     commandLine.AddSoundToProject(_assetName, _fileDesc.absolutePath, _projectFolder);

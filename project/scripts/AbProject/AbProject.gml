@@ -22,7 +22,6 @@ function AbProject(_path) constructor
     __assetFolderDict      = {};
     
     __yypString = __AbLoadString(_path);
-    __yypData   = json_parse(__yypString);
     
     //Extract arrays as strings from the .yyp
     __audioGroupsContent   = __YYPExtract(__yypString, "AudioGroups");

@@ -11,8 +11,7 @@ function __AbClassProjectSound() constructor
     __conversionMode     = undefined;
     __duration           = undefined;
     __exportDir          = undefined;
-    __folderName         = undefined;
-    __folderPath         = undefined;
+    __folderInfo         = undefined;
     __preload            = undefined;
     __sampleRate         = undefined;
     __soundFilename      = undefined;
@@ -22,7 +21,7 @@ function __AbClassProjectSound() constructor
     
     
     
-    static __Template = function(_sourcePath, _projectStruct, _assetName, _projectFolder, _compression = undefined, _audioGroupName = "audiogroup_default")
+    static __Template = function(_sourcePath, _projectStruct, _assetName, _projectFolder = "", _compression = undefined, _audioGroupName = "audiogroup_default")
     {
         var _extension = filename_ext(_sourcePath);
         if (_extension == ".wav")
@@ -38,26 +37,6 @@ function __AbClassProjectSound() constructor
             __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
         }
         
-        //Set the in-project folder path
-        if (_projectFolder == "")
-        {
-            var _folderName = _projectStruct.__projectName;
-            var _folderPath = _projectStruct.__projectFilename;
-        }
-        else
-        {
-            _projectFolder = __AbTrimDirectory(_projectFolder);
-            var _folderName = $"{filename_name(_projectFolder)}.yy";
-            var _folderPath = $"folders/{_projectFolder}.yy";
-        }
-        
-        __TemplateExt(_sourcePath, _assetName, _folderName, _folderPath, _compression, _audioGroupName);
-        
-        return self;
-    }
-    
-    static __TemplateExt = function(_sourcePath, _assetName, _folderName, _folderPath, _compression, _audioGroupName)
-    {
         __sourceFilePath = _sourcePath;
         
         __assetName          = _assetName;
@@ -69,8 +48,7 @@ function __AbClassProjectSound() constructor
         __conversionMode     = 0;
         __duration           = 0;
         __exportDir          = "";
-        __folderName         = _folderName;
-        __folderPath         = _folderPath;
+        __folderInfo         = __AbMakeProjectFolderInfo(_projectFolder);
         __preload            = false;
         __sampleRate         = 44100;
         __soundFilename      = filename_name(_sourcePath);
@@ -79,7 +57,7 @@ function __AbClassProjectSound() constructor
         return self;
     }
     
-    static __DeserializeFrom = function(_path)
+    static __Deserialize = function(_path)
     {
         var _yypData = __AbLoadJSON(_path);
         
@@ -92,8 +70,7 @@ function __AbClassProjectSound() constructor
         __conversionMode     = _yypData.conversionMode;
         __duration           = _yypData.duration;
         __exportDir          = _yypData.exportDir;
-        __folderName         = _yypData.parent.name;
-        __folderPath         = _yypData.parent.path;
+        __folderInfo         = { __name: _yypData.parent.name, __path: _yypData.parent.path };
         __preload            = _yypData.preload;
         __sampleRate         = _yypData.sampleRate;
         __soundFilename      = _yypData.soundFile;
@@ -109,24 +86,14 @@ function __AbClassProjectSound() constructor
         return self;
     }
     
-    static __Overwrite = function(_sourcePath, _projectStruct, _assetName, _projectFolder, _compression, _audioGroupName)
+    static __Overwrite = function(_sourcePath, _projectStruct, _projectFolder = undefined, _compression = undefined, _audioGroupName = undefined)
     {
         __sourceFilePath = _sourcePath;
         
-        //Set the in-project folder path
-        if (_projectFolder == "")
+        if (_projectFolder != undefined)
         {
-            var _folderName = _projectStruct.__projectName;
-            var _folderPath = _projectStruct.__projectFilename;
+            __AbMakeProjectFolderInfo(_projectFolder, _projectStruct, __folderInfo);
         }
-        else
-        {
-            _projectFolder = __AbTrimDirectory(_projectFolder);
-            var _folderName = $"folders/{_projectFolder}.yy";
-            var _folderPath = $"{filename_name(_projectFolder)}.yy";
-        }
-        
-        __assetName = _assetName;
         
         if (_compression != undefined)
         {
@@ -137,6 +104,8 @@ function __AbClassProjectSound() constructor
         {
             __audioGroupName = _audioGroupName;
         }
+        
+        return self;
     }
     
     static __GetExpectedSoundFilePath = function(_yyPath)
@@ -178,8 +147,8 @@ function __AbClassProjectSound() constructor
         __AbBufferWritePair(_buffer, "exportDir", __exportDir);
         __AbBufferWritePair(_buffer, "name", __assetName);
         __AbBufferWriteLine(_buffer, "  \"parent\":{");
-        __AbBufferWriteLine(_buffer, $"    \"name\":\"{__folderName}\",");
-        __AbBufferWriteLine(_buffer, $"    \"path\":\"{__folderPath}\",");
+        __AbBufferWriteLine(_buffer, $"    \"name\":\"{__folderInfo.__name}\",");
+        __AbBufferWriteLine(_buffer, $"    \"path\":\"{__folderInfo.__path}\",");
         __AbBufferWriteLine(_buffer, "  },");
         __AbBufferWritePair(_buffer, "preload", bool(__preload));
         __AbBufferWritePair(_buffer, "resourceType", "GMSound");

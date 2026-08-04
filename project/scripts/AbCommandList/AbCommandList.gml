@@ -248,7 +248,11 @@ function AbCommandList() constructor
         function(_projectStruct, _datafilesDirectory)
         {
             __commandList.__EnsureProjectSound(__assetName);
-            __commandList.__EnsureProjectFolder(__projectFolder);
+            
+            if (__projectFolder != undefined)
+            {
+                __commandList.__EnsureProjectFolder(__projectFolder);
+            }
             
             if (__audioGroup != undefined)
             {

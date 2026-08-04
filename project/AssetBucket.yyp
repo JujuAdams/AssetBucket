@@ -77,6 +77,7 @@
     {"id":{"name":"__AbError","path":"scripts/__AbError/__AbError.yy",},},
     {"id":{"name":"__AbLoadJSON","path":"scripts/__AbLoadJSON/__AbLoadJSON.yy",},},
     {"id":{"name":"__AbLoadString","path":"scripts/__AbLoadString/__AbLoadString.yy",},},
+    {"id":{"name":"__AbMakeProjectFolderInfo","path":"scripts/__AbMakeProjectFolderInfo/__AbMakeProjectFolderInfo.yy",},},
     {"id":{"name":"__AbReplaceNumberInJSON","path":"scripts/__AbReplaceNumberInJSON/__AbReplaceNumberInJSON.yy",},},
     {"id":{"name":"__AbReplaceStringInJSON","path":"scripts/__AbReplaceStringInJSON/__AbReplaceStringInJSON.yy",},},
     {"id":{"name":"__AbReplaceStructInJSON","path":"scripts/__AbReplaceStructInJSON/__AbReplaceStructInJSON.yy",},},
