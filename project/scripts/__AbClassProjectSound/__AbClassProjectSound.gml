@@ -14,7 +14,7 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
     conversionMode     = 0;
     duration           = 0;
     exportDir          = "";
-    folderInfo         = __AbMakeProjectFolderInfo("", _projectStruct);
+    folder             = "";
     preload            = false;
     sampleRate         = 44100;
     volume             = 1;
@@ -32,12 +32,12 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         conversionMode     = _yypData.conversionMode;
         duration           = _yypData.duration;
         exportDir          = _yypData.exportDir;
-        folderInfo         = { __name: _yypData.parent.name, __path: _yypData.parent.path }; //TODO - Refactor to a path string
+        folder             = __AbStringifyYYFolderPath(_yyData.parent.path);
         preload            = _yypData.preload;
         sampleRate         = _yypData.sampleRate;
         volume             = _yypData.volume;
         
-        __sourceFilePath = $"{AbFilenameDir(__yyPath)}/{soundFilename}";
+        __sourceFilePath = $"{AbFilenameDir(__yyPath)}/{_yypData.soundFile}";
         __destinationSoundPath = __sourceFilePath;
         
         if (not file_exists(__sourceFilePath))
@@ -71,7 +71,7 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         
         if (_projectFolder != undefined)
         {
-            __AbMakeProjectFolderInfo(_projectFolder, __projectStruct, folderInfo);
+            folder = _projectFolder;
         }
         
         if (_compression != undefined)
@@ -82,6 +82,16 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         if (_audioGroupName != undefined)
         {
             audioGroupName = _audioGroupName;
+        }
+        
+        return self;
+    }
+    
+    static SetFolderIfRoot = function(_fallback)
+    {
+        if (folder == "")
+        {
+            folder = _fallback;
         }
         
         return self;
@@ -103,6 +113,8 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
             file_copy(__sourceFilePath, __destinationSoundPath);
         }
         
+        var _folderInfo = __AbMakeProjectFolderInfo(folder, __projectStruct);
+        
         var _buffer = buffer_create(1024, buffer_grow, 1);
         
         __AbBufferWriteLine(_buffer, "{");
@@ -121,8 +133,8 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         __AbBufferWritePair(_buffer, 2, "exportDir", exportDir);
         __AbBufferWritePair(_buffer, 2, "name", assetName);
         __AbBufferWriteLine(_buffer, "  \"parent\":{");
-        __AbBufferWriteLine(_buffer, $"    \"name\":\"{folderInfo.__name}\",");
-        __AbBufferWriteLine(_buffer, $"    \"path\":\"{folderInfo.__path}\",");
+        __AbBufferWriteLine(_buffer, $"    \"name\":\"{_folderInfo.__name}\",");
+        __AbBufferWriteLine(_buffer, $"    \"path\":\"{_folderInfo.__path}\",");
         __AbBufferWriteLine(_buffer, "  },");
         __AbBufferWritePair(_buffer, 2, "preload", bool(preload));
         __AbBufferWritePair(_buffer, 2, "resourceType", "GMSound");

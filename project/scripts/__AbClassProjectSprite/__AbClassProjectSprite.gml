@@ -22,7 +22,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
     layer              = (new __AbClassProjectSpriteLayer()).__Template();
     nineSlice          = undefined;
     origin             = 0;
-    folderInfo         = __AbMakeProjectFolderInfo("", _projectStruct);;
+    folder             = "";
     preMultiplyAlpha   = false;
     sequence           = (new __AbClassProjectSpriteSequence()).__Template(_assetName);
     swatchColours      = undefined;
@@ -61,7 +61,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         preMultiplyAlpha   = _yyData.preMultiplyAlpha;
         sequence           = (new __AbClassProjectSpriteSequence()).__Deserialize(_yyData.sequence);
         origin             = _yyData.origin;
-        folderInfo         = { __name: _yyData.parent.name, __path: _yyData.parent.path }; //TODO - Refactor to a path string
+        folder             = __AbStringifyYYFolderPath(_yyData.parent.path);
         swatchColours      = _yyData.swatchColours;
         swfPrecision       = _yyData.swfPrecision;
         textureGroupName   = _yyData.textureGroupId.name;
@@ -107,6 +107,8 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
     
     static Edit = function(_sourcePathArray, _width, _height, _projectFolder = undefined, _textureGroupName = undefined)
     {
+        _sourcePathArray = __AbEnsureArray(_sourcePathArray);
+        
         //Overwrite existing frame data
         var _i = 0;
         repeat(min(array_length(_sourcePathArray), array_length(framesArray)))
@@ -132,7 +134,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         
         if (_projectFolder != undefined)
         {
-            __AbMakeProjectFolderInfo(_projectFolder, __projectStruct, folderInfo);
+            folder = _projectFolder;
         }
         
         if (_width != undefined)
@@ -153,9 +155,20 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         return self;
     }
     
+    static SetFolderIfRoot = function(_fallback)
+    {
+        if (folder == "")
+        {
+            folder = _fallback;
+        }
+        
+        return self;
+    }
+    
     static Save = function()
     {
         var _yyDirectory = AbFilenameDir(__yyPath) + "/";
+        var _folderInfo = __AbMakeProjectFolderInfo(folder, __projectStruct);
         
         var _buffer = buffer_create(1024, buffer_grow, 1);
         
@@ -205,8 +218,8 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         
         __AbBufferWritePair(_buffer, 2, "origin", origin);
         __AbBufferWriteLine(_buffer, "  \"parent\":{");
-        __AbBufferWriteLine(_buffer, $"    \"name\":\"{folderInfo.__name}\",");
-        __AbBufferWriteLine(_buffer, $"    \"path\":\"{folderInfo.__path}\",");
+        __AbBufferWriteLine(_buffer, $"    \"name\":\"{_folderInfo.__name}\",");
+        __AbBufferWriteLine(_buffer, $"    \"path\":\"{_folderInfo.__path}\",");
         __AbBufferWriteLine(_buffer, "  },");
         __AbBufferWritePair(_buffer, 2, "preMultiplyAlpha", bool(preMultiplyAlpha));
         __AbBufferWritePair(_buffer, 2, "resourceType",     "GMSprite");

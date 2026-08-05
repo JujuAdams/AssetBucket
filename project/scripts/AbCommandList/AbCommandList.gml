@@ -195,84 +195,51 @@ function AbCommandList() constructor
         __hasProjectCommands = true;
         __SetProjectDatafileAsModified(_localDatafilePath);
         
+        __EnsureProjectDatafile(_localDatafilePath);
+        
         array_push(__commandArray, method({
             __localDatafilePath:  _localDatafilePath,
             __absoluteSourcePath: _absoluteSourcePath,
-            __commandList:        other,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __commandList.__EnsureProjectDatafile(__localDatafilePath);
             file_copy(__absoluteSourcePath, _datafilesDirectory + __localDatafilePath);
         }));
     }
     
-    static AddSpriteToProject = function(_assetName, _pathOrArray, _width, _height, _projectFolder, _textureGroup = "Default")
+    static AddSpriteToProject = function(_projectSprite)
     {
-        _pathOrArray = __AbEnsureArray(_pathOrArray);
-        
         __hasProjectCommands = true;
-        __SetProjectAssetAsModified(_assetName);
+        __SetProjectAssetAsModified(_projectSprite.assetName);
+        
+        __EnsureProjectSprite(_projectSprite.assetName);
+        __EnsureProjectFolder(_projectSprite.folder);
+        __EnsureProjectTextureGroup(_projectSprite.textureGroupName);
         
         array_push(__commandArray, method({
-            __assetName:     _assetName,
-            __pathArray:     _pathOrArray,
-            __width:         _width,
-            __height:        _height,
-            __projectFolder: _projectFolder,
-            __textureGroup:  _textureGroup,
-            __commandList:   other,
+            __projectSprite: _projectSprite,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __commandList.__EnsureProjectSprite(__assetName);
-            
-            if (__projectFolder != undefined)
-            {
-                __commandList.__EnsureProjectFolder(__projectFolder);
-            }
-            
-            if (__textureGroup != undefined)
-            {
-                __commandList.__EnsureProjectTextureGroup(__textureGroup);
-            }
-            
-            _projectStruct.MakeSprite(__assetName)
-                          .Edit(__pathArray, __width, __height, __projectFolder, __textureGroup)
-                          .Save();
+            __projectSprite.Save();
         }));
     }
     
-    static AddSoundToProject = function(_assetName, _path, _projectFolder, _compressionSetting = undefined, _audioGroup = undefined)
+    static AddSoundToProject = function(_projectSound)
     {
         __hasProjectCommands = true;
-        __SetProjectAssetAsModified(_assetName);
+        __SetProjectAssetAsModified(_projectSound.assetName);
+        
+        __EnsureProjectSound(_projectSound.assetName);
+        __EnsureProjectFolder(_projectSound.folder);
+        __EnsureProjectAudioGroup(_projectSound.audioGroupName);
         
         array_push(__commandArray, method({
-            __assetName:          _assetName,
-            __path:               _path,
-            __projectFolder:      _projectFolder,
-            __audioGroup:         _audioGroup,
-            __compressionSetting: _compressionSetting,
-            __commandList:        other,
+            __projectSound: _projectSound,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __commandList.__EnsureProjectSound(__assetName);
-            
-            if (__projectFolder != undefined)
-            {
-                __commandList.__EnsureProjectFolder(__projectFolder);
-            }
-            
-            if (__audioGroup != undefined)
-            {
-                __commandList.__EnsureProjectAudioGroup(__audioGroup);
-            }
-            
-            _projectStruct.MakeSound(__assetName)
-                          .Edit(__path, __projectFolder, __compressionSetting, __audioGroup)
-                          .Save();
+            __projectSound.Save();
         }));
     }
     

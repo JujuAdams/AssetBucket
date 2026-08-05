@@ -131,23 +131,10 @@ function AbProject(_path) constructor
         }
         
         var _assetData = __AbLoadJSON(__directory + _localPath);
-        _folder = _assetData.parent.path;
         
-        if (string_copy(_folder, 1, 8) == "folders/")
-        {
-            _folder = string_delete(_folder, 1, 8);
-            
-            if (string_copy(_folder, string_length(_folder)-2, 3) == ".yy")
-            {
-                _folder = string_copy(_folder, 1, string_length(_folder)-3);
-            }
-        }
-        else if (_folder == __projectFilename)
-        {
-            _folder = "";
-        }
-        
+        _folder = __AbStringifyYYFolderPath(_assetData.parent.path);
         __assetFolderDict[$ _assetName] = _folder;
+        
         return _folder;
     }
     

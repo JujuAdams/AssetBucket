@@ -124,19 +124,25 @@ function(_fileDesc)
     }
     else //Not an Aseprite file
     {
-        //Try to reuse the same project folder as before, otherwise create a project folder path using
-        //the folder structure found in the source directory
-        var _projectFolder = project.GetAssetFolder(_assetName) ?? $"Sprites/{AbFilenameDir(_fileDesc.localPath)}";
+        //Spin up a project sprite
+        var _projectSprite = project.MakeSprite(_assetName);
         
         //This is some ugly legacy code. This is necessary for now but will get removed later
         var _fileInfo = __AbEnsureIngestFileInfo(_fileDesc.absolutePath);
         var _width  = _fileInfo.__GetWidth();
         var _height = _fileInfo.__GetHeight();
         
-        //Add a sprite to the project using the suggested asset name. We also use the linked path
-        //array to automatically create sprites that contain subimages that we found when we
-        //called `.CollectImageFrames()` above
-        commandLine.AddSpriteToProject(_fileDesc.suggestedName, _fileDesc.linkedPaths, _width, _height, _projectFolder);
+        //Edit the project sprite with our new frame image. We use the `.linkedPaths` variable here
+        //to send an array of image paths into the `.Edit()`. We leave the folder set to `undefined`
+        //because we'll set the folder with the next method call
+        _projectSprite.Edit(_fileDesc.linkedPaths, _width, _height, undefined);
+        
+        //Set the folder for this sprite if we don't have one set yet. Using the local path here
+        //we keep the folder hierarchy on disk in the IDE
+        _projectSprite.SetFolderIfRoot($"Sprites/{AbFilenameDir(_fileDesc.localPath)}");
+        
+        //Queue up this sprite to be formally added to the project
+        commandLine.AddSpriteToProject(_projectSprite);
     }
 }));
 
@@ -147,14 +153,15 @@ _soundFileList.Foreach(method({
 },
 function(_fileDesc)
 {
-    //Use the suggested asset name as the asset name
-    var _assetName = _fileDesc.suggestedName;
+    //Spin up a project sprite using the suggested asset name
+    var _projectSound = project.MakeSound(_fileDesc.suggestedName);
     
-    //Try to reuse the same project folder as before, otherwise put the asset into the "Sounds" folder in the IDE
-    var _projectFolder = project.GetAssetExists(_assetName)? undefined : "Sounds";
+    _projectSound.Edit(_fileDesc.absolutePath, undefined);
     
-    //Add the sound
-    commandLine.AddSoundToProject(_assetName, _fileDesc.absolutePath, _projectFolder);
+    _projectSound.SetFolderIfRoot("Sounds");
+    
+    //Queue up this sound to be formally added to the project
+    commandLine.AddSoundToProject(_projectSound);
 }));
 
 //Execute the command list. This is that method call that actually affects the project on disk
