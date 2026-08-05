@@ -9,12 +9,12 @@ var _baseFileList = (new AbFileList())
 _baseFileList.Duplicate()
 .ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles")
 .Foreach(method({
-    commandLine: _commandList,
+    commandList: _commandList,
     bucketName: "bucketDefault",
 },
 function(_fileDesc)
 {
-    commandLine.AddDatafileToBucket(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
+    commandList.AddDatafileToBucket(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
 }));
 
 _baseFileList.Duplicate()
@@ -22,24 +22,32 @@ _baseFileList.Duplicate()
 .IncludeLocalPaths(["*.png", "*.ase", "*.aseprite"])
 .CollectImageFrames()
 .Foreach(method({
-    commandLine: _commandList,
+    commandList: _commandList,
     bucketName: "bucketDefault",
 },
 function(_fileDesc)
 {
-    commandLine.AddSpriteToBucket(bucketName, "spr_" + _fileDesc.suggestedName, _fileDesc.linkedPaths);
+    var _extension = filename_ext(_fileDesc.absolutePath);
+    if ((_extension != ".ase") && (_extension != ".aseprite"))
+    {
+        commandList.AddSpriteToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.linkedPaths);
+    }
+    else
+    {
+        AddAsepriteFileToBucket(_fileDesc.suggestedName, _fileDesc, bucketName, commandList);
+    }
 }));
 
 _baseFileList.Duplicate()
 .ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds")
 .IncludeLocalPaths(["*.wav", "*.ogg"])
 .Foreach(method({
-    commandLine: _commandList,
+    commandList: _commandList,
     bucketName: "bucketDefault",
 },
 function(_fileDesc)
 {
-    commandLine.AddSoundToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.absolutePath);
+    commandList.AddSoundToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.absolutePath);
 }));
 
 _commandList.SaveToProject(_project);

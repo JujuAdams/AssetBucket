@@ -76,7 +76,7 @@ function(_fileDesc)
     }
     else
     {
-        ProcessAsepriteFile(_assetName, _fileDesc, project, commandList);
+        AddAsepriteFileToProject(_assetName, _fileDesc, project, commandList);
     }
 }));
 

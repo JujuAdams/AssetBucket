@@ -1,4 +1,9 @@
-function ProcessAsepriteFile(_assetName, _fileDesc, _projectStruct, _commandList)
+/// @param assetName
+/// @param fileDesc
+/// @param bucketName
+/// @param commandList
+
+function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandList)
 {
     //Load the Aseprite file
     var _aseStruct = AsepriteRead(_fileDesc.absolutePath);
@@ -8,9 +13,6 @@ function ProcessAsepriteFile(_assetName, _fileDesc, _projectStruct, _commandList
     
     //Render out the Aseprite frames
     _aseStruct.Render(true);
-    
-    var _canvasWidth  = _aseStruct.width;
-    var _canvasHeight = _aseStruct.height;
     
     var _frameArray = _aseStruct.frameArray;
     var _tagArray   = _aseStruct.tagArray;
@@ -30,24 +32,26 @@ function ProcessAsepriteFile(_assetName, _fileDesc, _projectStruct, _commandList
                 var _sliceStruct = _sliceArray[_i];
                 var _keyStruct = _sliceStruct.keyArray[0];
                 
-                var _surfaceDesc = new AbSurfaceDescription(_surface, _keyStruct.xOrigin, _keyStruct.yOrigin, _keyStruct.width, _keyStruct.height);
+                //TODO
                 
-                var _spriteStruct = project.MakeSprite($"{_assetName}_{_sliceStruct.name}")
-                                           .SetSource(_surfaceDesc, _keyStruct.width, _keyStruct.height)
-                                           .SetFolderIfRoot(_fallbackProjectFolder)
-                                           .AddToCommandList(commandList);
-                
-                if (_sliceStruct.flags & 0b01)
-                {
-                    _spriteStruct.SetNineslice(true,
-                                               _keyStruct.xCenter, _keyStruct.yCenter,
-                                               _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
-                                               _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
-                }
-                else
-                {
-                    _spriteStruct.SetNineslice(false);
-                }
+                //var _surfaceDesc = new AbSurfaceDescription(_surface, _keyStruct.xOrigin, _keyStruct.yOrigin, _keyStruct.width, _keyStruct.height);
+                //
+                //var _spriteStruct = project.MakeSprite($"{_assetName}_{_sliceStruct.name}")
+                //                           .SetSource(_surfaceDesc, _keyStruct.width, _keyStruct.height)
+                //                           .SetFolderIfRoot(_fallbackProjectFolder)
+                //                           .AddToCommandList(commandList);
+                //
+                //if (_sliceStruct.flags & 0b01)
+                //{
+                //    _spriteStruct.SetNineslice(true,
+                //                               _keyStruct.xCenter, _keyStruct.yCenter,
+                //                               _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
+                //                               _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
+                //}
+                //else
+                //{
+                //    _spriteStruct.SetNineslice(false);
+                //}
                 
                 ++_i;
             }
@@ -71,10 +75,7 @@ function ProcessAsepriteFile(_assetName, _fileDesc, _projectStruct, _commandList
                 ++_i;
             }
             
-            project.MakeSprite(_assetName)
-                    .SetSource(_frameBufferArray, _canvasWidth, _canvasHeight)
-                    .SetFolderIfRoot($"Sprites/{AbFilenameDir(_fileDesc.localPath)}")
-                    .AddToCommandList(commandList);
+            _commandList.AddSpriteToBucket(_bucketName, _assetName, _frameBufferArray);
         }
         else //We have some tags
         {
@@ -97,11 +98,7 @@ function ProcessAsepriteFile(_assetName, _fileDesc, _projectStruct, _commandList
                     ++_j;
                 }
                 
-                project.MakeSprite($"{_assetName}_{_tagName}")
-                        .SetSource(_frameBufferArray, _canvasWidth, _canvasHeight)
-                        .SetFolderIfRoot(_fallbackProjectFolder)
-                        .AddToCommandList(commandList);
-                
+                _commandList.AddSpriteToBucket(_bucketName, _assetName, _frameBufferArray);
                 ++_i;
             }
         }

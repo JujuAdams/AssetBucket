@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"ProcessAsepriteFile",
+  "%Name":"AddAsepriteFileToBucket",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"ProcessAsepriteFile",
+  "name":"AddAsepriteFileToBucket",
   "parent":{
     "name":"AssetBucket",
     "path":"AssetBucket.yyp",
