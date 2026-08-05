@@ -100,7 +100,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
             nineSlice = new __AbClassProjectSpriteNineslice();
         }
         
-        nineSlice.__Edit(_enabled, _left, _top, _right, _bottom);
+        nineSlice.__Set(_enabled, _left, _top, _right, _bottom);
         
         return self;
     }

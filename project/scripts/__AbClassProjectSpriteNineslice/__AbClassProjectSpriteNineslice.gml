@@ -25,13 +25,13 @@ function __AbClassProjectSpriteNineslice() constructor
         return self;
     }
     
-    static __Edit = function(_enabled, _left, _top, _right, _bottom)
+    static __Set = function(_enabled = undefined, _left = undefined, _top = undefined, _right = undefined, _bottom = undefined)
     {
-        enabled = _enabled;
-        left    = _left;
-        top     = _top;
-        right   = _right;
-        bottom  = _bottom;
+        if (_enabled != undefined) enabled = _enabled;
+        if (_left    != undefined) left    = _left;
+        if (_top     != undefined) top     = _top;
+        if (_right   != undefined) right   = _right;
+        if (_bottom  != undefined) bottom  = _bottom;
         
         return self;
     }

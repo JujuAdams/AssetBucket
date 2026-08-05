@@ -29,14 +29,26 @@ function ProcessAsepriteFile(_assetName, _fileDesc, _projectStruct, _commandList
             {
                 var _sliceStruct = _sliceArray[_i];
                 var _keyStruct = _sliceStruct.keyArray[0];
-            
+                
                 var _surfaceDesc = new AbSurfaceDescription(_surface, _keyStruct.xOrigin, _keyStruct.yOrigin, _keyStruct.width, _keyStruct.height);
-            
-                project.MakeSprite($"{_assetName}_{_sliceStruct.name}")
-                        .SetSource(_surfaceDesc, _keyStruct.width, _keyStruct.height)
-                        .SetFolderIfRoot(_fallbackProjectFolder)
-                        .AddToCommandList(commandList);
-                    
+                
+                var _spriteStruct = project.MakeSprite($"{_assetName}_{_sliceStruct.name}")
+                                           .SetSource(_surfaceDesc, _keyStruct.width, _keyStruct.height)
+                                           .SetFolderIfRoot(_fallbackProjectFolder)
+                                           .AddToCommandList(commandList);
+                
+                if (_sliceStruct.flags & 0b01)
+                {
+                    _spriteStruct.SetNineslice(true,
+                                               _keyStruct.xCenter, _keyStruct.yCenter,
+                                               _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
+                                               _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
+                }
+                else
+                {
+                    _spriteStruct.SetNineslice(false);
+                }
+                
                 ++_i;
             }
         }
