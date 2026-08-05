@@ -9,7 +9,7 @@
 /// `.blendMode`
 /// `.opacity`
 /// `.name`
-/// `.tilesetIndex`
+/// `.tilesetID`
 /// `.uuid`
 
 function __AsepriteClassLayer() constructor
@@ -19,6 +19,15 @@ function __AsepriteClassLayer() constructor
     static Hide = function()
     {
         flags = ~((~flags) | 0b0001);
+        
+        return self;
+    }
+    
+    static Show = function()
+    {
+        flags = flags | 0b0001;
+        
+        return self;
     }
     
     static __Deserialize = function(_buffer, _hasUUIDs)
@@ -67,7 +76,7 @@ function __AsepriteClassLayer() constructor
         
         name = __AsepriteReadString(_buffer);
         
-        tilesetIndex = (type == 2)? buffer_read(_buffer, buffer_u32) : undefined;
+        tilesetID = (type == 2)? buffer_read(_buffer, __ASEPRITE_BUFFER_DWORD) : undefined;
         uuid = _hasUUIDs? __AsepriteReadUUID(_buffer) : undefined;
         
         return self;

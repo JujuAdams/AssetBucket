@@ -42,6 +42,10 @@ function __AsepriteClassCel() constructor
     widthPrecise  = undefined;
     heightPrecise = undefined;
     
+    tilesetDict   = undefined;
+    tilemapStruct = undefined;
+    
+    __linkFrame       = undefined;
     __surface         = undefined;
     __tempBuffer      = undefined;
     __tempBufferDirty = false;
@@ -50,16 +54,21 @@ function __AsepriteClassCel() constructor
     
     static GetSurface = function()
     {
-        if (not surface_exists(__surface))
+        if (type == 3)
         {
-            __surface = surface_create(width, height);
-            buffer_set_surface(buffer, __surface, 0);
+            return tilemapStruct.__GetSurface();
+        }
+        else
+        {
+            if (not surface_exists(__surface))
+            {
+                __surface = surface_create(width, height);
+                buffer_set_surface(buffer, __surface, 0);
+            }
         }
         
         return __surface;
     }
-    
-    
     
     static __Destroy = function()
     {
@@ -80,44 +89,87 @@ function __AsepriteClassCel() constructor
             surface_free(__surface);
             __surface = undefined;
         }
+        
+        if (is_struct(tilemapStruct))
+        {
+            tilemapStruct.__Destroy();
+            tilemapStruct = undefined;
+        }
     }
     
-    static __Render = function(_frameSurface, _layerArray, _paletteArray, _transparentIndex, _keepSurfaces)
+    static __Render = function(_frameSurface, _layerArray, _paletteArray, _keepSurfaces)
     {
-        if (__tempBufferDirty)
+        if (type == 3)
         {
-            var _buffer = buffer_create(4*width*height, buffer_fixed, 1);
-            
-            var _tempBuffer = __tempBuffer;
-            buffer_seek(_tempBuffer, buffer_seek_start, 0);
-            
-            repeat(width*height)
+            if (is_struct(tilemapStruct))
             {
-                buffer_write(_buffer, buffer_u32, _paletteArray[buffer_read(_tempBuffer, buffer_u8)]);
+                var _tilesetID = _layerArray[layerIndex].tilesetID;
+                if (_tilesetID == undefined)
+                {
+                    __AsepriteError($"Layer tileset ID invalid");
+                }
+                
+                var _tilesetStruct = tilesetDict[$ _tilesetID];
+                if (_tilesetID == undefined)
+                {
+                    __AsepriteError($"Tileset ID {_tilesetID} doesn't exist");
+                }
+                
+                tilemapStruct.__Render(_tilesetStruct, _paletteArray);
+                
+                if (_layerArray[layerIndex].flags & 0b0001)
+                {
+                    surface_set_target(_frameSurface);
+                    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_inv_src_alpha);
+                    draw_surface(GetSurface(), x, y);
+                    gpu_set_blendmode(bm_normal);
+                    surface_reset_target();
+                    
+                    if (not _keepSurfaces)
+                    {
+                        surface_free(tilemapStruct.__surface);
+                        tilemapStruct.__surface = undefined;
+                    }
+                }
             }
-            
-            buffer = _buffer;
-            buffer_delete(__tempBuffer);
-            __tempBuffer = undefined;
-            __tempBufferDirty = false;
         }
         else
         {
-            buffer = __tempBuffer;
-        }
-        
-        if (_layerArray[layerIndex].flags & 0b0001)
-        {
-            surface_set_target(_frameSurface);
-            gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_inv_src_alpha);
-            draw_surface(GetSurface(), x, y);
-            gpu_set_blendmode(bm_normal);
-            surface_reset_target();
-            
-            if (not _keepSurfaces)
+            if (__tempBufferDirty)
             {
-                surface_free(__surface);
-                __surface = undefined;
+                var _buffer = buffer_create(4*width*height, buffer_fixed, 1);
+                
+                var _tempBuffer = __tempBuffer;
+                buffer_seek(_tempBuffer, buffer_seek_start, 0);
+                
+                repeat(width*height)
+                {
+                    buffer_write(_buffer, buffer_u32, _paletteArray[buffer_read(_tempBuffer, buffer_u8)]);
+                }
+                
+                buffer = _buffer;
+                buffer_delete(__tempBuffer);
+                __tempBuffer = undefined;
+                __tempBufferDirty = false;
+            }
+            else
+            {
+                buffer = __tempBuffer;
+            }
+            
+            if (_layerArray[layerIndex].flags & 0b0001)
+            {
+                surface_set_target(_frameSurface);
+                gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_inv_src_alpha);
+                draw_surface(GetSurface(), x, y);
+                gpu_set_blendmode(bm_normal);
+                surface_reset_target();
+                
+                if (not _keepSurfaces)
+                {
+                    surface_free(__surface);
+                    __surface = undefined;
+                }
             }
         }
     }
@@ -154,8 +206,7 @@ function __AsepriteClassCel() constructor
         }
         else if (type == 1)
         {
-            var _linkCel = buffer_read(_fileBuffer, buffer_u16);
-            //TODO
+            __linkFrame = buffer_read(_fileBuffer, buffer_u16);
         }
         else if (type == 2)
         {
@@ -171,17 +222,8 @@ function __AsepriteClassCel() constructor
         }
         else if (type == 3)
         {
-            var _tileWidth    = buffer_read(_fileBuffer, buffer_u16);
-            var _tileHeight   = buffer_read(_fileBuffer, buffer_u16);
-            var _bitsPerTile  = buffer_read(_fileBuffer, buffer_u16); //Should always be 32
-            var _bitmask      = buffer_read(_fileBuffer, buffer_u32); //Should always be 0x1FFF_FFFF (536870911)
-            var _bitmaskXFlip = buffer_read(_fileBuffer, buffer_u32);
-            var _bitmaskYFlip = buffer_read(_fileBuffer, buffer_u32);
-            var _bitmaskDiag  = buffer_read(_fileBuffer, buffer_u32);
-            buffer_seek(_fileBuffer, buffer_seek_relative, 10); //Reserved
-            //var _tileBuffer = __AsepriteBufferDecompressExt(_fileBuffer, buffer_tell(_fileBuffer), _chunkEnd);
-            
-            //TODO
+            tilesetDict = _fileStruct.tilesetDict;
+            tilemapStruct = (new __AsepriteClassTilemap()).__Deserialize(_fileBuffer, _chunkEnd);
         }
         else
         {

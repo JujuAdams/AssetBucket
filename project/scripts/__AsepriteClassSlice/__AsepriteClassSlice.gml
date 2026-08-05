@@ -12,6 +12,8 @@ function __AsepriteClassSlice() constructor
     
     userData = undefined;
     
+    
+    
     static __Deserialize = function(_buffer)
     {
         var _keyCount = buffer_read(_buffer, buffer_u32);

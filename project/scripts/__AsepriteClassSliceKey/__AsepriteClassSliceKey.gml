@@ -18,12 +18,14 @@ function __AsepriteClassSliceKey() constructor
     yOrigin      = undefined;
     width        = undefined;
     height       = undefined;
+    
     xCenter      = undefined;
     yCenter      = undefined;
     centerWidth  = undefined;
     centerHeight = undefined;
-    xPivot       = undefined;
-    yPivot       = undefined;
+    
+    xPivot = undefined;
+    yPivot = undefined;
     
     
     static __Deserialize = function(_buffer, _flags)
@@ -36,6 +38,7 @@ function __AsepriteClassSliceKey() constructor
         
         if (_flags & 0b01)
         {
+            //Nineslice
             xCenter      = buffer_read(_buffer, buffer_s32);
             yCenter      = buffer_read(_buffer, buffer_s32);
             centerWidth  = buffer_read(_buffer, buffer_u32);
@@ -44,6 +47,7 @@ function __AsepriteClassSliceKey() constructor
         
         if (_flags & 0b10)
         {
+            //TODO - Custom pivot
             xPivot = buffer_read(_buffer, buffer_s32);
             yPivot = buffer_read(_buffer, buffer_s32);
         }

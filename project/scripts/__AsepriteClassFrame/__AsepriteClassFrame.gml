@@ -30,7 +30,7 @@ function __AsepriteClassFrame() constructor
         {
             __surface = surface_create(__fileStruct.width, __fileStruct.height);
             
-            if (buffer_exists(__fileStruct))
+            if (buffer_exists(buffer))
             {
                 buffer_set_surface(buffer, __surface, 0);
             }
@@ -50,14 +50,26 @@ function __AsepriteClassFrame() constructor
         draw_surface(GetSurface(), _x, _y);
     }
     
+    static DrawPart = function(_left, _top, _width, _height, _x, _y)
+    {
+        draw_surface_part(GetSurface(), _left, _top, _width, _height, _x, _y);
+    }
+    
     static DrawExt = function(_x, _y, _xScale, _yScale, _angle, _blend, _alpha)
     {
         draw_surface_ext(GetSurface(), _x, _y, _xScale, _yScale, _angle, _blend, _alpha);
     }
     
+    static DrawPartExt = function(_left, _top, _width, _height, _x, _y, _xScale, _yScale, _blend, _alpha)
+    {
+        draw_surface_part_ext(GetSurface(), _left, _top, _width, _height, _x, _y, _xScale, _yScale, _blend, _alpha);
+    }
+    
     static SaveAs = function(_path)
     {
         surface_save(GetSurface(), _path);
+        
+        return self;
     }
     
     
@@ -84,7 +96,7 @@ function __AsepriteClassFrame() constructor
         }
     }
     
-    static __Render = function(_paletteArray, _transparentIndex, _keepSurfaces)
+    static __Render = function(_paletteArray, _keepSurfaces)
     {
         var _width      = __fileStruct.width;
         var _height     = __fileStruct.height;
@@ -111,7 +123,7 @@ function __AsepriteClassFrame() constructor
         var _i = 0;
         repeat(array_length(_orderedCelArray))
         {
-            _orderedCelArray[_i].__Render(_surface, _layerArray, _paletteArray, _transparentIndex, _keepSurfaces);
+            _orderedCelArray[_i].__Render(_surface, _layerArray, _paletteArray, _keepSurfaces);
             ++_i;
         }
         
@@ -126,15 +138,13 @@ function __AsepriteClassFrame() constructor
         {
             surface_free(_surface);
         }
-        
-        return self;
     }
     
     static __Deserialize = function(_buffer, _fileStruct)
     {
         __fileStruct = _fileStruct;
         
-        var _hasUUIDs         = __fileStruct.hasUUIDs;
+        var _hasUUIDs         = __fileStruct.__hasUUIDs;
         var _paletteArray     = __fileStruct.paletteArray;
         var _paletteNameArray = __fileStruct.paletteNameArray;
         
@@ -209,7 +219,7 @@ function __AsepriteClassFrame() constructor
                         _userDataDestination = _fileStruct;
                     }
                 break;
-            
+                
                 case 0x0011: //Old palette chunk
                     if (not _ignoreLegacyPaletteChunks)
                     {
@@ -227,7 +237,7 @@ function __AsepriteClassFrame() constructor
                                 var _red   = floor(min(63, buffer_read(_buffer, buffer_u8)) * (255/63));
                                 var _green = floor(min(63, buffer_read(_buffer, buffer_u8)) * (255/63));
                                 var _blue  = floor(min(63, buffer_read(_buffer, buffer_u8)) * (255/63));
-                            
+                                
                                 var _color = 0xFF000000 | (_blue << 16) | (_green << 8) | _red;
                                 _paletteArray[@ _writePaletteIndex++] = _color;
                             }
@@ -243,15 +253,25 @@ function __AsepriteClassFrame() constructor
                     array_push(_fileStruct.layerArray, _layerStruct);
                     _userDataDestination = _layerStruct;
                 break;
-
+                
                 case 0x2005: //Cel chunk
                     var _celStruct = (new __AsepriteClassCel()).__Deserialize(_buffer, _fileStruct, _chunkStart + _chunkSize);
+                    
+                    if (_celStruct.__linkFrame != undefined)
+                    {
+                        array_push(_fileStruct.__linkedCelArray, {
+                            __frame:      _celStruct.__linkFrame,
+                            __layerIndex: _celStruct.layerIndex,
+                            __celArray:   celArray,
+                            __celIndex:   array_length(celArray),
+                        });
+                    }
                     
                     array_push(celArray, _celStruct);
                     _userDataDestination = _celStruct;
                     _previousCelStruct = _celStruct;
                 break;
-            
+                
                 case 0x2006: //Cel extra chunk
                     if (is_struct(_previousCelStruct))
                     {
@@ -262,7 +282,7 @@ function __AsepriteClassFrame() constructor
                         __AsepriteTrace($"Warning! Saw extra cel chunk but we haven't read a normal cel chunk yet");
                     }
                 break;
-            
+                
                 case 0x2007: //Color profle chunk
                     var _colorType = buffer_read(_buffer, buffer_u16);
                     // 0 - no color profile (as in old .aseprite files)
@@ -285,7 +305,7 @@ function __AsepriteClassFrame() constructor
                     
                     _userDataDestination = _fileStruct;
                 break;
-            
+                
                 case 0x2008: //External file chunk
                     var _entriesCount = buffer_read(_buffer, buffer_u32);
                     buffer_seek(_buffer, buffer_seek_relative, 8);
@@ -374,11 +394,19 @@ function __AsepriteClassFrame() constructor
                         __AsepriteTrace($"Warning! User data has no valid destination");
                     }
                 break;
-
+                
                 case 0x2022: //Slice chunk
                     var _sliceStruct = (new __AsepriteClassSlice()).__Deserialize(_buffer);
                     array_push(_fileStruct.sliceArray, _sliceStruct);
+                    _fileStruct.sliceDict[$ _sliceStruct.name] = _sliceStruct;
                     _userDataDestination = _sliceStruct;
+                break;
+                
+                case 0x2023: //Tileset chunk
+                    var _tilesetStruct = (new __AsepriteClassTileset()).__Deserialize(_buffer, _fileStruct);
+                    array_push(_fileStruct.tilesetArray, _tilesetStruct);
+                    _fileStruct.tilesetDict[$ _tilesetStruct.tilesetID] = _tilesetStruct;
+                    _userDataDestination = _tilesetStruct;
                 break;
             
                 default:

@@ -1,4 +1,5 @@
 /// The constructed struct has the following public read-only variables:
+/// 
 /// `.entryID`
 /// `.type`
 /// `.name`

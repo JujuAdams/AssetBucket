@@ -107,6 +107,8 @@
     {"id":{"name":"__AsepriteClassSlice","path":"scripts/__AsepriteClassSlice/__AsepriteClassSlice.yy",},},
     {"id":{"name":"__AsepriteClassSliceKey","path":"scripts/__AsepriteClassSliceKey/__AsepriteClassSliceKey.yy",},},
     {"id":{"name":"__AsepriteClassTag","path":"scripts/__AsepriteClassTag/__AsepriteClassTag.yy",},},
+    {"id":{"name":"__AsepriteClassTilemap","path":"scripts/__AsepriteClassTilemap/__AsepriteClassTilemap.yy",},},
+    {"id":{"name":"__AsepriteClassTileset","path":"scripts/__AsepriteClassTileset/__AsepriteClassTileset.yy",},},
     {"id":{"name":"__AsepriteClassUserData","path":"scripts/__AsepriteClassUserData/__AsepriteClassUserData.yy",},},
     {"id":{"name":"__AsepriteError","path":"scripts/__AsepriteError/__AsepriteError.yy",},},
     {"id":{"name":"__AsepriteReadFixedPoint","path":"scripts/__AsepriteReadFixedPoint/__AsepriteReadFixedPoint.yy",},},

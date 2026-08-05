@@ -1,5 +1,15 @@
-#macro ASEPRITE_READER_VERSION  "1.0.0"
-#macro ASEPRITE_READER_DATE     "2026-07-30"
+#macro ASEPRITE_READER_VERSION  "0.0.2"
+#macro ASEPRITE_READER_DATE     "2026-08-05"
+
+#macro __ASEPRITE_BUFFER_BYTE    buffer_u8
+#macro __ASEPRITE_BUFFER_WORD    buffer_u16
+#macro __ASEPRITE_BUFFER_SHORT   buffer_s16
+#macro __ASEPRITE_BUFFER_DWORD   buffer_u32
+#macro __ASEPRITE_BUFFER_LONG    buffer_s32
+#macro __ASEPRITE_BUFFER_FLOAT   buffer_f32
+#macro __ASEPRITE_BUFFER_DOUBLE  buffer_f64
+#macro __ASEPRITE_BUFFER_QWORD   buffer_u64
+#macro __ASEPRITE_BUFFER_LONG64  buffer_u64
 
 function __AsepriteSystem()
 {
