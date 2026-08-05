@@ -3,7 +3,6 @@ function __AbClassProjectSpriteFrame() constructor
     static __Template = function(_source)
     {
         __source = _source;
-        
         frameUUID = __AbGenerateUUID();
         
         return self;
@@ -11,9 +10,8 @@ function __AbClassProjectSpriteFrame() constructor
     
     static __Deserialize = function(_yyStruct, _yyDirectory, _layerUUID)
     {
-        __source = __GetExpectedImageFilePath(_yyDirectory, _layerUUID);
-        
         frameUUID = _yyStruct.name;
+        __source = __GetExpectedImageFilePath(_yyDirectory, _layerUUID);
         
         return self;
     }

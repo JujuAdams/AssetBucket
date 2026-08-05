@@ -49,7 +49,7 @@ function __AbClassProjectSpriteNineslice() constructor
         __AbBufferWritePair(_buffer, 4, "resourceType", "GMNineSliceData");
         __AbBufferWritePair(_buffer, 4, "resourceVersion", "2.0");
         __AbBufferWritePair(_buffer, 4, "right", right);
-        __AbBufferWriteLine(_buffer, "    \"tileMode\":[\n");
+        __AbBufferWriteLine(_buffer, "    \"tileMode\":[");
         __AbBufferWriteLine(_buffer, $"      {tileMode[0]},");
         __AbBufferWriteLine(_buffer, $"      {tileMode[1]},");
         __AbBufferWriteLine(_buffer, $"      {tileMode[2]},");

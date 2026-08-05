@@ -26,6 +26,6 @@ function __AbClassProjectSpriteLayer() constructor
     
     static __Save = function(_buffer)
     {
-        buffer_write(_buffer, buffer_text, $"    \{\"$GMImageLayer\":\"\",\"%Name\":\"{layerUUID}\",\"blendMode\":{blendMode},\"displayName\":\"{displayName}\",\"isLocked\":{isLocked? "true" : "false"},\"name\":\"{layerUUID}\",\"opacity\":{opacity},\"resourceType\":\"GMSpriteFrame\",\"resourceVersion\":\"2.0\",\"visible\":{visible? "true" : "false"},\},\n");
+        buffer_write(_buffer, buffer_text, $"    \{\"$GMImageLayer\":\"\",\"%Name\":\"{layerUUID}\",\"blendMode\":{blendMode},\"displayName\":\"{displayName}\",\"isLocked\":{isLocked? "true" : "false"},\"name\":\"{layerUUID}\",\"opacity\":{__AbFormatDecimal(opacity)},\"resourceType\":\"GMImageLayer\",\"resourceVersion\":\"2.0\",\"visible\":{visible? "true" : "false"},\},\n");
     }
 }

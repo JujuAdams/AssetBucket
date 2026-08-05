@@ -6,7 +6,7 @@ function __AbStringifyYYFolderPath(_yyPath)
         
         if (string_copy(_yyPath, string_length(_yyPath)-2, 3) == ".yy")
         {
-            _folder = string_copy(_yyPath, 1, string_length(_yyPath)-3);
+            _folder = string_copy(_folder, 1, string_length(_folder)-3);
         }
     }
     else

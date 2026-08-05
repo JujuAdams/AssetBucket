@@ -14,7 +14,7 @@ function __AbMakeProjectFolderInfo(_folderInProject, _projectStruct, _folderInfo
         else
         {
             _folderInProject = __AbTrimDirectory(_folderInProject);
-            __name = $"{filename_name(_folderInProject)}.yy";
+            __name = filename_name(_folderInProject);
             __path = $"folders/{_folderInProject}.yy";
         }
     }

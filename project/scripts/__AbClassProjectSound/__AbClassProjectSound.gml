@@ -21,23 +21,23 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
     
     if (_projectStruct.GetAssetExists(_assetName) && file_exists(__yyPath))
     {
-        var _yypData = __AbLoadJSON(__yyPath);
+        var _yyData = __AbLoadJSON(__yyPath);
         
-        assetName          = _yypData.name;
-        audioGroupName     = _yypData.audioGroupId.name;
-        bitDepth           = _yypData.bitDepth;
-        channelFormat      = _yypData.channelFormat;
-        compression        = _yypData.compression;
-        compressionQuality = _yypData.compressionQuality;
-        conversionMode     = _yypData.conversionMode;
-        duration           = _yypData.duration;
-        exportDir          = _yypData.exportDir;
+        assetName          = _yyData.name;
+        audioGroupName     = _yyData.audioGroupId.name;
+        bitDepth           = _yyData.bitDepth;
+        channelFormat      = _yyData.channelFormat;
+        compression        = _yyData.compression;
+        compressionQuality = _yyData.compressionQuality;
+        conversionMode     = _yyData.conversionMode;
+        duration           = _yyData.duration;
+        exportDir          = _yyData.exportDir;
         folder             = __AbStringifyYYFolderPath(_yyData.parent.path);
-        preload            = _yypData.preload;
-        sampleRate         = _yypData.sampleRate;
-        volume             = _yypData.volume;
+        preload            = _yyData.preload;
+        sampleRate         = _yyData.sampleRate;
+        volume             = _yyData.volume;
         
-        __sourceFilePath = $"{AbFilenameDir(__yyPath)}/{_yypData.soundFile}";
+        __sourceFilePath = $"{AbFilenameDir(__yyPath)}/{_yyData.soundFile}";
         __destinationSoundPath = __sourceFilePath;
         
         if (not file_exists(__sourceFilePath))
@@ -57,6 +57,8 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         {
             __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
         }
+        
+        //TODO - Set duration
         
         __sourceFilePath = _sourcePath;
         __destinationSoundPath = $"{AbFilenameDir(__yyPath)}/{assetName}{_extension}";
@@ -138,10 +140,10 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         __AbBufferWritePair(_buffer, 2, "resourceVersion", "2.0"); //Needs to be a string
         __AbBufferWritePair(_buffer, 2, "sampleRate", sampleRate);
         __AbBufferWritePair(_buffer, 2, "soundFile", filename_name(__destinationSoundPath));
-        __AbBufferWritePair(_buffer, 2, "volume", volume);
+        __AbBufferWriteDecimal(_buffer, 2, "volume", volume);
         __AbBufferWriteLine(_buffer, "}");
         
-        buffer_save_ext(_buffer, __yyPath, 0, buffer_tell(_buffer));
+        buffer_save_ext(_buffer, __yyPath, 0, buffer_tell(_buffer)-1); //Trim off the final newline
         buffer_delete(_buffer);
         
         return self;

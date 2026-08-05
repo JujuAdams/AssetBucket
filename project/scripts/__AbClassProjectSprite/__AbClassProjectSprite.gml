@@ -140,8 +140,35 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
             _height ??= _fileInfo.__GetHeight();
         }
         
-        width  = _width;
-        height = _height;
+        if (width != _width)
+        {
+            if ((bboxLeft == 0) && (bboxRight == 0))
+            {
+                bboxRight = _width-1;
+            }
+            else
+            {
+                bboxLeft  = min(bboxLeft,  _width-1);
+                bboxRight = min(bboxRight, _width-1);
+            }
+            
+            width = _width;
+        }
+        
+        if (height != _height)
+        {
+            if ((bboxTop == 0) && (bboxBottom == 0))
+            {
+                bboxBottom = _height-1;
+            }
+            else
+            {
+                bboxTop    = min(bboxTop,    _height-1);
+                bboxBottom = min(bboxBottom, _height-1);
+            }
+            
+            height = _height;
+        }
         
         return self;
     }
@@ -230,7 +257,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         sequence.__Save(_buffer, assetName, framesArray);
         
         __AbBufferWritePair(_buffer, 2, "swatchColours", swatchColours);
-        __AbBufferWritePair(_buffer, 2, "swfPrecision",  swfPrecision);
+        __AbBufferWriteDecimal(_buffer, 2, "swfPrecision",  swfPrecision);
         __AbBufferWriteLine(_buffer, "  \"textureGroupId\":{");
         __AbBufferWriteLine(_buffer, $"    \"name\":\"{textureGroupName}\",");
         __AbBufferWriteLine(_buffer, $"    \"path\":\"texturegroups/{textureGroupName}\",");
@@ -240,7 +267,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         __AbBufferWritePair(_buffer, 2, "width", width);
         __AbBufferWriteLine(_buffer, "}");
         
-        buffer_save_ext(_buffer, __yyPath, 0, buffer_tell(_buffer));
+        buffer_save_ext(_buffer, __yyPath, 0, buffer_tell(_buffer)-1); //Trim off the final newline
         buffer_delete(_buffer);
         
         return self;
