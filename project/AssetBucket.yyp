@@ -149,6 +149,7 @@
     {"id":{"name":"AbCommandList","path":"scripts/AbCommandList/AbCommandList.yy",},},
     {"id":{"name":"AbFileDescription","path":"scripts/AbFileDescription/AbFileDescription.yy",},},
     {"id":{"name":"AbFileList","path":"scripts/AbFileList/AbFileList.yy",},},
+    {"id":{"name":"AbFilenameDir","path":"scripts/AbFilenameDir/AbFilenameDir.yy",},},
     {"id":{"name":"AbGetIncludedFilesPath","path":"scripts/AbGetIncludedFilesPath/AbGetIncludedFilesPath.yy",},},
     {"id":{"name":"AbGetProjectFolder","path":"scripts/AbGetProjectFolder/AbGetProjectFolder.yy",},},
     {"id":{"name":"AbProject","path":"scripts/AbProject/AbProject.yy",},},

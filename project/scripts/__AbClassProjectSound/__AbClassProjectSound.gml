@@ -37,7 +37,7 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         sampleRate         = _yypData.sampleRate;
         volume             = _yypData.volume;
         
-        __sourceFilePath = $"{filename_dir(__yyPath)}/{soundFilename}";
+        __sourceFilePath = $"{AbFilenameDir(__yyPath)}/{soundFilename}";
         __destinationSoundPath = __sourceFilePath;
         
         if (not file_exists(__sourceFilePath))
@@ -67,7 +67,7 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         }
         
         __sourceFilePath = _sourcePath;
-        __destinationSoundPath = $"{filename_dir(__yyPath)}/{assetName}{_extension}";
+        __destinationSoundPath = $"{AbFilenameDir(__yyPath)}/{assetName}{_extension}";
         
         if (_projectFolder != undefined)
         {

@@ -8,8 +8,8 @@ function AbProject(_path) constructor
     }
     
     __path               = _path;
-    __directory          = filename_dir(_path) + "/";
-    __datafilesDirectory = $"{filename_dir(_path)}/datafiles/";
+    __directory          = AbFilenameDir(_path) + "/";
+    __datafilesDirectory = $"{AbFilenameDir(_path)}/datafiles/";
     
     __projectFilename = filename_name(_path);
     __projectName     = filename_change_ext(__projectFilename, "");
@@ -151,100 +151,17 @@ function AbProject(_path) constructor
         return _folder;
     }
     
-    static MakeSound = function(_soundName)
+    static MakeSound = function(_assetName)
     {
-        return new __AbClassProjectSound(self, _soundName);
+        return new __AbClassProjectSound(self, _assetName);
     }
     
-    static __SaveSprite = function(_pathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)
+    static MakeSprite = function(_assetName)
     {
-        var _yyPath = $"{__directory}sprites/{_spriteName}/{_spriteName}.yy";
-        if (file_exists(_yyPath))
-        {
-            var _spriteStruct = (new __AbClassProjectSprite()).__Deserialize(_yyPath);
-        }
-        else
-        {
-            var _spriteStruct = (new __AbClassProjectSprite()).__Template(_spriteName, self);
-        }
-        
-        _spriteStruct.__Overwrite(_pathArray, self, _width, _height, _folderInProject, _textureGroupName);
-        _spriteStruct.__Save(_yyPath);
+        return new __AbClassProjectSprite(self, _assetName);
     }
     
-    static __SaveNoteImmediate = function(_noteName, _folderInProject, _string)
-    {
-        var _directory = $"{__directory}notes/{_noteName}/";
-        
-        //Set the in-project folder path
-        if (_folderInProject == "")
-        {
-            var _parentName = __projectName;
-            var _parentPath = __projectFilename;
-        }
-        else
-        {
-            _folderInProject = __AbTrimDirectory(_folderInProject);
-            var _parentPath = $"folders/{_folderInProject}.yy";
-            var _parentName = $"{filename_name(_folderInProject)}.yy";
-        }
-        
-        var _yyString = _templateYY;
-        _yyString = string_replace_all(_yyString, "%resourceName%", _noteName);
-        _yyString = string_replace_all(_yyString, "%folderName%", _parentName);
-        _yyString = string_replace_all(_yyString, "%folderPath%", _parentPath);
-    
-        __AbSaveString(_string, $"{_directory}{_noteName}.txt")
-        __AbSaveString(_yyString, $"{_directory}{_noteName}.yy");
-        
-        var _resourcesContent = __YYPExtract(__yypString, "resources");
-        var _isEmptyArray = _resourcesContent.__emptyArray;
-        if (_resourcesContent.__error)
-        {
-            __AbError($"Failed to extract resources from \"{__path}\"");
-        }
-        
-        var _yypResourcesDict = {};
-        var _yypResourcesArray = _resourcesContent.__array;
-        var _i = 0;
-        repeat(array_length(_yypResourcesArray))
-        {
-            _yypResourcesDict[$ _yypResourcesArray[_i].id.name] = true;
-            ++_i;
-        }
-        
-        var _resourcesString = _resourcesContent.__string;
-        if (not struct_exists(_yypResourcesDict, _noteName))
-        {
-            if (_isEmptyArray) _resourcesString += "\n";
-            _resourcesString += string_replace_all(_resourceTemplate, "%name%", _noteName);
-            if (_isEmptyArray) _resourcesString += "  ";
-        }
-        
-        var _yypString = __YYPInject(__yypString, _resourcesContent, _resourcesString);
-        if (_yypString != __yypString)
-        {
-            //Save the .yyp if anything's changed
-            __AbSaveString(_yypString, GM_project_filename);
-            __yypString = _yyString;
-        }
-        
-        static _templateYY = @'{
-    "$GMNotes":"v1",
-    "%Name":"%resourceName%",
-    "name":"%resourceName%",
-    "parent":{
-    "name":"%folderName%",
-    "path":"%folderPath%",
-    },
-    "resourceType":"GMNotes",
-    "resourceVersion":"2.0",
-}';
-        
-        static _resourceTemplate = "    {\"id\":{\"name\":\"%name%\",\"path\":\"notes/%name%/%name%.yy\",},},\n";
-    }
-    
-    static __SaveYY = function(_newAudioGroupDict, _newFolderDict, _newDatafileDict, _newResourceDict, _newTextureGroupDict)
+    static __Save = function(_newAudioGroupDict, _newFolderDict, _newDatafileDict, _newResourceDict, _newTextureGroupDict)
     {
         //Skip .yyp modification if we have nothing to add
         if ((struct_names_count(_newAudioGroupDict) <= 0)
@@ -270,7 +187,7 @@ function AbProject(_path) constructor
             while(_path != "")
             {
                 _newFolderDict[$ _path] = true;
-                _path = filename_dir(_path);
+                _path = AbFilenameDir(_path);
             }
             
             ++_i;

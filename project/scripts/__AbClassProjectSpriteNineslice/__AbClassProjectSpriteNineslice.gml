@@ -1,19 +1,14 @@
 function __AbClassProjectSpriteNineslice() constructor
 {
-    static __Template = function(_enabled, _left, _top, _right, _bottom)
-    {
-        bottom          = _bottom;
-        enabled         = _enabled;
-        guideColour     = [0xFFFF00FF, 0xFFFF00FF, 0xFFFF00FF, 0xFFFF00FF];
-        highlightColour = 0x66FF8A00;
-        highlightStyle  = 0;
-        left            = _left;
-        right           = _right;
-        tileMode        = [0, 0, 0, 0, 0];
-        top             = _top;
-        
-        return self;
-    }
+    bottom          = 0;
+    enabled         = false;
+    guideColour     = [0xFFFF00FF, 0xFFFF00FF, 0xFFFF00FF, 0xFFFF00FF];
+    highlightColour = 0x66FF8A00;
+    highlightStyle  = 0;
+    left            = 0;
+    right           = 0;
+    tileMode        = [0, 0, 0, 0, 0];
+    top             = 0;
     
     static __Deserialize = function(_yyStruct)
     {
@@ -30,7 +25,7 @@ function __AbClassProjectSpriteNineslice() constructor
         return self;
     }
     
-    static __Overwrite = function(_enabled, _left, _top, _right, _bottom)
+    static __Edit = function(_enabled, _left, _top, _right, _bottom)
     {
         enabled = _enabled;
         left    = _left;

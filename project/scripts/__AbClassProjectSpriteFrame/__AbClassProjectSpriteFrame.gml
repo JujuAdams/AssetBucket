@@ -23,7 +23,7 @@ function __AbClassProjectSpriteFrame() constructor
         return $"{_yyDirectory}{frameUUID}.png";
     }
     
-    static __Overwrite = function(_sourceFilePath)
+    static __Edit = function(_sourceFilePath)
     {
         __sourceFilePath = _sourceFilePath;
         

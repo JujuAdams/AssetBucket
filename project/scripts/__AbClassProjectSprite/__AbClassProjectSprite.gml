@@ -1,57 +1,41 @@
-function __AbClassProjectSprite() constructor
+function __AbClassProjectSprite(_projectStruct, _assetName) constructor
 {
-    static __Template = function(_assetName, _projectStruct)
-    {
-        assetName          = _assetName;
-        bboxMode           = 0;
-        bboxBottom         = 0;
-        bboxLeft           = 0;
-        bboxRight          = 0;
-        bboxTop            = 0;
-        collisionKind      = 1;
-        collisionTolerance = 0;
-        dynamicTexturePage = false;
-        edgeFiltering      = false;
-        for3D              = false;
-        framesArray        = [];
-        gridX              = 0;
-        gridY              = 0;
-        height             = undefined;
-        hTile              = 0;
-        layer              = (new __AbClassProjectSpriteLayer()).__Template();
-        nineSlice          = undefined;
-        origin             = 0;
-        folderInfo         = __AbMakeProjectFolderInfo("", _projectStruct);;
-        preMultiplyAlpha   = false;
-        sequence           = (new __AbClassProjectSpriteSequence()).__Template(_assetName);
-        swatchColours      = undefined;
-        swfPrecision       = 0.5;
-        textureGroupName   = "Default";
-        type               = 0;
-        vTile              = false;
-        width              = undefined;
-        
-        return self;
-    }
+    __projectStruct = _projectStruct;
+    __yyPath        = $"{_projectStruct.__directory}sprites/{_assetName}/{_assetName}.yy";
     
-    static __OverwriteNineslice = function(_enabled, _left, _top, _right, _bottom)
-    {
-        if (nineSlice == undefined)
-        {
-            nineSlice = (new __AbClassProjectSpriteNineslice()).__Template(_enabled, _left, _top, _right, _bottom);
-        }
-        else
-        {
-            nineSlice.__Overwrite(_enabled, _left, _top, _right, _bottom);
-        }
-        
-        return self;
-    }
+    assetName          = _assetName;
+    bboxMode           = 0;
+    bboxBottom         = 0;
+    bboxLeft           = 0;
+    bboxRight          = 0;
+    bboxTop            = 0;
+    collisionKind      = 1;
+    collisionTolerance = 0;
+    dynamicTexturePage = false;
+    edgeFiltering      = false;
+    for3D              = false;
+    framesArray        = [];
+    gridX              = 0;
+    gridY              = 0;
+    height             = undefined;
+    hTile              = 0;
+    layer              = (new __AbClassProjectSpriteLayer()).__Template();
+    nineSlice          = undefined;
+    origin             = 0;
+    folderInfo         = __AbMakeProjectFolderInfo("", _projectStruct);;
+    preMultiplyAlpha   = false;
+    sequence           = (new __AbClassProjectSpriteSequence()).__Template(_assetName);
+    swatchColours      = undefined;
+    swfPrecision       = 0.5;
+    textureGroupName   = "Default";
+    type               = 0;
+    vTile              = false;
+    width              = undefined;
     
-    static __Deserialize = function(_path)
+    if (_projectStruct.GetAssetExists(_assetName) && file_exists(__yyPath))
     {
-        var _yyData = __AbLoadJSON(_path);
-        var _yyDirectory = filename_dir(_path) + "/";
+        var _yyData = __AbLoadJSON(__yyPath);
+        var _yyDirectory = AbFilenameDir(__yyPath) + "/";
         
         if (array_length(_yyData.layers) > 1)
         {
@@ -77,7 +61,7 @@ function __AbClassProjectSprite() constructor
         preMultiplyAlpha   = _yyData.preMultiplyAlpha;
         sequence           = (new __AbClassProjectSpriteSequence()).__Deserialize(_yyData.sequence);
         origin             = _yyData.origin;
-        folderInfo         = { __name: _yyData.parent.name, __path: _yyData.parent.path };
+        folderInfo         = { __name: _yyData.parent.name, __path: _yyData.parent.path }; //TODO - Refactor to a path string
         swatchColours      = _yyData.swatchColours;
         swfPrecision       = _yyData.swfPrecision;
         textureGroupName   = _yyData.textureGroupId.name;
@@ -104,17 +88,30 @@ function __AbClassProjectSprite() constructor
             framesArray[@ _i] = (new __AbClassProjectSpriteFrame()).__Deserialize(_yyFramesArray[_i], _yyDirectory, _layerUUID);
             ++_i;
         }
+    }
+    
+    
+    
+    
+    static EditNineslice = function(_enabled, _left, _top, _right, _bottom)
+    {
+        if (nineSlice == undefined)
+        {
+            nineSlice = new __AbClassProjectSpriteNineslice();
+        }
+        
+        nineSlice.__Edit(_enabled, _left, _top, _right, _bottom);
         
         return self;
     }
     
-    static __Overwrite = function(_sourcePathArray, _projectStruct, _width, _height, _projectFolder = undefined, _textureGroupName = undefined)
+    static Edit = function(_sourcePathArray, _width, _height, _projectFolder = undefined, _textureGroupName = undefined)
     {
         //Overwrite existing frame data
         var _i = 0;
         repeat(min(array_length(_sourcePathArray), array_length(framesArray)))
         {
-            framesArray[_i].__Overwrite(_sourcePathArray[_i]);
+            framesArray[_i].__Edit(_sourcePathArray[_i]);
             ++_i;
         }
         
@@ -135,7 +132,7 @@ function __AbClassProjectSprite() constructor
         
         if (_projectFolder != undefined)
         {
-            __AbMakeProjectFolderInfo(_projectFolder, _projectStruct, folderInfo);
+            __AbMakeProjectFolderInfo(_projectFolder, __projectStruct, folderInfo);
         }
         
         if (_width != undefined)
@@ -156,9 +153,9 @@ function __AbClassProjectSprite() constructor
         return self;
     }
     
-    static __Save = function(_yyPath)
+    static Save = function()
     {
-        var _yyDirectory = filename_dir(_yyPath) + "/";
+        var _yyDirectory = AbFilenameDir(__yyPath) + "/";
         
         var _buffer = buffer_create(1024, buffer_grow, 1);
         
@@ -228,7 +225,7 @@ function __AbClassProjectSprite() constructor
         __AbBufferWritePair(_buffer, 2, "width", width);
         __AbBufferWriteLine(_buffer, "}");
         
-        buffer_save_ext(_buffer, _yyPath, 0, buffer_tell(_buffer));
+        buffer_save_ext(_buffer, __yyPath, 0, buffer_tell(_buffer));
         buffer_delete(_buffer);
         
         return self;

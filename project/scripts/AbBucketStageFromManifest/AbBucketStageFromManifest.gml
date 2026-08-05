@@ -40,7 +40,7 @@ function AbBucketStageFromManifest(_path)
             __AbError($"Input JSON is not a manifest");
         }
         
-        var _directory = $"{filename_dir(_path)}/";
+        var _directory = $"{AbFilenameDir(_path)}/";
         var _i = 0;
         repeat(array_length(_manifestBucketArray))
         {

@@ -7,7 +7,7 @@ function __AbClassRuntimeBucket(_headerPath) constructor
     static _projectBucketMap   = _system.__projectBucketMap;
     
     __headerPath = _headerPath;
-    __directory = $"{filename_dir(__headerPath)}/";
+    __directory = $"{AbFilenameDir(__headerPath)}/";
     
     var _json = __AbLoadString(_headerPath);
     try

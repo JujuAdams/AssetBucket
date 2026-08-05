@@ -76,7 +76,7 @@ function(_fileDesc)
         {
             //If we don't have an existing project folder, organise all imported tags into a separate
             //folder in the project
-            var _fallbackProjectFolder = $"Sprites/{filename_dir(_fileDesc.localPath)}/{_fileDesc.suggestedName}";
+            var _fallbackProjectFolder = $"Sprites/{AbFilenameDir(_fileDesc.localPath)}/{_fileDesc.suggestedName}";
             
             var _i = 0;
             repeat(array_length(_tagArray))
@@ -116,7 +116,7 @@ function(_fileDesc)
             
             //Try to reuse the same project folder as before, otherwise create a project folder path using
             //the folder structure found in the source directory
-            var _projectFolder = project.GetAssetFolder(_assetName) ?? $"Sprites/{filename_dir(_fileDesc.localPath)}";
+            var _projectFolder = project.GetAssetFolder(_assetName) ?? $"Sprites/{AbFilenameDir(_fileDesc.localPath)}";
             
             //Add the sprite to the project
             commandLine.AddSpriteToProject(_assetName, _frameBufferArray, _width, _height, _projectFolder);
@@ -126,7 +126,7 @@ function(_fileDesc)
     {
         //Try to reuse the same project folder as before, otherwise create a project folder path using
         //the folder structure found in the source directory
-        var _projectFolder = project.GetAssetFolder(_assetName) ?? $"Sprites/{filename_dir(_fileDesc.localPath)}";
+        var _projectFolder = project.GetAssetFolder(_assetName) ?? $"Sprites/{AbFilenameDir(_fileDesc.localPath)}";
         
         //This is some ugly legacy code. This is necessary for now but will get removed later
         var _fileInfo = __AbEnsureIngestFileInfo(_fileDesc.absolutePath);

@@ -226,9 +226,20 @@ function AbCommandList() constructor
         function(_projectStruct, _datafilesDirectory)
         {
             __commandList.__EnsureProjectSprite(__assetName);
-            __commandList.__EnsureProjectFolder(__projectFolder);
-            __commandList.__EnsureProjectTextureGroup(__textureGroup);
-            _projectStruct.__SaveSprite(__pathArray, __assetName, __width, __height, __projectFolder, __textureGroup);
+            
+            if (__projectFolder != undefined)
+            {
+                __commandList.__EnsureProjectFolder(__projectFolder);
+            }
+            
+            if (__textureGroup != undefined)
+            {
+                __commandList.__EnsureProjectTextureGroup(__textureGroup);
+            }
+            
+            _projectStruct.MakeSprite(__assetName)
+                          .Edit(__pathArray, __width, __height, __projectFolder, __textureGroup)
+                          .Save();
         }));
     }
     
@@ -424,11 +435,11 @@ function AbCommandList() constructor
         }
         
         //Save new project references
-        _projectStruct.__SaveYY(__ensureAudioGroupDict,
-                                __ensureFolderDict,
-                                __ensureDatafileDict,
-                                __ensureResourceDict,
-                                __ensureTextureGroupDict);
+        _projectStruct.__Save(__ensureAudioGroupDict,
+                              __ensureFolderDict,
+                              __ensureDatafileDict,
+                              __ensureResourceDict,
+                              __ensureTextureGroupDict);
         _projectStruct.__Destroy();
     }
 }

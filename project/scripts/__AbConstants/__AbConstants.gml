@@ -6,7 +6,7 @@
 #macro AB_DEV_MODE  (AB_ALLOW_DEV_MODE && AB_RUNNING_FROM_IDE && (os_type == os_windows))
 
 #macro AB_PROJECT_NAME       filename_change_ext(filename_name(GM_project_filename), "")
-#macro AB_PROJECT_DIRECTORY  $"{filename_dir(GM_project_filename)}/"
+#macro AB_PROJECT_DIRECTORY  $"{AbFilenameDir(GM_project_filename)}/"
 
 #macro AB_MANIFEST_FILENAME  "ab_manifest.json"
 
