@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ProcessAsepriteFile",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ProcessAsepriteFile",
+  "parent":{
+    "name":"AssetBucket",
+    "path":"AssetBucket.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

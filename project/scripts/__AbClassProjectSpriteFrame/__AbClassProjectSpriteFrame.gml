@@ -1,7 +1,5 @@
-function __AbClassProjectSpriteFrame(_projectSprite) constructor
+function __AbClassProjectSpriteFrame() constructor
 {
-    __projectSprite = _projectSprite;
-    
     static __Template = function(_source)
     {
         __source = _source;
@@ -32,30 +30,12 @@ function __AbClassProjectSpriteFrame(_projectSprite) constructor
         return self;
     }
     
-    static __Save = function(_buffer, _yyDirectory, _layerUUID)
+    static __Save = function(_buffer, _width, _height, _yyDirectory, _layerUUID)
     {
         buffer_write(_buffer, buffer_text, $"    \{\"$GMSpriteFrame\":\"v1\",\"%Name\":\"{frameUUID}\",\"name\":\"{frameUUID}\",\"resourceType\":\"GMSpriteFrame\",\"resourceVersion\":\"2.0\",\},\n");
         
         var _imagePath = __GetExpectedImageFilePath(_yyDirectory, _layerUUID);
-        if (is_string(__source))
-        {
-            if (__source != _imagePath)
-            {
-                file_copy(__source, _imagePath);
-            }
-        }
-        else if (is_handle(__source))
-        {
-            if (buffer_exists(__source))
-            {
-                __AbSaveBufferAsPNG(_imagePath, __source, __projectSprite.width, __projectSprite.height);
-            }
-            else if (surface_exists(__source))
-            {
-                surface_save(__source, _imagePath);
-            }
-        }
-        
+        __AbSaveSourceAsImage(__source, _imagePath, _width, _height);
         file_copy(_imagePath, $"{_yyDirectory}layers/{frameUUID}/{_layerUUID}.png");
     }
 }

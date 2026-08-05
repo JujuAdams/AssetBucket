@@ -127,7 +127,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
             //Pad out the frame array with incoming source paths
             repeat(array_length(_sourcePathArray) - _i)
             {
-                array_push(framesArray, (new __AbClassProjectSpriteFrame(self)).__Template(_sourcePathArray[_i]));
+                array_push(framesArray, (new __AbClassProjectSpriteFrame()).__Template(_sourcePathArray[_i]));
                 ++_i;
             }
         }
@@ -193,7 +193,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         var _i = 0;
         repeat(array_length(framesArray))
         {
-            framesArray[_i].__Save(_buffer, _yyDirectory, _layerUUID);
+            framesArray[_i].__Save(_buffer, width, height, _yyDirectory, _layerUUID);
             ++_i;
         }
         __AbBufferWriteLine(_buffer, "  ],");

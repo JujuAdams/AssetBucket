@@ -140,12 +140,12 @@ function AbProject(_path) constructor
     
     static MakeSound = function(_assetName)
     {
-        return new __AbClassProjectSound(self, _assetName);
+        return new __AbClassProjectSound(self, AsciiTransliterateNoSymbols(_assetName));
     }
     
     static MakeSprite = function(_assetName)
     {
-        return new __AbClassProjectSprite(self, _assetName);
+        return new __AbClassProjectSprite(self, AsciiTransliterateNoSymbols(_assetName));
     }
     
     static __Save = function(_newAudioGroupDict, _newFolderDict, _newDatafileDict, _newResourceDict, _newTextureGroupDict)
