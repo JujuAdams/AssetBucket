@@ -151,26 +151,9 @@ function AbProject(_path) constructor
         return _folder;
     }
     
-    static __SaveSound = function(_sourcePath, _soundName, _folderInProject, _compression = undefined, _audioGroupName = undefined)
+    static MakeSound = function(_soundName)
     {
-        var _extension = filename_ext(_sourcePath);
-        if ((_extension == ".wav") && (_extension == ".ogg"))
-        {
-            __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
-        }
-        
-        var _yyPath = $"{__directory}sounds/{_soundName}/{_soundName}.yy";
-        if (file_exists(_yyPath))
-        {
-            var _soundStruct = (new __AbClassProjectSound()).__Deserialize(_yyPath);
-        }
-        else
-        {
-            var _soundStruct = (new __AbClassProjectSound()).__Template(_soundName, self);
-        }
-        
-        _soundStruct.__Overwrite(_sourcePath, self, _folderInProject, _compression, _audioGroupName);
-        _soundStruct.__Save(_yyPath);
+        return new __AbClassProjectSound(self, _soundName);
     }
     
     static __SaveSprite = function(_pathArray, _spriteName, _width, _height, _folderInProject, _textureGroupName)

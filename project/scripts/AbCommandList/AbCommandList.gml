@@ -259,7 +259,9 @@ function AbCommandList() constructor
                 __commandList.__EnsureProjectAudioGroup(__audioGroup);
             }
             
-            _projectStruct.__SaveSound(__path, __assetName, __projectFolder, __compressionSetting, __audioGroup);
+            _projectStruct.MakeSound(__assetName)
+                          .Edit(__path, __projectFolder, __compressionSetting, __audioGroup)
+                          .Save();
         }));
     }
     

@@ -1,57 +1,56 @@
-function __AbClassProjectSound() constructor
+function __AbClassProjectSound(_projectStruct, _assetName) constructor
 {
-    static __Template = function(_assetName, _projectStruct)
-    {
-        __sourceFilePath = undefined;
-        
-        __assetName          = _assetName;
-        __audioGroupName     = "audiogroup_default";
-        __bitDepth           = 1;
-        __channelFormat      = 1;
-        __compression        = undefined;
-        __compressionQuality = 4;
-        __conversionMode     = 0;
-        __duration           = 0;
-        __exportDir          = "";
-        __folderInfo         = __AbMakeProjectFolderInfo("", _projectStruct);
-        __preload            = false;
-        __sampleRate         = 44100;
-        __soundFilename      = undefined;
-        __volume             = 1;
-        
-        return self;
-    }
+    __projectStruct        = _projectStruct;
+    __yyPath               = $"{_projectStruct.__directory}sounds/{_assetName}/{_assetName}.yy";
+    __destinationSoundPath = undefined;
+    __sourceFilePath       = undefined;
     
-    static __Deserialize = function(_path)
+    assetName          = _assetName;
+    audioGroupName     = "audiogroup_default";
+    bitDepth           = 1;
+    channelFormat      = 1;
+    compression        = undefined;
+    compressionQuality = 4;
+    conversionMode     = 0;
+    duration           = 0;
+    exportDir          = "";
+    folderInfo         = __AbMakeProjectFolderInfo("", _projectStruct);
+    preload            = false;
+    sampleRate         = 44100;
+    volume             = 1;
+    
+    if (_projectStruct.GetAssetExists(_assetName) && file_exists(__yyPath))
     {
-        var _yypData = __AbLoadJSON(_path);
+        var _yypData = __AbLoadJSON(__yyPath);
         
-        __assetName          = _yypData.name;
-        __audioGroupName     = _yypData.audioGroupId.name;
-        __bitDepth           = _yypData.bitDepth;
-        __channelFormat      = _yypData.channelFormat;
-        __compression        = _yypData.compression;
-        __compressionQuality = _yypData.compressionQuality;
-        __conversionMode     = _yypData.conversionMode;
-        __duration           = _yypData.duration;
-        __exportDir          = _yypData.exportDir;
-        __folderInfo         = { __name: _yypData.parent.name, __path: _yypData.parent.path };
-        __preload            = _yypData.preload;
-        __sampleRate         = _yypData.sampleRate;
-        __soundFilename      = _yypData.soundFile;
-        __volume             = _yypData.volume;
+        assetName          = _yypData.name;
+        audioGroupName     = _yypData.audioGroupId.name;
+        bitDepth           = _yypData.bitDepth;
+        channelFormat      = _yypData.channelFormat;
+        compression        = _yypData.compression;
+        compressionQuality = _yypData.compressionQuality;
+        conversionMode     = _yypData.conversionMode;
+        duration           = _yypData.duration;
+        exportDir          = _yypData.exportDir;
+        folderInfo         = { __name: _yypData.parent.name, __path: _yypData.parent.path }; //TODO - Refactor to a path string
+        preload            = _yypData.preload;
+        sampleRate         = _yypData.sampleRate;
+        volume             = _yypData.volume;
         
-        __sourceFilePath = __GetExpectedSoundFilePath(_path);
+        __sourceFilePath = $"{filename_dir(__yyPath)}/{soundFilename}";
+        __destinationSoundPath = __sourceFilePath;
         
         if (not file_exists(__sourceFilePath))
         {
-            __AbTrace($"Failed to sound file {__sourceFilePath} for .yy at \"{_path}\"");
+            __AbTrace($"Failed to sound file {__sourceFilePath} for .yy at \"{__sourceFilePath}\"");
         }
-        
-        return self;
     }
     
-    static __Overwrite = function(_sourcePath, _projectStruct, _projectFolder = undefined, _compression = undefined, _audioGroupName = undefined)
+    
+    
+    
+    
+    static Edit = function(_sourcePath, _projectFolder = undefined, _compression = undefined, _audioGroupName = undefined)
     {
         var _extension = filename_ext(_sourcePath);
         if (_extension == ".wav")
@@ -68,77 +67,72 @@ function __AbClassProjectSound() constructor
         }
         
         __sourceFilePath = _sourcePath;
-        __soundFilename = $"{__assetName}{_extension}";
+        __destinationSoundPath = $"{filename_dir(__yyPath)}/{assetName}{_extension}";
         
         if (_projectFolder != undefined)
         {
-            __AbMakeProjectFolderInfo(_projectFolder, _projectStruct, __folderInfo);
+            __AbMakeProjectFolderInfo(_projectFolder, __projectStruct, folderInfo);
         }
         
         if (_compression != undefined)
         {
-            __compression = _compression;
+            compression = _compression;
         }
         
         if (_audioGroupName != undefined)
         {
-            __audioGroupName = _audioGroupName;
+            audioGroupName = _audioGroupName;
         }
         
         return self;
     }
     
-    static __GetExpectedSoundFilePath = function(_yyPath)
-    {
-        return $"{filename_dir(_yyPath)}/{__soundFilename}";
-    }
-    
-    static __Save = function(_yyPath)
+    static Save = function()
     {
         if (__sourceFilePath == undefined)
         {
-            __AbError($"Sound source file not set for asset \"{__assetName}\"");
+            __AbError($"Sound source file not set for asset \"{assetName}\"");
         }
-        else if (__sourceFilePath != __GetExpectedSoundFilePath(_yyPath))
+        else if (__sourceFilePath != __destinationSoundPath)
         {
             if (not file_exists(__sourceFilePath))
             {
-                __AbError($"Sound source file \"{__sourceFilePath}\" could not be found (asset \"{__assetName}\")");
+                __AbError($"Sound source file \"{__sourceFilePath}\" could not be found (asset \"{assetName}\")");
             }
             
-            file_copy(__sourceFilePath, __GetExpectedSoundFilePath(_yyPath));
+            file_copy(__sourceFilePath, __destinationSoundPath);
         }
         
         var _buffer = buffer_create(1024, buffer_grow, 1);
         
         __AbBufferWriteLine(_buffer, "{");
         __AbBufferWritePair(_buffer, 2, "$GMSound", "v2");
-        __AbBufferWritePair(_buffer, 2, "%Name", __assetName);
+        __AbBufferWritePair(_buffer, 2, "%Name", assetName);
         __AbBufferWriteLine(_buffer, "  \"audioGroupId\":{");
-        __AbBufferWriteLine(_buffer, $"    \"name\":\"{__audioGroupName}\",");
-        __AbBufferWriteLine(_buffer, $"    \"path\":\"audiogroups/{__audioGroupName}\",");
+        __AbBufferWriteLine(_buffer, $"    \"name\":\"{audioGroupName}\",");
+        __AbBufferWriteLine(_buffer, $"    \"path\":\"audiogroups/{audioGroupName}\",");
         __AbBufferWriteLine(_buffer, "  },");
-        __AbBufferWritePair(_buffer, 2, "bitDepth", __bitDepth);
-        __AbBufferWritePair(_buffer, 2, "channelFormat", __channelFormat);
-        __AbBufferWritePair(_buffer, 2, "compression", __compression);
-        __AbBufferWritePair(_buffer, 2, "compressionQuality", __compressionQuality);
-        __AbBufferWritePair(_buffer, 2, "conversionMode", __conversionMode);
-        __AbBufferWritePair(_buffer, 2, "duration", __duration);
-        __AbBufferWritePair(_buffer, 2, "exportDir", __exportDir);
-        __AbBufferWritePair(_buffer, 2, "name", __assetName);
+        __AbBufferWritePair(_buffer, 2, "bitDepth", bitDepth);
+        __AbBufferWritePair(_buffer, 2, "channelFormat", channelFormat);
+        __AbBufferWritePair(_buffer, 2, "compression", compression);
+        __AbBufferWritePair(_buffer, 2, "compressionQuality", compressionQuality);
+        __AbBufferWritePair(_buffer, 2, "conversionMode", conversionMode);
+        __AbBufferWritePair(_buffer, 2, "duration", duration);
+        __AbBufferWritePair(_buffer, 2, "exportDir", exportDir);
+        __AbBufferWritePair(_buffer, 2, "name", assetName);
         __AbBufferWriteLine(_buffer, "  \"parent\":{");
-        __AbBufferWriteLine(_buffer, $"    \"name\":\"{__folderInfo.__name}\",");
-        __AbBufferWriteLine(_buffer, $"    \"path\":\"{__folderInfo.__path}\",");
+        __AbBufferWriteLine(_buffer, $"    \"name\":\"{folderInfo.__name}\",");
+        __AbBufferWriteLine(_buffer, $"    \"path\":\"{folderInfo.__path}\",");
         __AbBufferWriteLine(_buffer, "  },");
-        __AbBufferWritePair(_buffer, 2, "preload", bool(__preload));
+        __AbBufferWritePair(_buffer, 2, "preload", bool(preload));
         __AbBufferWritePair(_buffer, 2, "resourceType", "GMSound");
         __AbBufferWritePair(_buffer, 2, "resourceVersion", "2.0"); //Needs to be a string
-        __AbBufferWritePair(_buffer, 2, "sampleRate", __sampleRate);
-        __AbBufferWritePair(_buffer, 2, "soundFile", __soundFilename);
-        __AbBufferWritePair(_buffer, 2, "volume", __volume);
+        __AbBufferWritePair(_buffer, 2, "sampleRate", sampleRate);
+        __AbBufferWritePair(_buffer, 2, "soundFile", filename_name(__destinationSoundPath));
+        __AbBufferWritePair(_buffer, 2, "volume", volume);
         __AbBufferWriteLine(_buffer, "}");
         
-        buffer_save_ext(_buffer, _yyPath, 0, buffer_tell(_buffer));
+        buffer_save_ext(_buffer, __yyPath, 0, buffer_tell(_buffer));
         buffer_delete(_buffer);
         
         return self;
