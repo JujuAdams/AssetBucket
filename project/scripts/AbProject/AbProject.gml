@@ -89,7 +89,7 @@ function AbProject(_path) constructor
     repeat(array_length(_yypResourcesArray))
     {
         var _resource = _yypResourcesArray[_i].id;
-        _yypResourcesDict[$ _resource.name] = _resource.path;
+        _yypResourcesDict[$ _resource.name] = true;
         ++_i;
     }
     
@@ -162,16 +162,14 @@ function AbProject(_path) constructor
         var _yyPath = $"{__directory}sounds/{_soundName}/{_soundName}.yy";
         if (file_exists(_yyPath))
         {
-            var _soundStruct = (new __AbClassProjectSound())
-                               .__Deserialize(_yyPath)
-                               .__Overwrite(_sourcePath, self, _folderInProject, _compression, _audioGroupName);
+            var _soundStruct = (new __AbClassProjectSound()).__Deserialize(_yyPath);
         }
         else
         {
-            var _soundStruct = (new __AbClassProjectSound())
-                               .__Template(_sourcePath, self, _soundName, _folderInProject, _compression, _audioGroupName);
+            var _soundStruct = (new __AbClassProjectSound()).__Template(_soundName, self);
         }
         
+        _soundStruct.__Overwrite(_sourcePath, self, _folderInProject, _compression, _audioGroupName);
         _soundStruct.__Save(_yyPath);
     }
     
@@ -180,16 +178,14 @@ function AbProject(_path) constructor
         var _yyPath = $"{__directory}sprites/{_spriteName}/{_spriteName}.yy";
         if (file_exists(_yyPath))
         {
-            var _spriteStruct = (new __AbClassProjectSprite())
-                                .__Deserialize(_yyPath)
-                                .__Overwrite(_pathArray, self, _width, _height, _folderInProject, _textureGroupName);
+            var _spriteStruct = (new __AbClassProjectSprite()).__Deserialize(_yyPath);
         }
         else
         {
-            var _spriteStruct = (new __AbClassProjectSprite())
-                                .__Template(_pathArray, self, _spriteName, _width, _height, _folderInProject, _textureGroupName);
+            var _spriteStruct = (new __AbClassProjectSprite()).__Template(_spriteName, self);
         }
         
+        _spriteStruct.__Overwrite(_pathArray, self, _width, _height, _folderInProject, _textureGroupName);
         _spriteStruct.__Save(_yyPath);
     }
     

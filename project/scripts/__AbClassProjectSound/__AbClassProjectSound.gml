@@ -1,36 +1,22 @@
 function __AbClassProjectSound() constructor
 {
-    static __Template = function(_sourcePath, _projectStruct, _assetName, _projectFolder = "", _compression = undefined, _audioGroupName = "audiogroup_default")
+    static __Template = function(_assetName, _projectStruct)
     {
-        var _extension = filename_ext(_sourcePath);
-        if (_extension == ".wav")
-        {
-            _compression ??= AB_COMPRESSION_SETTING_UNCOMPRESSED;
-        }
-        else if (_extension == ".ogg")
-        {
-            _compression ??= AB_COMPRESSION_SETTING_COMPRESSED;
-        }
-        else
-        {
-            __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
-        }
-        
-        __sourceFilePath = _sourcePath;
+        __sourceFilePath = undefined;
         
         __assetName          = _assetName;
-        __audioGroupName     = _audioGroupName;
+        __audioGroupName     = "audiogroup_default";
         __bitDepth           = 1;
         __channelFormat      = 1;
-        __compression        = _compression;
+        __compression        = undefined;
         __compressionQuality = 4;
         __conversionMode     = 0;
         __duration           = 0;
         __exportDir          = "";
-        __folderInfo         = __AbMakeProjectFolderInfo(_projectFolder, _projectStruct);
+        __folderInfo         = __AbMakeProjectFolderInfo("", _projectStruct);
         __preload            = false;
         __sampleRate         = 44100;
-        __soundFilename      = filename_name(_sourcePath);
+        __soundFilename      = undefined;
         __volume             = 1;
         
         return self;
@@ -67,7 +53,22 @@ function __AbClassProjectSound() constructor
     
     static __Overwrite = function(_sourcePath, _projectStruct, _projectFolder = undefined, _compression = undefined, _audioGroupName = undefined)
     {
+        var _extension = filename_ext(_sourcePath);
+        if (_extension == ".wav")
+        {
+            _compression ??= AB_COMPRESSION_SETTING_UNCOMPRESSED;
+        }
+        else if (_extension == ".ogg")
+        {
+            _compression ??= AB_COMPRESSION_SETTING_COMPRESSED;
+        }
+        else
+        {
+            __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
+        }
+        
         __sourceFilePath = _sourcePath;
+        __soundFilename = $"{__assetName}{_extension}";
         
         if (_projectFolder != undefined)
         {

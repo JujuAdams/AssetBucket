@@ -1,6 +1,6 @@
 function __AbClassProjectSprite() constructor
 {
-    static __Template = function(_sourcePathArray, _projectStruct, _assetName, _width, _height, _projectFolder = "", _textureGroupName = "Default")
+    static __Template = function(_assetName, _projectStruct)
     {
         assetName          = _assetName;
         bboxMode           = 0;
@@ -13,30 +13,23 @@ function __AbClassProjectSprite() constructor
         dynamicTexturePage = false;
         edgeFiltering      = false;
         for3D              = false;
+        framesArray        = [];
         gridX              = 0;
         gridY              = 0;
-        height             = _height;
+        height             = undefined;
         hTile              = 0;
         layer              = (new __AbClassProjectSpriteLayer()).__Template();
         nineSlice          = undefined;
         origin             = 0;
-        folderInfo         = __AbMakeProjectFolderInfo(_projectFolder, _projectStruct);
+        folderInfo         = __AbMakeProjectFolderInfo("", _projectStruct);;
         preMultiplyAlpha   = false;
         sequence           = (new __AbClassProjectSpriteSequence()).__Template(_assetName);
         swatchColours      = undefined;
         swfPrecision       = 0.5;
-        textureGroupName   = _textureGroupName;
+        textureGroupName   = "Default";
         type               = 0;
         vTile              = false;
-        width              = _width;
-        
-        framesArray = array_create(array_length(_sourcePathArray), undefined);
-        var _i = 0;
-        repeat(array_length(_sourcePathArray))
-        {
-            framesArray[@ _i] = (new __AbClassProjectSpriteFrame()).__Template(_sourcePathArray[_i]);
-            ++_i;
-        }
+        width              = undefined;
         
         return self;
     }

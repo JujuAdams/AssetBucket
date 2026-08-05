@@ -32,12 +32,12 @@ function AbCommandList() constructor
         return _bucketStruct;
     }
     
-    static SetAbMetadata = function(_value)
+    static SetBucketMetadata = function(_value)
     {
         __EnsureAb(_bucketName).__metadata = _value;
     }
     
-    static SetAbAliasMetadata = function(_bucketName, _key, _value)
+    static SetBucketAliasMetadata = function(_bucketName, _key, _value)
     {
         __EnsureAb(_bucketName).__SetMetadata(_key, _value);
     }
