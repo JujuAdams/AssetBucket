@@ -9,7 +9,7 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
     audioGroupName     = "audiogroup_default";
     bitDepth           = 1;
     channelFormat      = 1;
-    compression        = undefined;
+    compression        = AB_COMPRESSION_AUTO;
     compressionQuality = 4;
     conversionMode     = 0;
     duration           = 0;
@@ -50,18 +50,10 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
     
     
     
-    static Edit = function(_sourcePath, _projectFolder = undefined, _compression = undefined, _audioGroupName = undefined)
+    static SetSource = function(_sourcePath, _compression = undefined)
     {
         var _extension = filename_ext(_sourcePath);
-        if (_extension == ".wav")
-        {
-            _compression ??= AB_COMPRESSION_SETTING_UNCOMPRESSED;
-        }
-        else if (_extension == ".ogg")
-        {
-            _compression ??= AB_COMPRESSION_SETTING_COMPRESSED;
-        }
-        else
+        if ((_extension != ".wav") && (_extension != ".ogg"))
         {
             __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
         }
@@ -69,19 +61,9 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         __sourceFilePath = _sourcePath;
         __destinationSoundPath = $"{AbFilenameDir(__yyPath)}/{assetName}{_extension}";
         
-        if (_projectFolder != undefined)
-        {
-            folder = _projectFolder;
-        }
-        
         if (_compression != undefined)
         {
             compression = _compression;
-        }
-        
-        if (_audioGroupName != undefined)
-        {
-            audioGroupName = _audioGroupName;
         }
         
         return self;
@@ -94,6 +76,12 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
             folder = _fallback;
         }
         
+        return self;
+    }
+    
+    static AddToCommandList = function(_commandList)
+    {
+        _commandList.AddSoundToProject(self);
         return self;
     }
     
@@ -113,6 +101,15 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
             file_copy(__sourceFilePath, __destinationSoundPath);
         }
         
+        if (compression != AB_COMPRESSION_AUTO)
+        {
+            var _compression = compression;
+        }
+        else
+        {
+            var _compression = (filename_ext(__sourceFilePath) == ".ogg")? AB_COMPRESSION_COMPRESSED : AB_COMPRESSION_UNCOMPRESSED;
+        }
+        
         var _folderInfo = __AbMakeProjectFolderInfo(folder, __projectStruct);
         
         var _buffer = buffer_create(1024, buffer_grow, 1);
@@ -126,7 +123,7 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
         __AbBufferWriteLine(_buffer, "  },");
         __AbBufferWritePair(_buffer, 2, "bitDepth", bitDepth);
         __AbBufferWritePair(_buffer, 2, "channelFormat", channelFormat);
-        __AbBufferWritePair(_buffer, 2, "compression", compression);
+        __AbBufferWritePair(_buffer, 2, "compression", _compression);
         __AbBufferWritePair(_buffer, 2, "compressionQuality", compressionQuality);
         __AbBufferWritePair(_buffer, 2, "conversionMode", conversionMode);
         __AbBufferWritePair(_buffer, 2, "duration", duration);

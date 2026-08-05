@@ -1,8 +1,10 @@
-function __AbClassProjectSpriteFrame() constructor
+function __AbClassProjectSpriteFrame(_projectSprite) constructor
 {
-    static __Template = function(_sourceFilePath)
+    __projectSprite = _projectSprite;
+    
+    static __Template = function(_source)
     {
-        __sourceFilePath = _sourceFilePath;
+        __source = _source;
         
         frameUUID = __AbGenerateUUID();
         
@@ -11,9 +13,9 @@ function __AbClassProjectSpriteFrame() constructor
     
     static __Deserialize = function(_yyStruct, _yyDirectory, _layerUUID)
     {
-        frameUUID = _yyStruct.name;
+        __source = __GetExpectedImageFilePath(_yyDirectory, _layerUUID);
         
-        __sourceFilePath = __GetExpectedImageFilePath(_yyDirectory, _layerUUID);
+        frameUUID = _yyStruct.name;
         
         return self;
     }
@@ -23,9 +25,9 @@ function __AbClassProjectSpriteFrame() constructor
         return $"{_yyDirectory}{frameUUID}.png";
     }
     
-    static __Edit = function(_sourceFilePath)
+    static __SetSource = function(_source)
     {
-        __sourceFilePath = _sourceFilePath;
+        __source = _source;
         
         return self;
     }
@@ -35,10 +37,25 @@ function __AbClassProjectSpriteFrame() constructor
         buffer_write(_buffer, buffer_text, $"    \{\"$GMSpriteFrame\":\"v1\",\"%Name\":\"{frameUUID}\",\"name\":\"{frameUUID}\",\"resourceType\":\"GMSpriteFrame\",\"resourceVersion\":\"2.0\",\},\n");
         
         var _imagePath = __GetExpectedImageFilePath(_yyDirectory, _layerUUID);
-        if (__sourceFilePath != _imagePath)
+        if (is_string(__source))
         {
-            file_copy(__sourceFilePath, _imagePath);
-            file_copy(__sourceFilePath, $"{_yyDirectory}layers/{frameUUID}/{_layerUUID}.png");
+            if (__source != _imagePath)
+            {
+                file_copy(__source, _imagePath);
+            }
         }
+        else if (is_handle(__source))
+        {
+            if (buffer_exists(__source))
+            {
+                __AbSaveBufferAsPNG(_imagePath, __source, __projectSprite.width, __projectSprite.height);
+            }
+            else if (surface_exists(__source))
+            {
+                surface_save(__source, _imagePath);
+            }
+        }
+        
+        file_copy(_imagePath, $"{_yyDirectory}layers/{frameUUID}/{_layerUUID}.png");
     }
 }

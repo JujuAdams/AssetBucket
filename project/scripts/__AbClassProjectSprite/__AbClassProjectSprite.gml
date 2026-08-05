@@ -85,7 +85,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         var _i = 0;
         repeat(array_length(_yyFramesArray))
         {
-            framesArray[@ _i] = (new __AbClassProjectSpriteFrame()).__Deserialize(_yyFramesArray[_i], _yyDirectory, _layerUUID);
+            framesArray[@ _i] = (new __AbClassProjectSpriteFrame(self)).__Deserialize(_yyFramesArray[_i], _yyDirectory, _layerUUID);
             ++_i;
         }
     }
@@ -93,7 +93,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
     
     
     
-    static EditNineslice = function(_enabled, _left, _top, _right, _bottom)
+    static SetNineslice = function(_enabled, _left, _top, _right, _bottom)
     {
         if (nineSlice == undefined)
         {
@@ -105,7 +105,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         return self;
     }
     
-    static Edit = function(_sourcePathArray, _width, _height, _projectFolder = undefined, _textureGroupName = undefined)
+    static SetSource = function(_sourcePathArray, _width = undefined, _height = undefined)
     {
         _sourcePathArray = __AbEnsureArray(_sourcePathArray);
         
@@ -113,7 +113,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         var _i = 0;
         repeat(min(array_length(_sourcePathArray), array_length(framesArray)))
         {
-            framesArray[_i].__Edit(_sourcePathArray[_i]);
+            framesArray[_i].__SetSource(_sourcePathArray[_i]);
             ++_i;
         }
         
@@ -127,30 +127,21 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
             //Pad out the frame array with incoming source paths
             repeat(array_length(_sourcePathArray) - _i)
             {
-                array_push(framesArray, (new __AbClassProjectSpriteFrame()).__Template(_sourcePathArray[_i]));
+                array_push(framesArray, (new __AbClassProjectSpriteFrame(self)).__Template(_sourcePathArray[_i]));
                 ++_i;
             }
         }
         
-        if (_projectFolder != undefined)
+        if ((_width == undefined) || (_height == undefined))
         {
-            folder = _projectFolder;
+            //TODO - Expand to cover buffers and surfaces
+            var _fileInfo = __AbEnsureIngestFileInfo(_sourcePathArray[0]);
+            _width  ??= _fileInfo.__GetWidth();
+            _height ??= _fileInfo.__GetHeight();
         }
         
-        if (_width != undefined)
-        {
-            width = _width;
-        }
-        
-        if (_height != undefined)
-        {
-            height = _height;
-        }
-        
-        if (_textureGroupName != undefined)
-        {
-            textureGroupName = _textureGroupName;
-        }
+        width  = _width;
+        height = _height;
         
         return self;
     }
@@ -165,8 +156,19 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         return self;
     }
     
+    static AddToCommandList = function(_commandList)
+    {
+        _commandList.AddSpriteToProject(self);
+        return self;
+    }
+    
     static Save = function()
     {
+        if (array_length(framesArray) <= 0)
+        {
+            __AbError($"Sprite \"{assetName}\" has no frames");
+        }
+        
         var _yyDirectory = AbFilenameDir(__yyPath) + "/";
         var _folderInfo = __AbMakeProjectFolderInfo(folder, __projectStruct);
         

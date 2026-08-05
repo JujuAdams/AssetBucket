@@ -38,18 +38,18 @@ var _soundFileList = _baseFileList.Duplicate()
 //Iterate over every datafile and add it to the project
 _datafileFileList.Foreach(method({
     project: _project,
-    commandLine: _commandList,
+    commandList: _commandList,
 },
 function(_fileDesc)
 {
     //Add a datafile to the project maintaining the folder structure in the source directory
-    commandLine.AddDatafileToProject(_fileDesc.localPath, _fileDesc.absolutePath);
+    commandList.AddDatafileToProject(_fileDesc.localPath, _fileDesc.absolutePath);
 }));
 
 //Iterate over every image file and add it to the project
 _spriteFileList.Foreach(method({
     project: _project,
-    commandLine: _commandList,
+    commandList: _commandList,
 },
 function(_fileDesc)
 {
@@ -58,7 +58,23 @@ function(_fileDesc)
     
     //If this sprite is from Aseprite then try importing each tag as a separate sprite
     var _extension = filename_ext(_fileDesc.absolutePath);
-    if ((_extension == ".ase") || (_extension == ".aseprite"))
+    if ((_extension != ".ase") && (_extension != ".aseprite"))
+    {
+        //Spin up a project sprite
+        var _projectSprite = project.MakeSprite(_assetName);
+        
+        //Edit the project sprite with our new frame image. We use the `.linkedPaths` variable here
+        //to use an array of image paths collected by `.CollectImageFrames()` above
+        _projectSprite.SetSource(_fileDesc.linkedPaths);
+        
+        //Set the folder for this sprite if we don't have one set yet. Using the local path here
+        //we keep the folder hierarchy on disk in the IDE
+        _projectSprite.SetFolderIfRoot($"Sprites/{AbFilenameDir(_fileDesc.localPath)}");
+        
+        //Queue up this sprite to be formally added to the project
+        _projectSprite.AddToCommandList(commandList);
+    }
+    else
     {
         //Load the Aseprite file
         var _aseStruct = AsepriteRead(_fileDesc.absolutePath);
@@ -72,7 +88,24 @@ function(_fileDesc)
         _aseStruct.Render(false);
         
         var _tagArray = _aseStruct.tagArray;
-        if (array_length(_tagArray) >= 1) //We have some tags
+        if (array_length(_tagArray) <= 0) //We have no tags
+        {
+            //Build an array from each frame's buffer
+            var _frameArray = _aseStruct.frameArray;
+            var _frameBufferArray = array_create(array_length(_frameArray));
+            var _i = 0;
+            repeat(array_length(_frameArray))
+            {
+                _frameBufferArray[@ _i] = _frameArray[_i].buffer;
+                ++_i;
+            }
+            
+            project.MakeSprite(_assetName)
+                   .SetSource(_frameBufferArray, _width, _height)
+                   .SetFolderIfRoot($"Sprites/{AbFilenameDir(_fileDesc.localPath)}")
+                   .AddToCommandList(commandList);
+        }
+        else //We have some tags
         {
             //If we don't have an existing project folder, organise all imported tags into a separate
             //folder in the project
@@ -84,7 +117,7 @@ function(_fileDesc)
                 var _tagName = _tagArray[_i].name;
                 var _frameArray = _aseStruct.GetTagFrames(_tagName);
                 
-                //Make a buffer from each tag frame's buffer
+                //Build an array from each frame's buffer
                 var _frameBufferArray = array_create(array_length(_frameArray));
                 var _j = 0;
                 repeat(array_length(_frameArray))
@@ -93,75 +126,33 @@ function(_fileDesc)
                     ++_j;
                 }
                 
-                //Try to reuse the existing folder, otherwise fall back on what we decided earlier
-                var _projectFolder = project.GetAssetFolder(_assetName) ?? _fallbackProjectFolder;
-                
-                //Add the sprite to the project using a modified asset name using the tag name
-                commandLine.AddSpriteToProject($"{_assetName}_{_tagName}", _frameBufferArray, _width, _height, _projectFolder);
+                project.MakeSprite($"{_assetName}_{_tagName}")
+                       .SetSource(_frameBufferArray, _width, _height)
+                       .SetFolderIfRoot(_fallbackProjectFolder)
+                       .AddToCommandList(commandList);
                 
                 ++_i;
             }
         }
-        else //We have no tags
-        {
-            //Make a buffer from each frame's buffer
-            var _frameArray = _aseStruct.frameArray;
-            var _frameBufferArray = array_create(array_length(_frameArray));
-            var _i = 0;
-            repeat(array_length(_frameArray))
-            {
-                _frameBufferArray[@ _i] = _frameArray[_i].buffer;
-                ++_i;
-            }
-            
-            //Try to reuse the same project folder as before, otherwise create a project folder path using
-            //the folder structure found in the source directory
-            var _projectFolder = project.GetAssetFolder(_assetName) ?? $"Sprites/{AbFilenameDir(_fileDesc.localPath)}";
-            
-            //Add the sprite to the project
-            commandLine.AddSpriteToProject(_assetName, _frameBufferArray, _width, _height, _projectFolder);
-        }
-    }
-    else //Not an Aseprite file
-    {
-        //Spin up a project sprite
-        var _projectSprite = project.MakeSprite(_assetName);
-        
-        //This is some ugly legacy code. This is necessary for now but will get removed later
-        var _fileInfo = __AbEnsureIngestFileInfo(_fileDesc.absolutePath);
-        var _width  = _fileInfo.__GetWidth();
-        var _height = _fileInfo.__GetHeight();
-        
-        //Edit the project sprite with our new frame image. We use the `.linkedPaths` variable here
-        //to send an array of image paths into the `.Edit()`. We leave the folder set to `undefined`
-        //because we'll set the folder with the next method call
-        _projectSprite.Edit(_fileDesc.linkedPaths, _width, _height, undefined);
-        
-        //Set the folder for this sprite if we don't have one set yet. Using the local path here
-        //we keep the folder hierarchy on disk in the IDE
-        _projectSprite.SetFolderIfRoot($"Sprites/{AbFilenameDir(_fileDesc.localPath)}");
-        
-        //Queue up this sprite to be formally added to the project
-        commandLine.AddSpriteToProject(_projectSprite);
     }
 }));
 
 //Iterate over every datafile and add it to the project
 _soundFileList.Foreach(method({
     project: _project,
-    commandLine: _commandList,
+    commandList: _commandList,
 },
 function(_fileDesc)
 {
     //Spin up a project sprite using the suggested asset name
     var _projectSound = project.MakeSound(_fileDesc.suggestedName);
     
-    _projectSound.Edit(_fileDesc.absolutePath, undefined);
+    _projectSound.SetSource(_fileDesc.absolutePath);
     
     _projectSound.SetFolderIfRoot("Sounds");
     
     //Queue up this sound to be formally added to the project
-    commandLine.AddSoundToProject(_projectSound);
+    commandList.AddSoundToProject(_projectSound);
 }));
 
 //Execute the command list. This is that method call that actually affects the project on disk

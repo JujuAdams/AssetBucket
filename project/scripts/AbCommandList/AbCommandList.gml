@@ -18,7 +18,7 @@ function AbCommandList() constructor
     
     
     
-    static __EnsureAb = function(_bucketName)
+    static __EnsureBucket = function(_bucketName)
     {
         var _bucketStruct = __bucketDict[$ _bucketName];
         
@@ -34,17 +34,17 @@ function AbCommandList() constructor
     
     static SetBucketMetadata = function(_value)
     {
-        __EnsureAb(_bucketName).__metadata = _value;
+        __EnsureBucket(_bucketName).__metadata = _value;
     }
     
     static SetBucketAliasMetadata = function(_bucketName, _key, _value)
     {
-        __EnsureAb(_bucketName).__SetMetadata(_key, _value);
+        __EnsureBucket(_bucketName).__SetMetadata(_key, _value);
     }
     
     static AddDatafileToBucket = function(_bucketName, _alias, _sourcePath)
     {
-        var _bucket = __EnsureAb(_bucketName);
+        var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetDatafileAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -64,7 +64,7 @@ function AbCommandList() constructor
     {
         var _sourcePathArray = __AbEnsureArray(_sourcePathOrArray);
         
-        var _bucket = __EnsureAb(_bucketName);
+        var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -81,7 +81,7 @@ function AbCommandList() constructor
     
     static AddSoundToBucket = function(_bucketName, _alias, _sourcePath, _forceFormat = undefined)
     {
-        var _bucket = __EnsureAb(_bucketName);
+        var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -134,7 +134,7 @@ function AbCommandList() constructor
     {
         _bufferDescription = __AbEnsureBufferDescription(_bufferDescription);
         
-        var _bucket = __EnsureAb(_bucketName);
+        var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
         
         array_push(__commandArray, method({
@@ -253,7 +253,6 @@ function AbCommandList() constructor
         array_push(__commandArray, method({
             __localDatafilePath: _localDatafilePath,
             __bufferDescription: _bufferDescription,
-            __commandList:       other,
         },
         function(_projectStruct, _datafilesDirectory)
         {
