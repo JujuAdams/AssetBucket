@@ -65,6 +65,7 @@
     {"id":{"name":"__AbClassProjectSprite","path":"scripts/__AbClassProjectSprite/__AbClassProjectSprite.yy",},},
     {"id":{"name":"__AbClassProjectSpriteFrame","path":"scripts/__AbClassProjectSpriteFrame/__AbClassProjectSpriteFrame.yy",},},
     {"id":{"name":"__AbClassProjectSpriteLayer","path":"scripts/__AbClassProjectSpriteLayer/__AbClassProjectSpriteLayer.yy",},},
+    {"id":{"name":"__AbClassProjectSpriteNineslice","path":"scripts/__AbClassProjectSpriteNineslice/__AbClassProjectSpriteNineslice.yy",},},
     {"id":{"name":"__AbClassProjectSpriteSequence","path":"scripts/__AbClassProjectSpriteSequence/__AbClassProjectSpriteSequence.yy",},},
     {"id":{"name":"__AbClassProjectTextureGroup","path":"scripts/__AbClassProjectTextureGroup/__AbClassProjectTextureGroup.yy",},},
     {"id":{"name":"__AbClassRuntimeBucket","path":"scripts/__AbClassRuntimeBucket/__AbClassRuntimeBucket.yy",},},

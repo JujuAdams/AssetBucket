@@ -41,6 +41,20 @@ function __AbClassProjectSprite() constructor
         return self;
     }
     
+    static __OverwriteNineslice = function(_enabled, _left, _top, _right, _bottom)
+    {
+        if (nineSlice == undefined)
+        {
+            nineSlice = (new __AbClassProjectSpriteNineslice()).__Template(_enabled, _left, _top, _right, _bottom);
+        }
+        else
+        {
+            nineSlice.__Overwrite(_enabled, _left, _top, _right, _bottom);
+        }
+        
+        return self;
+    }
+    
     static __Deserialize = function(_path)
     {
         var _yyData = __AbLoadJSON(_path);
@@ -69,7 +83,6 @@ function __AbClassProjectSprite() constructor
         layer              = (new __AbClassProjectSpriteLayer()).__Deserialize(_yyData.layers[0]);
         preMultiplyAlpha   = _yyData.preMultiplyAlpha;
         sequence           = (new __AbClassProjectSpriteSequence()).__Deserialize(_yyData.sequence);
-        nineSlice          = _yyData.nineSlice;
         origin             = _yyData.origin;
         folderInfo         = { __name: _yyData.parent.name, __path: _yyData.parent.path };
         swatchColours      = _yyData.swatchColours;
@@ -78,6 +91,15 @@ function __AbClassProjectSprite() constructor
         type               = _yyData.type;
         vTile              = _yyData.VTile;
         width              = _yyData.width;
+        
+        if (_yyData.nineSlice == undefined)
+        {
+            nineSlice = undefined;
+        }
+        else
+        {
+            nineSlice = (new __AbClassProjectSpriteNineslice()).__Deserialize(_yyData.nineSlice);
+        }
         
         var _yyFramesArray = _yyData.frames;
         framesArray = array_create(array_length(_yyFramesArray), undefined);
@@ -180,9 +202,18 @@ function __AbClassProjectSprite() constructor
         layer.__Save(_buffer);
         __AbBufferWriteLine(_buffer, "  ],");
         
-        __AbBufferWritePair(_buffer, 2, "name",      assetName);
-        __AbBufferWritePair(_buffer, 2, "nineSlice", nineSlice);
-        __AbBufferWritePair(_buffer, 2, "origin",    origin);
+        __AbBufferWritePair(_buffer, 2, "name", assetName);
+        
+        if (nineSlice == undefined)
+        {
+            __AbBufferWritePair(_buffer, 2, "nineSlice", undefined);
+        }
+        else
+        {
+            nineSlice.__Save(_buffer);
+        }
+        
+        __AbBufferWritePair(_buffer, 2, "origin", origin);
         __AbBufferWriteLine(_buffer, "  \"parent\":{");
         __AbBufferWriteLine(_buffer, $"    \"name\":\"{folderInfo.__name}\",");
         __AbBufferWriteLine(_buffer, $"    \"path\":\"{folderInfo.__path}\",");
