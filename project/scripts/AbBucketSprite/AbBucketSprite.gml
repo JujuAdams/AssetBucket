@@ -69,7 +69,7 @@ function AbBucketSprite(_assetName, _sourcesArray, _width = undefined, _height =
                 tilemodeLeft:   nineslice_stretch,
                 tilemodeTop:    nineslice_stretch,
                 tilemodeRight:  nineslice_stretch,
-                tilemodeBpttom: nineslice_stretch,
+                tilemodeBottom: nineslice_stretch,
                 tilemodeCenter: nineslice_stretch,
             };
         }
@@ -98,7 +98,7 @@ function AbBucketSprite(_assetName, _sourcesArray, _width = undefined, _height =
                 tilemodeLeft:   _tilemodeLeft,
                 tilemodeTop:    _tilemodeTop,
                 tilemodeRight:  _tilemodeRight,
-                tilemodeBpttom: _tilemodeBottom,
+                tilemodeBottom: _tilemodeBottom,
                 tilemodeCenter: _tilemodeCenter,
             };
         }
@@ -114,7 +114,7 @@ function AbBucketSprite(_assetName, _sourcesArray, _width = undefined, _height =
                 tilemodeLeft   = _tilemodeLeft;
                 tilemodeTop    = _tilemodeTop;
                 tilemodeRight  = _tilemodeRight;
-                tilemodeBpttom = _tilemodeBottom;
+                tilemodeBottom = _tilemodeBottom;
                 tilemodeCenter = _tilemodeCenter;
             }
         }

@@ -103,6 +103,23 @@ function __AbClassBuildTextureGroup(_parent, _name) constructor
             var _spriteDesc = { frames: [] };
             _spritesDict[$ _assetName] = _spriteDesc;
             
+            var _nineslice = _bucketSprite.nineslice;
+            if (is_struct(_nineslice))
+            {
+                _spriteDesc.nineslice = {
+                    left:   _nineslice.left,
+                    top:    _nineslice.top,
+                    right:  _nineslice.right,
+                    bottom: _nineslice.bottom,
+                    
+                    tilemode_left:   _nineslice.tilemodeLeft,
+                    tilemode_top:    _nineslice.tilemodeTop,
+                    tilemode_right:  _nineslice.tilemodeRight,
+                    tilemode_bpttom: _nineslice.tilemodeBottom,
+                    tilemode_center: _nineslice.tilemodeCenter,
+                };
+            }
+                        
             var _frameDescArray = _spriteDesc.frames;
             var _j = 0;
             repeat(array_length(_sourcesArray))
