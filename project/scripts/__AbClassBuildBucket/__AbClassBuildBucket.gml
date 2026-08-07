@@ -32,7 +32,7 @@ function __AbClassBuildAb(_name) constructor
     {
         if (struct_exists(__modifiedDatafileDict, _alias))
         {
-            __AbError($"Ab alias \"{_alias}\" has already been modified by another command");
+            __AbError($"Datafile alias \"{_alias}\" has already been modified by another command");
         }
         
         __modifiedDatafileDict[$ _alias] = true;
@@ -42,7 +42,7 @@ function __AbClassBuildAb(_name) constructor
     {
         if (struct_exists(__modifiedAliasDict, _alias))
         {
-            __AbError($"Ab alias \"{_alias}\" has already been modified by another command");
+            __AbError($"Asset alias \"{_alias}\" has already been modified by another command");
         }
         
         __modifiedAliasDict[$ _alias] = true;
@@ -74,8 +74,10 @@ function __AbClassBuildAb(_name) constructor
         buffer_write(_accumulationBuffer, buffer_u8, 0x00);
     }
     
-    static __AddSprite = function(_alias, _pathArray, _textureGroupName)
+    static __AddSprite = function(_bucketSprite)
     {
+        var _textureGroupName = _bucketSprite.textureGroupName ?? __name;
+        
         var _textureGroup = __textureGroupDict[$ _textureGroupName];
         if (not is_struct(_textureGroup))
         {
@@ -83,7 +85,7 @@ function __AbClassBuildAb(_name) constructor
             __textureGroupDict[$ _textureGroupName] = _textureGroup;
         }
         
-        _textureGroup.__AddSprite(_alias, _pathArray);
+        _textureGroup.__AddSprite(_bucketSprite);
     }
     
     static __AddOGG = function(_alias, _path)

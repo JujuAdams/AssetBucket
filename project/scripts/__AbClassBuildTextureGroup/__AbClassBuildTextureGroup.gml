@@ -18,12 +18,9 @@ function __AbClassBuildTextureGroup(_parent, _name) constructor
     
     
     
-    static __AddSprite = function(_alias, _imageArray)
+    static __AddSprite = function(_bucketSprite)
     {
-        array_push(__queuedSprites, {
-            __alias:      _alias,
-            __imageArray: _imageArray,
-        });
+        array_push(__queuedSprites, _bucketSprite);
     }
     
     static __AddTexturePage = function(_directory, _surface)
@@ -94,31 +91,24 @@ function __AbClassBuildTextureGroup(_parent, _name) constructor
         var _i = 0;
         repeat(array_length(__queuedSprites))
         {
-            var _spriteInfo = __queuedSprites[_i];
+            var _bucketSprite = __queuedSprites[_i];
             
-            var _alias      = _spriteInfo.__alias;
-            var _imageArray = _spriteInfo.__imageArray;
+            var _assetName    = _bucketSprite.assetName;
+            var _spriteWidth  = _bucketSprite.width;
+            var _spriteHeight = _bucketSprite.height;
+            var _sourcesArray = _bucketSprite.sourcesArray;
             
             var _boxArray = [];
             
             var _spriteDesc = { frames: [] };
-            _spritesDict[$ _alias] = _spriteDesc;
+            _spritesDict[$ _assetName] = _spriteDesc;
             
             var _frameDescArray = _spriteDesc.frames;
             var _j = 0;
-            repeat(array_length(_imageArray))
+            repeat(array_length(_sourcesArray))
             {
-                var _path = _imageArray[_j];
-                var _sprite = __AbAddSprite(_path);
-                
-                if (is_struct(_path))
-                {
-                    var _callback = _path[$ "callback"];
-                    if (is_method(_callback))
-                    {
-                        _callback();
-                    }
-                }
+                var _source = _sourcesArray[_j];
+                var _sprite = __AbAddSprite(_source, _spriteWidth, _spriteHeight);
                 
                 var _bboxLeft   = sprite_get_bbox_left(_sprite);
                 var _bboxTop    = sprite_get_bbox_top(_sprite);

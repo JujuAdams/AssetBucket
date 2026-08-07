@@ -134,10 +134,8 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         
         if ((_width == undefined) || (_height == undefined))
         {
-            //TODO - Expand to cover buffers and surfaces
-            var _fileInfo = __AbEnsureIngestFileInfo(_sourcePathArray[0]);
-            _width  ??= _fileInfo.__GetWidth();
-            _height ??= _fileInfo.__GetHeight();
+            _width  ??= __AbGetSourceWidth(_sourcePathArray[0]);
+            _height ??= __AbGetSourceHeight(_sourcePathArray[0]);
         }
         
         if (width != _width)

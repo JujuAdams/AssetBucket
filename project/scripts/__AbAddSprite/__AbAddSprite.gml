@@ -1,19 +1,47 @@
-function __AbAddSprite(_absolutePath)
+function __AbAddSprite(_source, _hintWidth = undefined, _hintHeight = undefined)
 {
     var _sprite = -1;
     
-    if (is_struct(_absolutePath))
+    if (is_handle(_source))
     {
-        var _surface = surface_create(_absolutePath.width, _absolutePath.height);
-        buffer_set_surface(_absolutePath.buffer, _surface, _absolutePath[$ "offset"] ?? 0);
-        var _sprite = sprite_create_from_surface(_surface, 0, 0, _absolutePath.width, _absolutePath.height, false, false, 0, 0);
-        surface_free(_surface);
-    }
-    else if (is_string(_absolutePath))
-    {
-        if (filename_ext(_absolutePath) != ".psd")
+        if (buffer_exists(_source))
         {
-            _sprite = sprite_add(_absolutePath, 0, false, false, 0, 0);
+            if ((_hintWidth == undefined) || (_hintHeight == undefined))
+            {
+                __AbError($"Buffer source type not supported without hinted width & height\nPlease hint a width and height or pass a `AbBufferDescription()`");
+            }
+            else
+            {
+                var _surface = surface_create(_hintWidth, _hintHeight);
+                buffer_set_surface(_source, _surface, 0);
+                var _sprite = sprite_create_from_surface(_surface, 0, 0, _hintWidth, _hintHeight, false, false, 0, 0);
+                surface_free(_surface);
+            }
+        }
+        else if (surface_exists(_source))
+        {
+            var _sprite = sprite_create_from_surface(_surface, 0, 0, surface_get_width(_source), surface_get_height(_source), false, false, 0, 0);
+        }
+    }
+    else if (is_struct(_source))
+    {
+        if (is_instanceof(_source, AbBufferDescription))
+        {
+            var _surface = surface_create(_source.imageWidth, _source.imageHeight);
+            buffer_set_surface(_source.buffer, _surface, _source.offset);
+            var _sprite = sprite_create_from_surface(_surface, 0, 0, _source.imageWidth, _source.imageHeight, false, false, 0, 0);
+            surface_free(_surface);
+        }
+        else if (is_instanceof(_source, AbSurfaceDescription))
+        {
+            var _sprite = sprite_create_from_surface(_source.surface, _source.left, _source.top, _source.width, _source.height, false, false, 0, 0);
+        }
+    }
+    else if (is_string(_source))
+    {
+        if (filename_ext(_source) != ".psd")
+        {
+            _sprite = sprite_add(_source, 0, false, false, 0, 0);
         }
         else
         {
@@ -35,8 +63,8 @@ function __AbAddSprite(_absolutePath)
         
             var _batchFileString = string_join("\n",
             "@echo off",
-            $"echo Converting {_absolutePath} from PSD to PNG",
-            $"\"{AB_IMAGEMAGICK_PATH}\" \"{_absolutePath}\"[0] \"{_destinationPath}\"");
+            $"echo Converting {_source} from PSD to PNG",
+            $"\"{AB_IMAGEMAGICK_PATH}\" \"{_source}\"[0] \"{_destinationPath}\"");
         
             __AbSaveString(_batchFileString, _batchPath);
             __AbExecuteShell(_batchPath, "");
@@ -54,7 +82,7 @@ function __AbAddSprite(_absolutePath)
         
             if (not _finished)
             {
-                __AbError($"ImageMagick conversion of \"{_absolutePath}\" failed");
+                __AbError($"ImageMagick conversion of \"{_source}\" failed");
             }
             else
             {
@@ -71,7 +99,7 @@ function __AbAddSprite(_absolutePath)
     
     if (not sprite_exists(_sprite))
     {
-        __AbError($"Failed to load \"{_absolutePath}\" as a sprite");
+        __AbError($"Failed to load \"{_source}\" as a sprite");
     }
     
     return _sprite;

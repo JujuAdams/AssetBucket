@@ -15,6 +15,11 @@ var _baseFileList = (new AbFileList())
 var _datafileFileList = _baseFileList.Duplicate()
 .ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles");
 
+//As above but for sounds. This file list filters out anything that's not a supported audio file
+var _soundFileList = _baseFileList.Duplicate()
+.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds")
+.IncludeLocalPaths(["*.wav", "*.ogg"]);
+
 //As above but for sprites. This file list filters out anything that's not a supported image file
 var _spriteFileList = _baseFileList.Duplicate()
 .ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites")
@@ -30,11 +35,6 @@ var _spriteFileList = _baseFileList.Duplicate()
 //the file description
 _spriteFileList.CollectImageFrames();
 
-//As above but for sounds. This file list filters out anything that's not a supported audio file
-var _soundFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds")
-.IncludeLocalPaths(["*.wav", "*.ogg"]);
-
 //Iterate over every datafile and add it to the project
 _datafileFileList.Foreach(method({
     project: _project,
@@ -44,6 +44,24 @@ function(_fileDesc)
 {
     //Add a datafile to the project maintaining the folder structure in the source directory
     commandList.AddDatafileToProject(_fileDesc.localPath, _fileDesc.absolutePath);
+}));
+
+//Iterate over every datafile and add it to the project
+_soundFileList.Foreach(method({
+    project: _project,
+    commandList: _commandList,
+},
+function(_fileDesc)
+{
+    //Spin up a project sprite using the suggested asset name
+    var _projectSound = project.MakeSound(_fileDesc.suggestedName);
+    
+    _projectSound.SetSource(_fileDesc.absolutePath);
+    
+    _projectSound.SetFolderIfRoot("Sounds");
+    
+    //Queue up this sound to be formally added to the project
+    commandList.AddSoundToProject(_projectSound);
 }));
 
 //Iterate over every image file and add it to the project
@@ -78,24 +96,6 @@ function(_fileDesc)
     {
         AddAsepriteFileToProject(_assetName, _fileDesc, project, commandList);
     }
-}));
-
-//Iterate over every datafile and add it to the project
-_soundFileList.Foreach(method({
-    project: _project,
-    commandList: _commandList,
-},
-function(_fileDesc)
-{
-    //Spin up a project sprite using the suggested asset name
-    var _projectSound = project.MakeSound(_fileDesc.suggestedName);
-    
-    _projectSound.SetSource(_fileDesc.absolutePath);
-    
-    _projectSound.SetFolderIfRoot("Sounds");
-    
-    //Queue up this sound to be formally added to the project
-    commandList.AddSoundToProject(_projectSound);
 }));
 
 //Execute the command list. This is that method call that actually affects the project on disk

@@ -60,22 +60,18 @@ function AbCommandList() constructor
         }));
     }
     
-    static AddSpriteToBucket = function(_bucketName, _alias, _sourcePathOrArray, _textureGroup = _bucketName)
+    static AddSpriteToBucket = function(_bucketName, _bucketSprite, _textureGroup = _bucketName)
     {
-        var _sourcePathArray = __AbEnsureArray(_sourcePathOrArray);
-        
         var _bucket = __EnsureBucket(_bucketName);
-        _bucket.__SetAliasAsModified(_alias);
+        _bucket.__SetAliasAsModified(_bucketSprite.assetName);
         
         array_push(__commandArray, method({
             __bucket:       _bucket,
-            __alias:        _alias,
-            __pathArray:    _sourcePathOrArray,
-            __textureGroup: _textureGroup,
+            __bucketSprite: _bucketSprite,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __bucket.__AddSprite(__alias, __pathArray, __textureGroup);
+            __bucket.__AddSprite(__bucketSprite);
         }));
     }
     

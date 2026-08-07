@@ -32,27 +32,17 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
                 var _sliceStruct = _sliceArray[_i];
                 var _keyStruct = _sliceStruct.keyArray[0];
                 
-                //TODO
+                var _surfaceDesc = new AbSurfaceDescription(_surface, _keyStruct.xOrigin, _keyStruct.yOrigin, _keyStruct.width, _keyStruct.height);
+                var _bucketSprite = new AbBucketSprite($"{_assetName}_{_sliceStruct.name}", _surfaceDesc, _keyStruct.width, _keyStruct.height);
                 
-                //var _surfaceDesc = new AbSurfaceDescription(_surface, _keyStruct.xOrigin, _keyStruct.yOrigin, _keyStruct.width, _keyStruct.height);
-                //
-                //var _spriteStruct = project.MakeSprite($"{_assetName}_{_sliceStruct.name}")
-                //                           .SetSource(_surfaceDesc, _keyStruct.width, _keyStruct.height)
-                //                           .SetFolderIfRoot(_fallbackProjectFolder)
-                //                           .AddToCommandList(commandList);
-                //
-                //if (_sliceStruct.flags & 0b01)
-                //{
-                //    _spriteStruct.SetNineslice(true,
-                //                               _keyStruct.xCenter, _keyStruct.yCenter,
-                //                               _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
-                //                               _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
-                //}
-                //else
-                //{
-                //    _spriteStruct.SetNineslice(false);
-                //}
+                if (_sliceStruct.flags & 0b01)
+                {
+                    _bucketSprite.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
+                                               _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
+                                               _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
+                }
                 
+                _commandList.AddSpriteToBucket(_bucketName, _bucketSprite);
                 ++_i;
             }
         }
@@ -63,6 +53,9 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
     }
     else
     {
+        var _canvasWidth  = _aseStruct.width;
+        var _canvasHeight = _aseStruct.height;
+        
         if (array_length(_tagArray) <= 0) //We have no tags
         {
             //Build an array from each frame's buffer
@@ -75,7 +68,7 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
                 ++_i;
             }
             
-            _commandList.AddSpriteToBucket(_bucketName, _assetName, _frameBufferArray);
+            _commandList.AddSpriteToBucket(_bucketName, new AbBucketSprite(_assetName, _frameBufferArray, _canvasWidth, _canvasHeight));
         }
         else //We have some tags
         {
@@ -98,7 +91,7 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
                     ++_j;
                 }
                 
-                _commandList.AddSpriteToBucket(_bucketName, _assetName, _frameBufferArray);
+                _commandList.AddSpriteToBucket(_bucketName, new AbBucketSprite($"{_assetName}_{_tagName}", _frameBufferArray, _canvasWidth, _canvasHeight));
                 ++_i;
             }
         }
