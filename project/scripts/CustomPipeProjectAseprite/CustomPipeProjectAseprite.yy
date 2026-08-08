@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbProject",
+  "%Name":"CustomPipeProjectAseprite",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbProject",
+  "name":"CustomPipeProjectAseprite",
   "parent":{
-    "name":"Constructors",
-    "path":"folders/Asset Bucket/Pipeline/Constructors.yy",
+    "name":"AssetBucket",
+    "path":"AssetBucket.yyp",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

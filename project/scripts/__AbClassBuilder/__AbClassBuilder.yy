@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__AbClassBuildBucket",
+  "%Name":"__AbClassBuilder",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__AbClassBuildBucket",
+  "name":"__AbClassBuilder",
   "parent":{
     "name":"Classes",
     "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Classes.yy",

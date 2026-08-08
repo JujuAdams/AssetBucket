@@ -1,5 +1,11 @@
-function AbCommandList() constructor
+/// @param projectStruct
+/// @param bucketDirectory
+
+function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
 {
+    __projectStruct   = _projectStruct;
+    __bucketDirectory = _bucketDirectory;
+    
     __hasProjectCommands = false;
     
     __commandArray = [];
@@ -24,7 +30,7 @@ function AbCommandList() constructor
         
         if (not is_struct(_bucketStruct))
         {
-            var _bucketStruct = new __AbClassBuildAb(_bucketName);
+            var _bucketStruct = new __AbClassBuilderBucket(_bucketName);
             __bucketDict[$ _bucketName] = _bucketStruct;
             array_push(__bucketArray, _bucketStruct);
         }
@@ -181,9 +187,14 @@ function AbCommandList() constructor
     static SetProjectMetadata = function(_key, _value)
     {
         __hasProjectCommands = true;
-        if (_value == undefined) return;
-        
-        __projectMetadata[$ _key] = _value;
+        if (_value == undefined)
+        {
+            struct_remove(__projectMetadata, _value);
+        }
+        else
+        {
+            __projectMetadata[$ _key] = _value;
+        }
     }
     
     static AddDatafileToProject = function(_localDatafilePath, _absoluteSourcePath)
@@ -311,37 +322,6 @@ function AbCommandList() constructor
     
     
     
-    static SaveBucketsToDirectory = function(_directory)
-    {
-        if (__hasProjectCommands)
-        {
-            __AbWarning("Called `SaveBucketsToDirectory()` but command list has project commands. Project commands will be ignored");
-        }
-        
-        var _commandArray = __commandArray;
-        var _i = 0;
-        repeat(array_length(_commandArray))
-        {
-            var _command = _commandArray[_i];
-            
-            if (struct_exists(method_get_self(_command), "bucket"))
-            {
-                _command(undefined, _directory);
-            }
-            
-            ++_i;
-        }
-        
-        var _bucketExportArray = __SaveBuckets(_directory);
-        
-        var _json = json_stringify({
-            type:    "loose manifest v1",
-            buckets: _bucketExportArray,
-        })
-        
-        __AbSaveString(_json, _directory + AB_MANIFEST_FILENAME);
-    }
-    
     static __SaveBuckets = function(_directory)
     {
         var _bucketExportArray = [];
@@ -364,44 +344,81 @@ function AbCommandList() constructor
         return _bucketExportArray;
     }
     
-    static SaveToProject = function(_projectStruct)
+    static __End = function()
     {
-        var _datafilesDirectory = _projectStruct.__datafilesDirectory;
+        var _projectStruct = __projectStruct;
         
-        //Execute all commands
-        var _commandArray = __commandArray;
-        var _i = 0;
-        repeat(array_length(_commandArray))
+        if (_projectStruct == undefined)
         {
-            _commandArray[_i](_projectStruct, _datafilesDirectory);
-            ++_i;
-        }
-        
-        //Save buckets into the datafiles directory
-        var _bucketExportArray = __SaveBuckets(_datafilesDirectory);
-        
-        //TODO - Find old manifest and clean up any old bucket files
-        file_delete(_datafilesDirectory + AB_MANIFEST_FILENAME);
-        
-        //If we have any exported buckets or metadata then save that to the manifest
-        if ((array_length(_bucketExportArray) > 0) || (struct_names_count(__projectMetadata) > 0))
-        {
-            var _json = json_stringify({
-                type:            "project manifest v1",
-                buckets:         _bucketExportArray,
-                projectMetadata: __projectMetadata,
-            });
+            if (__hasProjectCommands)
+            {
+                __AbWarning("Called `SaveBucketsToDirectory()` but command list has project commands. Project commands will be ignored");
+            }
             
-            __AbSaveString(_json, _datafilesDirectory + AB_MANIFEST_FILENAME);
-            __EnsureProjectDatafile(AB_MANIFEST_FILENAME);
+            var _bucketDirectory = __bucketDirectory;
+            
+            var _commandArray = __commandArray;
+            var _i = 0;
+            repeat(array_length(_commandArray))
+            {
+                var _command = _commandArray[_i];
+                
+                if (struct_exists(method_get_self(_command), "bucket"))
+                {
+                    _command(undefined, _bucketDirectory);
+                }
+            
+                ++_i;
+            }
+            
+            var _bucketExportArray = __SaveBuckets(_bucketDirectory);
+            
+            var _json = json_stringify({
+                type:    "loose manifest v1",
+                buckets: _bucketExportArray,
+            })
+            
+            __AbSaveString(_json, _bucketDirectory + AB_MANIFEST_FILENAME);
         }
-        
-        //Save new project references
-        _projectStruct.__Save(__ensureAudioGroupDict,
-                              __ensureFolderDict,
-                              __ensureDatafileDict,
-                              __ensureResourceDict,
-                              __ensureTextureGroupDict);
-        _projectStruct.__Destroy();
+        else
+        {
+            var _datafilesDirectory = _projectStruct.__datafilesDirectory;
+            
+            //Execute all commands
+            var _commandArray = __commandArray;
+            var _i = 0;
+            repeat(array_length(_commandArray))
+            {
+                _commandArray[_i](_projectStruct, _datafilesDirectory);
+                ++_i;
+            }
+            
+            //Save buckets into the datafiles directory
+            var _bucketExportArray = __SaveBuckets(_datafilesDirectory);
+            
+            //TODO - Find old manifest and clean up any old bucket files
+            file_delete(_datafilesDirectory + AB_MANIFEST_FILENAME);
+            
+            //If we have any exported buckets or metadata then save that to the manifest
+            if ((array_length(_bucketExportArray) > 0) || (struct_names_count(__projectMetadata) > 0))
+            {
+                var _json = json_stringify({
+                    type:            "project manifest v1",
+                    buckets:         _bucketExportArray,
+                    projectMetadata: __projectMetadata,
+                });
+                
+                __AbSaveString(_json, _datafilesDirectory + AB_MANIFEST_FILENAME);
+                __EnsureProjectDatafile(AB_MANIFEST_FILENAME);
+            }
+            
+            //Save new project references
+            _projectStruct.__Save(__ensureAudioGroupDict,
+                                  __ensureFolderDict,
+                                  __ensureDatafileDict,
+                                  __ensureResourceDict,
+                                  __ensureTextureGroupDict);
+            _projectStruct.__Destroy();
+        }
     }
 }

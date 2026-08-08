@@ -1,54 +1,39 @@
+//Create a project representation for us to work with
 var _project = new AbProject(GM_project_filename);
+AbPipeBeginForProject(_project);
 
-var _commandList = new AbCommandList();
-
-var _baseFileList = (new AbFileList())
-                    .SetRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket")
-                    .PopulateFromSubdirectory("");
-
-_baseFileList.Duplicate()
-.SetRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles")
-.Foreach(method({
-    commandList: _commandList,
-},
-function(_fileDesc)
+(new AbFileList($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles"))
+.Foreach(function(_fileDesc)
 {
-    commandList.AddDatafileToBucket("bucketDefault", _fileDesc.localPath, _fileDesc.absolutePath);
-}));
+    AbPipeBucketDatafile("bucketDefault", _fileDesc.localPath, _fileDesc.absolutePath);
+});
 
-_baseFileList.Duplicate()
-.SetRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds")
+(new AbFileList($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds"))
 .IncludeLocalPaths(["*.wav", "*.ogg"])
-.Foreach(method({
-    commandList: _commandList,
-},
-function(_fileDesc)
+.Foreach(function(_fileDesc)
 {
-    commandList.AddSoundToBucket("bucketDefault", _fileDesc.suggestedName, _fileDesc.absolutePath);
-}));
+    AbPipeBucketSound("bucketDefault", _fileDesc.suggestedName, _fileDesc.absolutePath);
+});
 
-_baseFileList.Duplicate()
-.SetRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites")
+(new AbFileList($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites"))
 .IncludeLocalPaths(["*.png", "*.ase", "*.aseprite"])
-.CollectImageFrames()
-.Foreach(method({
-    commandList: _commandList,
-},
-function(_fileDesc)
+.LinkImageFiles()
+.Foreach(function(_fileDesc)
 {
     var _extension = filename_ext(_fileDesc.absolutePath);
     if ((_extension != ".ase") && (_extension != ".aseprite"))
     {
-        var _bucketSprite = new AbBucketSprite(_fileDesc.suggestedName, _fileDesc.linkedPaths);
-        commandList.AddSpriteToBucket("bucketDefault", _bucketSprite);
+        AbPipeBucketSprite("bucketDefault", _fileDesc.suggestedName, _fileDesc.linkedPaths);
     }
     else
     {
-        AddAsepriteFileToBucket(_fileDesc.suggestedName, _fileDesc, "bucketDefault", commandList);
+        CustomPipeBucketAseprite("bucketDefault", _fileDesc.suggestedName, _fileDesc);
     }
-}));
+});
 
-_commandList.SaveToProject(_project);
+AbPipeEnd();
+
+
 
 AbBucketLoadAndFetchFromManifest(AbGetIncludedFilesPath(AB_MANIFEST_FILENAME));
 AbBucketTextureGroupsFetch("bucketDefault");

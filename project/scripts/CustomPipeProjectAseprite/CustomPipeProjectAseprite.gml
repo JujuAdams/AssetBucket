@@ -1,9 +1,7 @@
 /// @param assetName
 /// @param fileDesc
-/// @param bucketName
-/// @param commandList
 
-function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandList)
+function CustomPipeProjectAseprite(_assetName, _fileDesc)
 {
     //Load the Aseprite file
     var _aseStruct = AsepriteRead(_fileDesc.absolutePath);
@@ -13,6 +11,9 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
     
     //Render out the Aseprite frames
     _aseStruct.Render(false);
+    
+    var _canvasWidth  = _aseStruct.width;
+    var _canvasHeight = _aseStruct.height;
     
     var _frameArray = _aseStruct.frameArray;
     var _tagArray   = _aseStruct.tagArray;
@@ -24,23 +25,27 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
         
         if (array_length(_tagArray) <= 0) //We have no tags
         {
-            //Build an array from each frame's buffer
+            //Build an array from each slice's buffer
             var _i = 0;
             repeat(array_length(_sliceArray))
             {
                 var _sliceStruct = _sliceArray[_i];
                 var _keyStruct = _sliceStruct.keyArray[0];
                 
-                var _bucketSprite = new AbBucketSprite($"{_assetName}_{_sliceStruct.name}", _sliceStruct.GetBuffer(0), _keyStruct.width, _keyStruct.height);
+                var _spriteStruct = AbPipeProjectSprite(_sliceStruct.GetBuffer(0), $"{_assetName}_{_sliceStruct.name}", _fallbackProjectFolder, _keyStruct.width, _keyStruct.height);
                 
                 if (_sliceStruct.flags & 0b01)
                 {
-                    _bucketSprite.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
+                    _spriteStruct.SetNineslice(true,
+                                               _keyStruct.xCenter, _keyStruct.yCenter,
                                                _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
                                                _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
                 }
+                else
+                {
+                    _spriteStruct.SetNineslice(false);
+                }
                 
-                _commandList.AddSpriteToBucket(_bucketName, _bucketSprite);
                 ++_i;
             }
         }
@@ -71,16 +76,20 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
                         ++_tagFrame;
                     }
                     
-                    var _bucketSprite = new AbBucketSprite($"{_assetName}_{_sliceStruct.name}_{_tagStruct.name}", _sourcesArray, _keyStruct.width, _keyStruct.height);
+                    var _spriteStruct = AbPipeProjectSprite(_sourcesArray, $"{_assetName}_{_sliceStruct.name}_{_tagStruct.name}", _fallbackProjectFolder, _keyStruct.width, _keyStruct.height);
                     
                     if (_sliceStruct.flags & 0b01)
                     {
-                        _bucketSprite.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
+                        _spriteStruct.SetNineslice(true,
+                                                   _keyStruct.xCenter, _keyStruct.yCenter,
                                                    _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
                                                    _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
                     }
+                    else
+                    {
+                        _spriteStruct.SetNineslice(false);
+                    }
                     
-                    _commandList.AddSpriteToBucket(_bucketName, _bucketSprite);
                     ++_j;
                 }
                 
@@ -90,9 +99,6 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
     }
     else
     {
-        var _canvasWidth  = _aseStruct.width;
-        var _canvasHeight = _aseStruct.height;
-        
         if (array_length(_tagArray) <= 0) //We have no tags
         {
             //Build an array from each frame's buffer
@@ -105,7 +111,7 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
                 ++_i;
             }
             
-            _commandList.AddSpriteToBucket(_bucketName, new AbBucketSprite(_assetName, _frameBufferArray, _canvasWidth, _canvasHeight));
+            AbPipeProjectSprite(_frameBufferArray, _assetName, $"Sprites/{AbFilenameDir(_fileDesc.localPath)}", _canvasWidth, _canvasHeight);
         }
         else //We have some tags
         {
@@ -120,15 +126,16 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
                 var _frameArray = _aseStruct.GetTagFrames(_tagName);
                 
                 //Build an array from each frame's buffer
-                var _frameBufferArray = array_create(array_length(_frameArray));
+                var _sourcesArray = array_create(array_length(_frameArray));
                 var _j = 0;
                 repeat(array_length(_frameArray))
                 {
-                    _frameBufferArray[@ _j] = _frameArray[_j].buffer;
+                    _sourcesArray[@ _j] = _frameArray[_j].buffer;
                     ++_j;
                 }
                 
-                _commandList.AddSpriteToBucket(_bucketName, new AbBucketSprite($"{_assetName}_{_tagName}", _frameBufferArray, _canvasWidth, _canvasHeight));
+                AbPipeProjectSprite(_sourcesArray, $"{_assetName}_{_tagName}", _fallbackProjectFolder, _canvasWidth, _canvasHeight);
+                
                 ++_i;
             }
         }

@@ -1,51 +1,70 @@
-function AbFileList() constructor
+/// @param [rootDirectory]
+/// @param [subDirectory]
+
+function AbFileList(_rootDirectory = undefined, _subDirectory = "") constructor
 {
     __rootDirectory = "";
     __fileDataArray = [];
     
-    static SetRootDirectory = function(_newRootDirectory)
+    if (is_string(_rootDirectory))
     {
-        _newRootDirectory = __AbEnsureDirectory(_newRootDirectory);
-        if (not directory_exists(_newRootDirectory))
+        __rootDirectory = _rootDirectory;
+        
+        _rootDirectory = __AbEnsureDirectory(_rootDirectory);
+        if (not directory_exists(_rootDirectory))
         {
-            __AbError($"Directory \"{_newRootDirectory}\" doesn't exist");
+            __AbError($"Directory \"{_rootDirectory}\" doesn't exist");
         }
         
-        var _oldRootDirectory = __rootDirectory;
-        
-        if (_oldRootDirectory == _newRootDirectory) return;
-        __rootDirectory = _newRootDirectory;
-        
-        if ((string_pos(_oldRootDirectory, _newRootDirectory) == 1) || (string_pos(_newRootDirectory, _oldRootDirectory) == 1))
+        if (is_string(_subDirectory))
         {
-            var _newRootDirLength = string_length(_newRootDirectory);
+            _subDirectory = __AbEnsureDirectory(_subDirectory);
             
             var _fileDescArray = __fileDataArray;
-            var _i = array_length(_fileDescArray)-1;
-            repeat(array_length(_fileDescArray))
+            
+            var _directoryArray = [];
+            array_push(_directoryArray, "");
+            
+            while(array_length(_directoryArray) > 0)
             {
-                with(_fileDescArray[_i])
+                var _directory = array_pop(_directoryArray);
+                
+                var _file = undefined;
+                while(true)
                 {
-                    if (string_pos(_newRootDirectory, absolutePath) == 1)
+                    //On Linux the attribute argument is ignored, and everything that we can read is returned (even directories with a proper pattern).
+                    //This doesn't affect this function in particular but good to keep that in mind.
+                    _file = (_file == undefined)? file_find_first(_rootDirectory + _directory + __AB_PATH_WILDCARD, fa_directory) : file_find_next();
+                    if (_file == "") break;
+                    
+                    if (directory_exists(_rootDirectory + _directory + _file))
                     {
-                        rootDirectory = _newRootDirectory;
-                        localPath     = string_delete(absolutePath, 1, _newRootDirLength);
+                        array_push(_directoryArray, _directory + _file + "/");
                     }
                     else
                     {
-                        array_delete(_fileDescArray, _i, 1);
+                        array_push(_fileDescArray, new AbFileDescription(_rootDirectory, _directory + _file));
                     }
                 }
                 
-                --_i;
+                file_find_close();
+            }
+            
+            //Iterate over all existing cached file info and check their hashes. Any file info that
+            //fails the hash check has its variables wiped ready for recalculation
+            var _fileInfoDict = __AbSystem().__fileInfoDict;
+            var _i = 0;
+            repeat(array_length(_fileDescArray))
+            {
+                var _fileInfo = _fileInfoDict[$ _fileDescArray[_i].absolutePath];
+                if (is_struct(_fileInfo))
+                {
+                    _fileInfo.__CheckHash();
+                }
+                
+                ++_i;
             }
         }
-        else
-        {
-            array_resize(__fileDataArray, 0);
-        }
-        
-        return self;
     }
     
     static AddLocalPath = function(_pathOrArray)
@@ -73,59 +92,6 @@ function AbFileList() constructor
         repeat(array_length(_pathOrArray))
         {
             array_push(_fileDescArray, new AbFileDescription("", __AbEnsureDirectory(_pathOrArray[_i])));
-            ++_i;
-        }
-        
-        return self;
-    }
-    
-    static PopulateFromSubdirectory = function(_path)
-    {
-        _path = __AbEnsureDirectory(_path);
-        
-        var _rootDirectory = __rootDirectory;
-        var _fileDescArray = __fileDataArray;
-        
-        var _directoryArray = [];
-        array_push(_directoryArray, "");
-        
-        while(array_length(_directoryArray) > 0)
-        {
-            var _directory = array_pop(_directoryArray);
-            
-            var _file = undefined;
-            while(true)
-            {
-                //On Linux the attribute argument is ignored, and everything that we can read is returned (even directories with a proper pattern).
-                //This doesn't affect this function in particular but good to keep that in mind.
-                _file = (_file == undefined)? file_find_first(_rootDirectory + _directory + __AB_PATH_WILDCARD, fa_directory) : file_find_next();
-                if (_file == "") break;
-                
-                if (directory_exists(_rootDirectory + _directory + _file))
-                {
-                    array_push(_directoryArray, _directory + _file + "/");
-                }
-                else
-                {
-                    array_push(_fileDescArray, new AbFileDescription(_rootDirectory, _directory + _file));
-                }
-            }
-            
-            file_find_close();
-        }
-        
-        //Iterate over all existing cached file info and check their hashes. Any file info that
-        //fails the hash check has its variables wiped ready for recalculation
-        var _fileInfoDict = __AbSystem().__fileInfoDict;
-        var _i = 0;
-        repeat(array_length(_fileDescArray))
-        {
-            var _fileInfo = _fileInfoDict[$ _fileDescArray[_i].absolutePath];
-            if (is_struct(_fileInfo))
-            {
-                _fileInfo.__CheckHash();
-            }
-            
             ++_i;
         }
         
@@ -168,7 +134,7 @@ function AbFileList() constructor
         return self;
     }
     
-    static CollectImageFrames = function()
+    static LinkImageFiles = function()
     {
         var _collectionDict = {};
         

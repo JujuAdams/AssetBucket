@@ -1,1 +1,1 @@
-{"projectMetadata":{},"buckets":[{"filename":"ab_bucketdefault.json","bucketName":"bucketDefault"}],"type":"project manifest v1"}
+{"type":"project manifest v1","buckets":[{"filename":"ab_bucketdefault.json","bucketName":"bucketDefault"}],"projectMetadata":{}}

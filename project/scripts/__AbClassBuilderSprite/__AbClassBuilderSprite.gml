@@ -3,7 +3,7 @@
 /// @param [width]
 /// @param [height]
 
-function AbBucketSprite(_assetName, _sourcesArray, _width = undefined, _height = undefined) constructor
+function __AbClassBuilderSprite(_assetName, _sourcesArray, _width = undefined, _height = undefined) constructor
 {
     assetName = _assetName;
     

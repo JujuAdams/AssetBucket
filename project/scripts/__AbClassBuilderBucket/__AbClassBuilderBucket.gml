@@ -1,6 +1,6 @@
 /// @param name
 
-function __AbClassBuildAb(_name) constructor
+function __AbClassBuilderBucket(_name) constructor
 {
     static _system = __AbSystem();
     
@@ -81,7 +81,7 @@ function __AbClassBuildAb(_name) constructor
         var _textureGroup = __textureGroupDict[$ _textureGroupName];
         if (not is_struct(_textureGroup))
         {
-            _textureGroup = new __AbClassBuildTextureGroup(self, _textureGroupName);
+            _textureGroup = new __AbClassBuilderTextureGroup(self, _textureGroupName);
             __textureGroupDict[$ _textureGroupName] = _textureGroup;
         }
         

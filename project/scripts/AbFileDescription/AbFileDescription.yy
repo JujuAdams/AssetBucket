@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"AbFileDescription",
   "parent":{
-    "name":"Pipeline Constructors",
-    "path":"folders/Asset Bucket/Pipeline Constructors.yy",
+    "name":"Constructors",
+    "path":"folders/Asset Bucket/Pipeline/Constructors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

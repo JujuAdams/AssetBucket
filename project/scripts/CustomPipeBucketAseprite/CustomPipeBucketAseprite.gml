@@ -1,9 +1,9 @@
+/// @param bucketName
 /// @param assetName
 /// @param fileDesc
-/// @param projectStruct
-/// @param commandList
 
-function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _commandList)
+
+function CustomPipeBucketAseprite(_bucketName, _assetName, _fileDesc)
 {
     //Load the Aseprite file
     var _aseStruct = AsepriteRead(_fileDesc.absolutePath);
@@ -13,9 +13,6 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
     
     //Render out the Aseprite frames
     _aseStruct.Render(false);
-    
-    var _canvasWidth  = _aseStruct.width;
-    var _canvasHeight = _aseStruct.height;
     
     var _frameArray = _aseStruct.frameArray;
     var _tagArray   = _aseStruct.tagArray;
@@ -27,28 +24,20 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
         
         if (array_length(_tagArray) <= 0) //We have no tags
         {
-            //Build an array from each slice's buffer
+            //Build an array from each frame's buffer
             var _i = 0;
             repeat(array_length(_sliceArray))
             {
                 var _sliceStruct = _sliceArray[_i];
                 var _keyStruct = _sliceStruct.keyArray[0];
                 
-                var _spriteStruct = project.MakeSprite($"{_assetName}_{_sliceStruct.name}")
-                                           .SetSource(_sliceStruct.GetBuffer(0), _keyStruct.width, _keyStruct.height)
-                                           .SetFolderIfRoot(_fallbackProjectFolder)
-                                           .AddToCommandList(commandList);
+                var _bucketSprite = AbPipeBucketSprite(_bucketName, $"{_assetName}_{_sliceStruct.name}", _sliceStruct.GetBuffer(0), _keyStruct.width, _keyStruct.height);
                 
                 if (_sliceStruct.flags & 0b01)
                 {
-                    _spriteStruct.SetNineslice(true,
-                                               _keyStruct.xCenter, _keyStruct.yCenter,
+                    _bucketSprite.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
                                                _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
                                                _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
-                }
-                else
-                {
-                    _spriteStruct.SetNineslice(false);
                 }
                 
                 ++_i;
@@ -81,21 +70,13 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
                         ++_tagFrame;
                     }
                     
-                    var _spriteStruct = project.MakeSprite($"{_assetName}_{_sliceStruct.name}_{_tagStruct.name}")
-                                               .SetSource(_sourcesArray, _keyStruct.width, _keyStruct.height)
-                                               .SetFolderIfRoot(_fallbackProjectFolder)
-                                               .AddToCommandList(commandList);
+                    var _bucketSprite = AbPipeBucketSprite(_bucketName, $"{_assetName}_{_sliceStruct.name}_{_tagStruct.name}", _sourcesArray, _keyStruct.width, _keyStruct.height);
                     
                     if (_sliceStruct.flags & 0b01)
                     {
-                        _spriteStruct.SetNineslice(true,
-                                                   _keyStruct.xCenter, _keyStruct.yCenter,
+                        _bucketSprite.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
                                                    _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
                                                    _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
-                    }
-                    else
-                    {
-                        _spriteStruct.SetNineslice(false);
                     }
                     
                     ++_j;
@@ -107,6 +88,9 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
     }
     else
     {
+        var _canvasWidth  = _aseStruct.width;
+        var _canvasHeight = _aseStruct.height;
+        
         if (array_length(_tagArray) <= 0) //We have no tags
         {
             //Build an array from each frame's buffer
@@ -119,10 +103,7 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
                 ++_i;
             }
             
-            project.MakeSprite(_assetName)
-                    .SetSource(_frameBufferArray, _canvasWidth, _canvasHeight)
-                    .SetFolderIfRoot($"Sprites/{AbFilenameDir(_fileDesc.localPath)}")
-                    .AddToCommandList(commandList);
+            AbPipeBucketSprite(_bucketName, _assetName, _frameBufferArray, _canvasWidth, _canvasHeight);
         }
         else //We have some tags
         {
@@ -137,18 +118,15 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
                 var _frameArray = _aseStruct.GetTagFrames(_tagName);
                 
                 //Build an array from each frame's buffer
-                var _sourcesArray = array_create(array_length(_frameArray));
+                var _frameBufferArray = array_create(array_length(_frameArray));
                 var _j = 0;
                 repeat(array_length(_frameArray))
                 {
-                    _sourcesArray[@ _j] = _frameArray[_j].buffer;
+                    _frameBufferArray[@ _j] = _frameArray[_j].buffer;
                     ++_j;
                 }
                 
-                project.MakeSprite($"{_assetName}_{_tagName}")
-                        .SetSource(_sourcesArray, _canvasWidth, _canvasHeight)
-                        .SetFolderIfRoot(_fallbackProjectFolder)
-                        .AddToCommandList(commandList);
+                AbPipeBucketSprite(_bucketName, $"{_assetName}_{_tagName}", _frameBufferArray, _canvasWidth, _canvasHeight);
                 
                 ++_i;
             }

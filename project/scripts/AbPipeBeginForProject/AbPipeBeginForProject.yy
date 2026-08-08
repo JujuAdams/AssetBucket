@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"AddAsepriteFileToBucket",
+  "%Name":"AbPipeBeginForProject",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AddAsepriteFileToBucket",
+  "name":"AbPipeBeginForProject",
   "parent":{
-    "name":"AssetBucket",
-    "path":"AssetBucket.yyp",
+    "name":"Pipeline",
+    "path":"folders/Asset Bucket/Pipeline.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

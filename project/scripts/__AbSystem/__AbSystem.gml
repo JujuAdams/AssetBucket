@@ -18,6 +18,7 @@ function __AbSystem()
             }
             
             __fileInfoDict = {};
+            __builderStack = [];
             
             __projectMetadata = undefined;
             

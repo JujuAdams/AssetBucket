@@ -1,7 +1,7 @@
 /// @param parent
 /// @param name
 
-function __AbClassBuildTextureGroup(_parent, _name) constructor
+function __AbClassBuilderTextureGroup(_parent, _name) constructor
 {
     static _system = __AbSystem();
     
