@@ -14,6 +14,46 @@ function __AsepriteClassSlice() constructor
     
     
     
+    static Draw = function(_frame, _x, _y)
+    {
+        return keyArray[0].__Draw(_frame, _x, _y);
+    }
+    
+    static DrawExt = function(_frame, _x, _y, _xScale, _yScale, _angle, _blend, _alpha)
+    {
+        return keyArray[0].__DrawExt(_frame, _x, _y, _xScale, _yScale, _angle, _blend, _alpha);
+    }
+    
+    static GetBuffer = function(_frame)
+    {
+        return keyArray[0].GetBuffer(_frame);
+    }
+    
+    static GetSurface = function(_frame)
+    {
+        return keyArray[0].GetSurface(_frame);
+    }
+    
+    static __Render = function(_frameArray, _canvasWidth, _canvasHeight, _keepSurfaces)
+    {
+        var _i = 0;
+        repeat(array_length(keyArray))
+        {
+            keyArray[_i].__Render(_frameArray, _canvasWidth, _canvasHeight, _keepSurfaces);
+            ++_i;
+        }
+    }
+    
+    static __Destroy = function()
+    {
+        var _i = 0;
+        repeat(array_length(keyArray))
+        {
+            keyArray[@ _i].__Destroy();
+            ++_i;
+        }
+    }
+    
     static __Deserialize = function(_buffer)
     {
         var _keyCount = buffer_read(_buffer, buffer_u32);

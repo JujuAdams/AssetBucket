@@ -1,5 +1,5 @@
-#macro ASEPRITE_READER_VERSION  "0.0.2"
-#macro ASEPRITE_READER_DATE     "2026-08-05"
+#macro ASEPRITE_READER_VERSION  "0.0.3-alpha"
+#macro ASEPRITE_READER_DATE     "2026-08-08"
 
 #macro __ASEPRITE_BUFFER_BYTE    buffer_u8
 #macro __ASEPRITE_BUFFER_WORD    buffer_u16

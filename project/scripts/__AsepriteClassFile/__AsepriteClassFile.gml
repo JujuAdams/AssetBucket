@@ -178,14 +178,6 @@ function __AsepriteClassFile() constructor
         frameArray[max(0, _frame) mod array_length(frameArray)].Draw(_x, _y);
     }
     
-    static DrawTag = function(_tagName, _frame, _x, _y)
-    {
-        with(tagDict[$ _tagName])
-        {
-            other.Draw((_frame mod (1 + toFrame - fromFrame)) + fromFrame, _x, _y);
-        }
-    }
-    
     static DrawSlice = function(_sliceName, _frame, _x, _y)
     {
         var _sliceStruct = sliceDict[$ _sliceName];
@@ -194,21 +186,7 @@ function __AsepriteClassFile() constructor
             __AsepriteError($"Slice \"{_sliceName}\" not found");
         }
         
-        var _frameStruct = frameArray[max(0, _frame) mod array_length(frameArray)];
-        if (_sliceStruct.flags & 0b01)
-        {
-            with(_sliceStruct.keyArray[0])
-            {
-                _frameStruct.DrawPart(xOrigin, yOrigin, width, height, _x, _y);
-            }
-        }
-        else
-        {
-            with(_sliceStruct.keyArray[0])
-            {
-                _frameStruct.DrawPart(xOrigin, yOrigin, width, height, _x, _y);
-            }
-        }
+        _sliceStruct.Draw(_frame, _x, _y);
     }
     
     static DrawExt = function(_frame, _x, _y, _xScale, _yScale, _angle, _blend, _alpha)
@@ -216,15 +194,7 @@ function __AsepriteClassFile() constructor
         frameArray[max(0, _frame) mod array_length(frameArray)].DrawExt(_x, _y, _xScale, _yScale, _angle, _blend, _alpha);
     }
     
-    static DrawTagExt = function(_tagName, _frame, _x, _y, _xScale, _yScale, _angle, _blend, _alpha)
-    {
-        with(tagDict[$ _tagName])
-        {
-            other.DrawExt((_frame mod (1 + toFrame - fromFrame)) + fromFrame, _x, _y, _xScale, _yScale, _angle, _blend, _alpha);
-        }
-    }
-    
-    static DrawSliceExt = function(_sliceName, _frame, _drawX0, _drawY0, _xScale, _yScale, _blend, _alpha)
+    static DrawSliceExt = function(_sliceName, _frame, _x, _y, _xScale, _yScale, _angle, _blend, _alpha)
     {
         var _sliceStruct = sliceDict[$ _sliceName];
         if (_sliceStruct == undefined)
@@ -232,76 +202,17 @@ function __AsepriteClassFile() constructor
             __AsepriteError($"Slice \"{_sliceName}\" not found");
         }
         
-        var _frameStruct = frameArray[max(0, _frame) mod array_length(frameArray)];
-        if (_sliceStruct.flags & 0b01)
+        _sliceStruct.DrawExt(_frame, _x, _y, _xScale, _yScale, _angle, _blend, _alpha);
+    }
+    
+    static GetTagFrame = function(_tagName, _frame)
+    {
+        with(tagDict[$ _tagName])
         {
-            with(_sliceStruct.keyArray[0])
-            {
-                var _drawW = _xScale*width;
-                var _drawH = _yScale*height;
-                
-                var _surfX0 = xOrigin;
-                var _surfX1 = xCenter;
-                var _surfX2 = _surfX1 + centerWidth;
-                var _surfX3 = xOrigin + width;
-                
-                var _surfY0 = yOrigin;
-                var _surfY1 = yCenter;
-                var _surfY2 = _surfY1 + centerHeight;
-                var _surfY3 = yOrigin + height;
-                
-                var _surfW01 = _surfX1 - _surfX0;
-                var _surfW12 = _surfX2 - _surfX1;
-                var _surfW23 = _surfX3 - _surfX2;
-                
-                var _surfH01 = _surfY1 - _surfY0;
-                var _surfH12 = _surfY2 - _surfY1;
-                var _surfH23 = _surfY3 - _surfY2;
-                
-                var _drawX1 = _drawX0 + _surfW01;
-                var _drawX2 = _drawX0 + _drawW - _surfW23;
-                
-                var _drawY1 = _drawY0 + _surfH01;
-                var _drawY2 = _drawY0 + _drawH - _surfH23;
-                
-                var _scaleX12 = (_drawW - (_surfW01 + _surfW23)) / _surfW12;
-                var _scaleY12 = (_drawH - (_surfH01 + _surfH23)) / _surfH12;
-                
-                //Top-left
-                _frameStruct.DrawPartExt(_surfX0, _surfY0, _surfW01, _surfH01, _drawX0, _drawY0, 1, 1, _blend, _alpha);
-                
-                //Top
-                _frameStruct.DrawPartExt(_surfX1, _surfY0, _surfW12, _surfH01, _drawX1, _drawY0, _scaleX12, 1, _blend, _alpha);
-                
-                //Top-right
-                _frameStruct.DrawPartExt(_surfX2, _surfY0, _surfW23, _surfH01, _drawX2, _drawY0, 1, 1, _blend, _alpha);
-                
-                //Left
-                _frameStruct.DrawPartExt(_surfX0, _surfY1, _surfW01, _surfH12, _drawX0, _drawY1, 1, _scaleY12, _blend, _alpha);
-                
-                //Centre
-                _frameStruct.DrawPartExt(_surfX1, _surfY1, _surfW12, _surfH12, _drawX1, _drawY1, _scaleX12, _scaleY12, _blend, _alpha);
-                
-                //Right
-                _frameStruct.DrawPartExt(_surfX2, _surfY1, _surfW23, _surfH12, _drawX2, _drawY1, 1, _scaleY12, _blend, _alpha);
-                
-                //Bottom-left
-                _frameStruct.DrawPartExt(_surfX0, _surfY2, _surfW01, _surfH23, _drawX0, _drawY2, 1, 1, _blend, _alpha);
-                
-                //Bottom
-                _frameStruct.DrawPartExt(_surfX1, _surfY2, _surfW12, _surfH23, _drawX1, _drawY2, _scaleX12, 1, _blend, _alpha);
-                
-                //Bottom-right
-                _frameStruct.DrawPartExt(_surfX2, _surfY2, _surfW23, _surfH23, _drawX2, _drawY2, 1, 1, _blend, _alpha);
-            }
+            return (_frame mod (1 + toFrame - fromFrame)) + fromFrame;
         }
-        else
-        {
-            with(_sliceStruct.keyArray[0])
-            {
-                _frameStruct.DrawPartExt(xOrigin, yOrigin, width, height, _drawX0, _drawY0, _xScale, _yScale, _blend, _alpha);
-            }
-        }
+        
+        return max(0, _frame) mod array_length(frameArray);
     }
     
     static HideLayersByMask = function(_mask)
@@ -377,6 +288,16 @@ function __AsepriteClassFile() constructor
         return _output;
     }
     
+    static GetTagNames = function()
+    {
+        return struct_get_names(tagDict);
+    }
+    
+    static GetSliceNames = function()
+    {
+        return struct_get_names(sliceDict);
+    }
+    
     static Render = function(_keepSurfaces = true)
     {
         var _i = 0;
@@ -390,6 +311,13 @@ function __AsepriteClassFile() constructor
         repeat(array_length(frameArray))
         {
             frameArray[_i].__Render(paletteArray, transparentIndex, _keepSurfaces);
+            ++_i;
+        }
+        
+        var _i = 0;
+        repeat(array_length(sliceArray))
+        {
+            sliceArray[_i].__Render(frameArray, width, height, _keepSurfaces);
             ++_i;
         }
         
@@ -443,6 +371,13 @@ function __AsepriteClassFile() constructor
         repeat(array_length(frameArray))
         {
             frameArray[_i].__Destroy();
+            ++_i;
+        }
+        
+        var _i = 0;
+        repeat(array_length(sliceArray))
+        {
+            sliceArray[_i].__Destroy();
             ++_i;
         }
     }
