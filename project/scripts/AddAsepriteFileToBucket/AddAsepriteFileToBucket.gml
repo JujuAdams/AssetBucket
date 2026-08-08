@@ -12,7 +12,7 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
     _aseStruct.HideLayersByMask("*[ignore]").DeleteTagsByMask("*[ignore]");
     
     //Render out the Aseprite frames
-    _aseStruct.Render(true);
+    _aseStruct.Render(false);
     
     var _frameArray = _aseStruct.frameArray;
     var _tagArray   = _aseStruct.tagArray;
@@ -20,11 +20,10 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
     
     if (array_length(_sliceArray))
     {
+        var _fallbackProjectFolder = $"Sprites/{AbFilenameDir(_fileDesc.localPath)}/{_fileDesc.suggestedName}";
+        
         if (array_length(_tagArray) <= 0) //We have no tags
         {
-            var _surface = _aseStruct.frameArray[0].GetSurface();
-            var _fallbackProjectFolder = $"Sprites/{AbFilenameDir(_fileDesc.localPath)}/{_fileDesc.suggestedName}";
-            
             //Build an array from each frame's buffer
             var _i = 0;
             repeat(array_length(_sliceArray))
@@ -32,8 +31,7 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
                 var _sliceStruct = _sliceArray[_i];
                 var _keyStruct = _sliceStruct.keyArray[0];
                 
-                var _surfaceDesc = new AbSurfaceDescription(_surface, _keyStruct.xOrigin, _keyStruct.yOrigin, _keyStruct.width, _keyStruct.height);
-                var _bucketSprite = new AbBucketSprite($"{_assetName}_{_sliceStruct.name}", _surfaceDesc, _keyStruct.width, _keyStruct.height);
+                var _bucketSprite = new AbBucketSprite($"{_assetName}_{_sliceStruct.name}", _sliceStruct.GetBuffer(0), _keyStruct.width, _keyStruct.height);
                 
                 if (_sliceStruct.flags & 0b01)
                 {
@@ -48,7 +46,46 @@ function AddAsepriteFileToBucket(_assetName, _fileDesc, _bucketName, _commandLis
         }
         else
         {
-            //TODO
+            //Build an array from each slice buffer for each frame of all tags
+            var _i = 0;
+            repeat(array_length(_sliceArray))
+            {
+                var _sliceStruct = _sliceArray[_i];
+                var _keyStruct = _sliceStruct.keyArray[0];
+                
+                var _j = 0;
+                repeat(array_length(_tagArray))
+                {
+                    var _tagStruct = _tagArray[_j];
+                    
+                    var _tagFrame = _tagStruct.fromFrame;
+                    var _tagCount = 1 + _tagStruct.toFrame - _tagFrame;
+                    
+                    //Build an array from each slice frame's buffer
+                    var _sourcesArray = array_create(_tagCount, undefined);
+                    var _k = 0;
+                    repeat(_tagCount)
+                    {
+                        _sourcesArray[@ _k] = _sliceStruct.GetBuffer(_tagFrame);
+                        ++_k;
+                        ++_tagFrame;
+                    }
+                    
+                    var _bucketSprite = new AbBucketSprite($"{_assetName}_{_sliceStruct.name}_{_tagStruct.name}", _sourcesArray, _keyStruct.width, _keyStruct.height);
+                    
+                    if (_sliceStruct.flags & 0b01)
+                    {
+                        _bucketSprite.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
+                                                   _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
+                                                   _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
+                    }
+                    
+                    _commandList.AddSpriteToBucket(_bucketName, _bucketSprite);
+                    ++_j;
+                }
+                
+                ++_i;
+            }
         }
     }
     else

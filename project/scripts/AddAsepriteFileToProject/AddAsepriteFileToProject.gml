@@ -12,7 +12,7 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
     _aseStruct.HideLayersByMask("*[ignore]").DeleteTagsByMask("*[ignore]");
     
     //Render out the Aseprite frames
-    _aseStruct.Render(true);
+    _aseStruct.Render(false);
     
     var _canvasWidth  = _aseStruct.width;
     var _canvasHeight = _aseStruct.height;
@@ -23,22 +23,19 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
     
     if (array_length(_sliceArray))
     {
+        var _fallbackProjectFolder = $"Sprites/{AbFilenameDir(_fileDesc.localPath)}/{_fileDesc.suggestedName}";
+        
         if (array_length(_tagArray) <= 0) //We have no tags
         {
-            var _surface = _aseStruct.frameArray[0].GetSurface();
-            var _fallbackProjectFolder = $"Sprites/{AbFilenameDir(_fileDesc.localPath)}/{_fileDesc.suggestedName}";
-            
-            //Build an array from each frame's buffer
+            //Build an array from each slice's buffer
             var _i = 0;
             repeat(array_length(_sliceArray))
             {
                 var _sliceStruct = _sliceArray[_i];
                 var _keyStruct = _sliceStruct.keyArray[0];
                 
-                var _surfaceDesc = new AbSurfaceDescription(_surface, _keyStruct.xOrigin, _keyStruct.yOrigin, _keyStruct.width, _keyStruct.height);
-                
                 var _spriteStruct = project.MakeSprite($"{_assetName}_{_sliceStruct.name}")
-                                           .SetSource(_surfaceDesc, _keyStruct.width, _keyStruct.height)
+                                           .SetSource(_sliceStruct.GetBuffer(0), _keyStruct.width, _keyStruct.height)
                                            .SetFolderIfRoot(_fallbackProjectFolder)
                                            .AddToCommandList(commandList);
                 
@@ -59,7 +56,53 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
         }
         else
         {
-            //TODO
+            //Build an array from each slice buffer for each frame of all tags
+            var _i = 0;
+            repeat(array_length(_sliceArray))
+            {
+                var _sliceStruct = _sliceArray[_i];
+                var _keyStruct = _sliceStruct.keyArray[0];
+                
+                var _j = 0;
+                repeat(array_length(_tagArray))
+                {
+                    var _tagStruct = _tagArray[_j];
+                    
+                    var _tagFrame = _tagStruct.fromFrame;
+                    var _tagCount = 1 + _tagStruct.toFrame - _tagFrame;
+                    
+                    //Build an array from each slice frame's buffer
+                    var _sourcesArray = array_create(_tagCount, undefined);
+                    var _k = 0;
+                    repeat(_tagCount)
+                    {
+                        _sourcesArray[@ _k] = _sliceStruct.GetBuffer(_tagFrame);
+                        ++_k;
+                        ++_tagFrame;
+                    }
+                    
+                    var _spriteStruct = project.MakeSprite($"{_assetName}_{_sliceStruct.name}_{_tagStruct.name}")
+                                               .SetSource(_sourcesArray, _keyStruct.width, _keyStruct.height)
+                                               .SetFolderIfRoot(_fallbackProjectFolder)
+                                               .AddToCommandList(commandList);
+                    
+                    if (_sliceStruct.flags & 0b01)
+                    {
+                        _spriteStruct.SetNineslice(true,
+                                                   _keyStruct.xCenter, _keyStruct.yCenter,
+                                                   _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
+                                                   _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
+                    }
+                    else
+                    {
+                        _spriteStruct.SetNineslice(false);
+                    }
+                    
+                    ++_j;
+                }
+                
+                ++_i;
+            }
         }
     }
     else
@@ -94,16 +137,16 @@ function AddAsepriteFileToProject(_assetName, _fileDesc, _projectStruct, _comman
                 var _frameArray = _aseStruct.GetTagFrames(_tagName);
                 
                 //Build an array from each frame's buffer
-                var _frameBufferArray = array_create(array_length(_frameArray));
+                var _sourcesArray = array_create(array_length(_frameArray));
                 var _j = 0;
                 repeat(array_length(_frameArray))
                 {
-                    _frameBufferArray[@ _j] = _frameArray[_j].buffer;
+                    _sourcesArray[@ _j] = _frameArray[_j].buffer;
                     ++_j;
                 }
                 
                 project.MakeSprite($"{_assetName}_{_tagName}")
-                        .SetSource(_frameBufferArray, _canvasWidth, _canvasHeight)
+                        .SetSource(_sourcesArray, _canvasWidth, _canvasHeight)
                         .SetFolderIfRoot(_fallbackProjectFolder)
                         .AddToCommandList(commandList);
                 
