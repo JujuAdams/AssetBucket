@@ -7,33 +7,13 @@ var _commandList = new AbCommandList();
 //have their local path relative to this root directory. The local path will be used later to
 //create a folder structure inside the GameMaker project
 var _baseFileList = (new AbFileList())
-                    .ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket")
+                    .SetRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket")
                     .PopulateFromSubdirectory("");
 
 //Createa a new file list from the base file list. We change the root directory which will
 //automatically reject any file not found inside the `datafiles/` directory
 var _datafileFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles");
-
-//As above but for sounds. This file list filters out anything that's not a supported audio file
-var _soundFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds")
-.IncludeLocalPaths(["*.wav", "*.ogg"]);
-
-//As above but for sprites. This file list filters out anything that's not a supported image file
-var _spriteFileList = _baseFileList.Duplicate()
-.ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites")
-.IncludeLocalPaths(["*.png", "*.ase", "*.aseprite"]);
-
-//This special method will collect together image files that have the following pattern:
-//    sprite_name_frame0.png
-//    sprite_name_frame1.png
-//    sprite_name_frame2.png
-//    etc.
-//Images that fit this pattern are removed from the file list leaving only the first file remaining
-//in the file list. You can access an array of subimage paths via the `.linkedPaths` variable in
-//the file description
-_spriteFileList.CollectImageFrames();
+.SetRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles");
 
 //Iterate over every datafile and add it to the project
 _datafileFileList.Foreach(method({
@@ -45,6 +25,11 @@ function(_fileDesc)
     //Add a datafile to the project maintaining the folder structure in the source directory
     commandList.AddDatafileToProject(_fileDesc.localPath, _fileDesc.absolutePath);
 }));
+
+//As above but for sounds. This file list filters out anything that's not a supported audio file
+var _soundFileList = _baseFileList.Duplicate()
+.SetRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds")
+.IncludeLocalPaths(["*.wav", "*.ogg"]);
 
 //Iterate over every datafile and add it to the project
 _soundFileList.Foreach(method({
@@ -63,6 +48,21 @@ function(_fileDesc)
     //Queue up this sound to be formally added to the project
     commandList.AddSoundToProject(_projectSound);
 }));
+
+//As above but for sprites. This file list filters out anything that's not a supported image file
+var _spriteFileList = _baseFileList.Duplicate()
+.SetRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites")
+.IncludeLocalPaths(["*.png", "*.ase", "*.aseprite"]);
+
+//This special method will collect together image files that have the following pattern:
+//    sprite_name_frame0.png
+//    sprite_name_frame1.png
+//    sprite_name_frame2.png
+//    etc.
+//Images that fit this pattern are removed from the file list leaving only the first file remaining
+//in the file list. You can access an array of subimage paths via the `.linkedPaths` variable in
+//the file description
+_spriteFileList.CollectImageFrames();
 
 //Iterate over every image file and add it to the project
 _spriteFileList.Foreach(method({

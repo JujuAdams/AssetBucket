@@ -3,7 +3,7 @@ function AbFileList() constructor
     __rootDirectory = "";
     __fileDataArray = [];
     
-    static ChangeRootDirectory = function(_newRootDirectory)
+    static SetRootDirectory = function(_newRootDirectory)
     {
         _newRootDirectory = __AbEnsureDirectory(_newRootDirectory);
         if (not directory_exists(_newRootDirectory))

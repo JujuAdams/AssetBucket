@@ -27,8 +27,14 @@ function __AbSaveSourceAsImage(_source, _path, _imageWidth, _imageHeight)
     {
         if (is_instanceof(_source, AbBufferDescription))
         {
-            //TODO
-            //__AbSaveBufferAsPNG(_path, _source, _imageWidth, _imageHeight);
+            if ((_source.imageWidth == undefined) || (_source.imageHeight == undefined))
+            {
+                __AbError($"Buffer description does not have an image width/height defined");
+            }
+            else
+            {
+                __AbSaveBufferAsPNG(_path, _source.buffer, _source.imageWidth, _source.imageHeight, _source.offset);
+            }
         }
         else if (is_instanceof(_source, AbSurfaceDescription))
         {
