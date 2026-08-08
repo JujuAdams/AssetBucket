@@ -4,7 +4,7 @@ function AbBucketTextureGroupsGetFetched(_bucketName)
 {
     static _arrayStatic = [];
     
-    if (not AbBucketGetLoaded(_bucketName))
+    if (not AbBucketGetFetched(_bucketName))
     {
         return false;
     }

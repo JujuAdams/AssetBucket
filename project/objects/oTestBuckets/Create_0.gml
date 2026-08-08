@@ -10,11 +10,10 @@ _baseFileList.Duplicate()
 .ChangeRootDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles")
 .Foreach(method({
     commandList: _commandList,
-    bucketName: "bucketDefault",
 },
 function(_fileDesc)
 {
-    commandList.AddDatafileToBucket(bucketName, _fileDesc.localPath, _fileDesc.absolutePath);
+    commandList.AddDatafileToBucket("bucketDefault", _fileDesc.localPath, _fileDesc.absolutePath);
 }));
 
 _baseFileList.Duplicate()
@@ -22,11 +21,10 @@ _baseFileList.Duplicate()
 .IncludeLocalPaths(["*.wav", "*.ogg"])
 .Foreach(method({
     commandList: _commandList,
-    bucketName: "bucketDefault",
 },
 function(_fileDesc)
 {
-    commandList.AddSoundToBucket(bucketName, _fileDesc.suggestedName, _fileDesc.absolutePath);
+    commandList.AddSoundToBucket("bucketDefault", _fileDesc.suggestedName, _fileDesc.absolutePath);
 }));
 
 _baseFileList.Duplicate()
@@ -35,7 +33,6 @@ _baseFileList.Duplicate()
 .CollectImageFrames()
 .Foreach(method({
     commandList: _commandList,
-    bucketName: "bucketDefault",
 },
 function(_fileDesc)
 {
@@ -43,16 +40,16 @@ function(_fileDesc)
     if ((_extension != ".ase") && (_extension != ".aseprite"))
     {
         var _bucketSprite = new AbBucketSprite(_fileDesc.suggestedName, _fileDesc.linkedPaths);
-        commandList.AddSpriteToBucket(bucketName, _bucketSprite);
+        commandList.AddSpriteToBucket("bucketDefault", _bucketSprite);
     }
     else
     {
-        AddAsepriteFileToBucket(_fileDesc.suggestedName, _fileDesc, bucketName, commandList);
+        AddAsepriteFileToBucket(_fileDesc.suggestedName, _fileDesc, "bucketDefault", commandList);
     }
 }));
 
 _commandList.SaveToProject(_project);
 
-AbBucketStageAndLoadFromManifest(AbGetIncludedFilesPath(AB_MANIFEST_FILENAME));
+AbBucketLoadAndFetchFromManifest(AbGetIncludedFilesPath(AB_MANIFEST_FILENAME));
 AbBucketTextureGroupsFetch("bucketDefault");
-//AbBucketSoundPlay("sndChickenNuggets", true);
+AbBucketSoundPlay("sndChickenNuggets", true);

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbBucketStage",
+  "%Name":"AbBucketLoadAndFetch",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbBucketStage",
+  "name":"AbBucketLoadAndFetch",
   "parent":{
     "name":"Staging & Loading",
     "path":"folders/Asset Bucket/Buckets/Staging & Loading.yy",

@@ -1,4 +1,6 @@
-function AbBucketStageFromManifest(_path)
+/// @param [path=AB_MANIFEST_FILENAME]
+
+function AbBucketLoadFromManifest(_path = AB_MANIFEST_FILENAME)
 {
     static _system = __AbSystem();
     
@@ -29,8 +31,6 @@ function AbBucketStageFromManifest(_path)
             __AbError($"Failed to parse JSON in {_path}");
         }
         
-        var _manifestBucketArray = _manifest.buckets;
-        
         if (_manifest.type == "project manifest v1")
         {
             __projectMetadata = _manifest.projectMetadata;
@@ -41,10 +41,11 @@ function AbBucketStageFromManifest(_path)
         }
         
         var _directory = $"{AbFilenameDir(_path)}/";
+        var _manifestBucketArray = _manifest.buckets;
         var _i = 0;
         repeat(array_length(_manifestBucketArray))
         {
-            array_push(_outputBucketArray, AbBucketStage($"{_directory}{_manifestBucketArray[_i].filename}").__name);
+            array_push(_outputBucketArray, AbBucketLoad($"{_directory}{_manifestBucketArray[_i].filename}").__name);
             ++_i;
         }
     }

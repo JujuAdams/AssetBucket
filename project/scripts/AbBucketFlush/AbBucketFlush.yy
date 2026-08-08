@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbBucketUnload",
+  "%Name":"AbBucketFlush",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbBucketUnload",
+  "name":"AbBucketFlush",
   "parent":{
     "name":"Staging & Loading",
     "path":"folders/Asset Bucket/Buckets/Staging & Loading.yy",

@@ -54,7 +54,7 @@ function __AbClassRuntimeBucket(_headerPath) constructor
     __datafileNameArray = [];
     __soundNameArray    = [];
     
-    __loaded = false;
+    __fetched = false;
     
     
     
@@ -62,17 +62,17 @@ function __AbClassRuntimeBucket(_headerPath) constructor
     
     static __Destroy = function()
     {
-        __Unload();
+        __Flush();
         
         ds_map_delete(_projectBucketMap, __name);
         var _index = array_get_index(_projectBucketArray, self);
         if (_index >= 0) array_delete(_projectBucketArray, _index, 1);
     }
     
-    static __Unload = function()
+    static __Flush = function()
     {
-        if (not __loaded) return;
-        __loaded = false;
+        if (not __fetched) return;
+        __fetched = false;
         
         array_foreach(__wavArray, audio_free_buffer_sound);
         array_foreach(__oggArray, audio_destroy_stream);
@@ -106,13 +106,13 @@ function __AbClassRuntimeBucket(_headerPath) constructor
         __datafileNameArray = [];
         __soundNameArray    = [];
         
-        __loaded = false;
+        __fetched = false;
     }
     
-    static __Load = function()
+    static __Fetch = function()
     {
-        if (__loaded) return;
-        __loaded = true;
+        if (__fetched) return;
+        __fetched = true;
         
         __datafileDict             = __header[$ "datafiles"];
         var _soundsDefinitionArray = __header[$ "sounds"];

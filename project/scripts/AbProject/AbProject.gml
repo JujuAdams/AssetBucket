@@ -14,6 +14,8 @@ function AbProject(_path) constructor
     __projectFilename = filename_name(_path);
     __projectName     = filename_change_ext(__projectFilename, "");
     
+    __assetTree = undefined;
+    
     __yypAudioGroupsDict   = {};
     __yypFoldersDict       = {};
     __yypDatafilesDict     = {};
@@ -89,7 +91,7 @@ function AbProject(_path) constructor
     repeat(array_length(_yypResourcesArray))
     {
         var _resource = _yypResourcesArray[_i].id;
-        _yypResourcesDict[$ _resource.name] = true;
+        _yypResourcesDict[$ _resource.name] = _resource.path;
         ++_i;
     }
     
@@ -109,6 +111,56 @@ function AbProject(_path) constructor
     static __Destroy = function()
     {
         // TODO
+    }
+    
+    static GetAssetTree = function()
+    {
+        if (__assetTree != undefined)
+        {
+            return __assetTree;
+        }
+        
+        __assetTree = {};
+        
+        var _directory = __directory;
+        var _assetTreeRoot = __assetTree;
+        
+        var _yypData = json_parse(__yypString);
+        var _resourceArray = _yypData.resources;
+        var _i = 0;
+        repeat(array_length(_resourceArray))
+        {
+            var _localPath = _resourceArray[_i].id.path;
+            var _absolutePath = _directory + _localPath;
+            
+            var _resourceYY = __AbLoadJSON(_absolutePath);
+            var _folderPath = __AbStringifyYYFolderPath(_resourceYY.parent.path);
+            
+            var _folderStruct = _assetTreeRoot;
+            if (_folderPath != "")
+            {
+                var _folderArray = string_split(_folderPath, "/");
+                var _j = 0;
+                repeat(array_length(_folderArray))
+                {
+                    var _nextFolderStruct = _folderStruct[$ _folderArray[_j]];
+                    if (_nextFolderStruct == undefined)
+                    {
+                        _nextFolderStruct = {};
+                        _folderStruct[$ _folderArray[_j]] = _nextFolderStruct;
+                    }
+                    
+                    _folderStruct = _nextFolderStruct;
+                    
+                    ++_j;
+                }
+            }
+            
+            _folderStruct[$ _resourceYY.name] = _resourceYY.resourceType;
+            ++_i;
+        }
+        
+        return _assetTreeRoot;
     }
     
     static GetAssetExists = function(_assetName)
