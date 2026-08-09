@@ -1,7 +1,7 @@
 /// @param [rootDirectory]
 /// @param [subDirectory]
 
-function AbFileList(_rootDirectory = undefined, _subDirectory = "") constructor
+function AbFileListCustom(_rootDirectory = undefined, _subDirectory = "") constructor
 {
     __rootDirectory = "";
     __fileDataArray = [];
@@ -195,7 +195,7 @@ function AbFileList(_rootDirectory = undefined, _subDirectory = "") constructor
     
     static Duplicate = function()
     {
-        var _new = new AbFileList();
+        var _new = new AbFileListCustom();
         _new.__rootDirectory = __rootDirectory;
         _new.__fileDataArray = variable_clone(__fileDataArray);
         return _new;

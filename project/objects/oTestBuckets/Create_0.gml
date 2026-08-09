@@ -2,22 +2,19 @@
 var _project = new AbProject(GM_project_filename);
 AbPipeBeginForProject(_project);
 
-(new AbFileList($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles"))
+(new AbFileListDirectory($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles"))
 .Foreach(function(_fileDesc)
 {
     AbPipeBucketDatafile("bucketDefault", _fileDesc.localPath, _fileDesc.absolutePath);
 });
 
-(new AbFileList($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds"))
-.IncludeLocalPaths(["*.wav", "*.ogg"])
+(new AbFileListDirectoryWithFilters($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds", false, ["*.wav", "*.ogg"]))
 .Foreach(function(_fileDesc)
 {
     AbPipeBucketSound("bucketDefault", _fileDesc.suggestedName, _fileDesc.absolutePath);
 });
 
-(new AbFileList($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites"))
-.IncludeLocalPaths(["*.png", "*.ase", "*.aseprite"])
-.LinkImageFiles()
+(new AbFileListDirectoryWithFilters($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites", true, ["*.png", "*.ase", "*.aseprite"]))
 .Foreach(function(_fileDesc)
 {
     var _extension = filename_ext(_fileDesc.absolutePath);
