@@ -98,6 +98,8 @@
     {"id":{"name":"__AbSoftError","path":"scripts/__AbSoftError/__AbSoftError.yy",},},
     {"id":{"name":"__AbStringifyYYFolderPath","path":"scripts/__AbStringifyYYFolderPath/__AbStringifyYYFolderPath.yy",},},
     {"id":{"name":"__AbSuggestSafe","path":"scripts/__AbSuggestSafe/__AbSuggestSafe.yy",},},
+    {"id":{"name":"__AbSurfaceGetBuffer","path":"scripts/__AbSurfaceGetBuffer/__AbSurfaceGetBuffer.yy",},},
+    {"id":{"name":"__AbSurfacePartGetBuffer","path":"scripts/__AbSurfacePartGetBuffer/__AbSurfacePartGetBuffer.yy",},},
     {"id":{"name":"__AbSystem","path":"scripts/__AbSystem/__AbSystem.yy",},},
     {"id":{"name":"__AbTestStringMask","path":"scripts/__AbTestStringMask/__AbTestStringMask.yy",},},
     {"id":{"name":"__AbTestStringMaskAll","path":"scripts/__AbTestStringMaskAll/__AbTestStringMaskAll.yy",},},

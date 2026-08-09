@@ -38,17 +38,12 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         return _bucketStruct;
     }
     
-    static SetBucketMetadata = function(_value)
-    {
-        __EnsureBucket(_bucketName).__metadata = _value;
-    }
-    
-    static SetBucketAliasMetadata = function(_bucketName, _key, _value)
+    static SetBucketMetadata = function(_bucketName, _key, _value)
     {
         __EnsureBucket(_bucketName).__SetMetadata(_key, _value);
     }
     
-    static AddDatafileToBucket = function(_bucketName, _alias, _sourcePath)
+    static AddDatafileToBucket = function(_bucketName, _alias, _source)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetDatafileAsModified(_alias);
@@ -56,13 +51,60 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         array_push(__commandArray, method({
             __bucket: _bucket,
             __alias:  _alias,
-            __path:   _sourcePath,
+            __source: _source,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            var _buffer = buffer_load(__path);
-            __bucket.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
-            buffer_delete(_buffer);
+            if (is_string(__source))
+            {
+                var _buffer = buffer_load(__source);
+                __bucket.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
+                buffer_delete(_buffer);
+            }
+            else if (is_handle(__source))
+            {
+                if (buffer_exists(__source))
+                {
+                    __bucket.__AddBuffer(__alias, __source, 0, buffer_get_size(__source));
+                }
+                else if (surface_exists(__source))
+                {
+                    var _buffer = __AbSurfaceGetBuffer(__surface);
+                    __bucket.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
+                    buffer_delete(_buffer);
+                }
+                else
+                {
+                    __AbError($"Source type not supported ({typeof(__source)})");
+                }
+            }
+            else if (is_struct(__source))
+            {
+                if (is_instanceof(__source, AbFileDescription))
+                {
+                    var _buffer = buffer_load(__source.absolutePath);
+                    __bucket.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
+                    buffer_delete(_buffer);
+                }
+                else if (is_instanceof(__source, AbBufferDescription))
+                {
+                    __bucket.__AddBuffer(__alias, __source.buffer, __source.offset, __source.size);
+                }
+                else if (is_instanceof(__source, AbSurfaceDescription))
+                {
+                    var _buffer = __AbSurfacePartGetBuffer(__source.surface, __source.left, __source.top, __source.width, __source.height);
+                    __bucket.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
+                    buffer_delete(_buffer);
+                }
+                else
+                {
+                    __AbError($"Source struct not supported ({instanceof(__source)})");
+                }
+            }
+            else
+            {
+                __AbError($"Source type not supported ({typeof(__source)})");
+            }
         }));
     }
     
@@ -81,7 +123,7 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         }));
     }
     
-    static AddSoundToBucket = function(_bucketName, _alias, _sourcePath, _forceFormat = undefined)
+    static AddSoundToBucket = function(_bucketName, _alias, _source, _forceFormat = undefined)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
@@ -89,14 +131,23 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         array_push(__commandArray, method({
             __bucket:      _bucket,
             __alias:       _alias,
-            __path:        _sourcePath,
+            __source:      _source,
             __forceFormat: _forceFormat,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            if (__forceFormat == undefined)
+            if (__forceFormat != undefined)
             {
-                var _extension = filename_ext(__path);
+                var _audioFormat = __forceFormat;
+            }
+            else
+            {
+                if (not is_string(__source))
+                {
+                    __AbError($"Must specify sound format if source is not an audio\nSource type was \"{typeof(__source)}\"");
+                }
+                
+                var _extension = filename_ext(__source);
                 if (_extension == ".wav")
                 {
                     var _audioFormat = AB_AUDIO_FORMAT_WAV;
@@ -107,55 +158,21 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
                 }
                 else
                 {
-                    __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{__path}\"");
+                    __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{__source}\"");
                 }
-            }
-            else
-            {
-                var _audioFormat = __forceFormat;
             }
             
             if ((_audioFormat == AB_AUDIO_FORMAT_WAV) || (_audioFormat == AB_AUDIO_FORMAT_WAV_ZLIB))
             {
-                var _buffer = buffer_load(__path);
-                __bucket.__AddWAV(__alias, __path, _buffer, 0, (_audioFormat == AB_AUDIO_FORMAT_WAV_ZLIB));
-                buffer_delete(_buffer);
+                __bucket.__AddWAV(__alias, __source, (_audioFormat == AB_AUDIO_FORMAT_WAV_ZLIB));
             }
             else if (_audioFormat == AB_AUDIO_FORMAT_OGG)
             {
-                __bucket.__AddOGG(__alias, __path);
+                __bucket.__AddOGG(__alias, __source);
             }
             else
             {
                 __AbError($"Audio format \"{_audioFormat}\" not supported");
-            }
-        }));
-    }
-    
-    static AddBufferToBucket = function(_bucketName, _alias, _bufferDescription)
-    {
-        _bufferDescription = __AbEnsureBufferDescription(_bufferDescription);
-        
-        var _bucket = __EnsureBucket(_bucketName);
-        _bucket.__SetAliasAsModified(_alias);
-        
-        array_push(__commandArray, method({
-            __bucket:           _bucket,
-            __alias:            _alias,
-            __bufferDescription: _bufferDescription,
-        },
-        function(_projectStruct, _datafilesDirectory)
-        {
-            with(__bufferDescription)
-            {
-                other.__bucket.__AddBuffer(other.__alias, buffer, offset, size);
-                
-                //TODO - Move to `.Destroy()` method
-                if (ownsBuffer)
-                {
-                    buffer_delete(buffer);
-                    buffer = undefined;
-                }
             }
         }));
     }
@@ -197,20 +214,63 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         }
     }
     
-    static AddDatafileToProject = function(_localDatafilePath, _absoluteSourcePath)
+    static AddDatafileToProject = function(_datafilesPath, _source)
     {
         __hasProjectCommands = true;
-        __SetProjectDatafileAsModified(_localDatafilePath);
+        __SetProjectDatafileAsModified(_datafilesPath);
         
-        __EnsureProjectDatafile(_localDatafilePath);
+        __EnsureProjectDatafile(_datafilesPath);
         
         array_push(__commandArray, method({
-            __localDatafilePath:  _localDatafilePath,
-            __absoluteSourcePath: _absoluteSourcePath,
+            __datafilesPath: _datafilesPath,
+            __source: _source,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            file_copy(__absoluteSourcePath, _datafilesDirectory + __localDatafilePath);
+            var _absolutePath = _datafilesDirectory + __datafilesPath;
+            
+            if (is_string(__source))
+            {
+                file_copy(__source, _absolutePath);
+            }
+            else if (is_handle(__source))
+            {
+                if (buffer_exists(__source))
+                {
+                    buffer_save(__source, _absolutePath);
+                }
+                else if (surface_exists(__source))
+                {
+                    surface_save(__source, _absolutePath);
+                }
+                else
+                {
+                    __AbError($"Source type not supported ({typeof(__source)})");
+                }
+            }
+            else if (is_struct(__source))
+            {
+                if (is_instanceof(__source, AbFileDescription))
+                {
+                    file_copy(__source, __source.absolutePath);
+                }
+                else if (is_instanceof(__source, AbBufferDescription))
+                {
+                    buffer_save_ext(__source.buffer, _absolutePath, __source.offset, __source.size);
+                }
+                else if (is_instanceof(__source, AbSurfaceDescription))
+                {
+                    surface_save_part(__source.surface, _absolutePath, __source.left, __source.top, __source.width, __source.height);
+                }
+                else
+                {
+                    __AbError($"Source struct not supported ({instanceof(__source)})");
+                }
+            }
+            else
+            {
+                __AbError($"Source type not supported ({typeof(__source)})");
+            }
         }));
     }
     
@@ -247,35 +307,6 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         function(_projectStruct, _datafilesDirectory)
         {
             __projectSound.Save();
-        }));
-    }
-    
-    static AddDataBufferToProject = function(_localDatafilePath, _bufferDescription)
-    {
-        _bufferDescription = __AbEnsureBufferDescription(_bufferDescription);
-        
-        __hasProjectCommands = true;
-        __SetProjectDatafileAsModified(_localDatafilePath);
-        
-        array_push(__commandArray, method({
-            __localDatafilePath: _localDatafilePath,
-            __bufferDescription: _bufferDescription,
-        },
-        function(_projectStruct, _datafilesDirectory)
-        {
-            static _system = __AbSystem();
-            
-            with(__bufferDescription)
-            {
-                buffer_save_ext(buffer, _datafilesDirectory + other.__localDatafilePath, offset, size);
-                
-                //TODO - Move to `.Destroy()` method
-                if (ownsBuffer)
-                {
-                    buffer_delete(buffer);
-                    buffer = undefined;
-                }
-            }
         }));
     }
     

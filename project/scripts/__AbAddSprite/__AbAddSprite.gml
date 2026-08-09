@@ -22,6 +22,10 @@ function __AbAddSprite(_source, _hintWidth = undefined, _hintHeight = undefined)
         {
             var _sprite = sprite_create_from_surface(_surface, 0, 0, surface_get_width(_source), surface_get_height(_source), false, false, 0, 0);
         }
+        else
+        {
+            __AbError($"Source type not supported ({typeof(_source)})");
+        }
     }
     else if (is_struct(_source))
     {
@@ -35,6 +39,10 @@ function __AbAddSprite(_source, _hintWidth = undefined, _hintHeight = undefined)
         else if (is_instanceof(_source, AbSurfaceDescription))
         {
             var _sprite = sprite_create_from_surface(_source.surface, _source.left, _source.top, _source.width, _source.height, false, false, 0, 0);
+        }
+        else
+        {
+            __AbError($"Source struct not supported ({instanceof(_source)})");
         }
     }
     else if (is_string(_source))
@@ -95,6 +103,10 @@ function __AbAddSprite(_source, _hintWidth = undefined, _hintHeight = undefined)
                 _sprite = sprite_add(_destinationPath, 1, false, false, 0, 0);
             }
         }
+    }
+    else
+    {
+        __AbError($"Source type not supported ({typeof(_source)})");
     }
     
     if (not sprite_exists(_sprite))

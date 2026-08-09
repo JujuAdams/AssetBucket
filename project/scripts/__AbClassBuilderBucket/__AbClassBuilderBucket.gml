@@ -88,24 +88,62 @@ function __AbClassBuilderBucket(_name) constructor
         _textureGroup.__AddSprite(_bucketSprite);
     }
     
-    static __AddOGG = function(_alias, _path)
+    static __AddOGG = function(_alias, _source)
     {
         array_push(__queuedOGGArray, {
             __alias: _alias,
-            __path:  _path,
+            __source: _source,
         });
     }
     
-    static __AddWAV = function(_alias, _sourcePath, _buffer, _offset, _compress)
+    static __AddWAV = function(_alias, _source, _compress)
     {
         var _accumulationBuffer = __coreBuffer;
         
-        var _fileExtension = filename_ext(_sourcePath);
-        if (_fileExtension != ".wav")
+        if (is_string(_source))
         {
-            __AbError($"Audio file extension \"{_fileExtension}\" not supported\nPath was \"{_sourcePath}\"");
+            var _buffer = buffer_load(_source);
+            var _offset = 0;
+            var _cleanUpBuffer = true;
+        }
+        else if (is_handle(_source))
+        {
+            if (buffer_exists(_source))
+            {
+                var _buffer = _source;
+                var _offset = 0;
+                var _cleanUpBuffer = false;
+            }
+            else
+            {
+                __AbError($"Source type not supported as a .wav file (expecting buffer, was \"{typeof(_source)}\")");
+            }
+        }
+        else if (is_struct(_source))
+        {
+            if (is_instanceof(_source, AbFileDescription))
+            {
+                var _buffer = buffer_load(_source.absolutePath);
+                var _offset = 0;
+                var _cleanUpBuffer = true;
+            }
+            else if (is_instanceof(_source, AbBufferDescription))
+            {
+                var _buffer = _source.buffer;
+                var _offset = _source.offset;
+                var _cleanUpBuffer = false;
+            }
+            else
+            {
+                __AbError($"Source struct not supported ({instanceof(_source)})");
+            }
+        }
+        else
+        {
+            __AbError($"Source type not supported ({typeof(_source)})");
         }
         
+        var _oldTell = buffer_tell(_buffer);
         buffer_seek(_buffer, buffer_seek_start, _offset);
         
         var _chunkID        = buffer_read(_buffer, buffer_u32);
@@ -124,12 +162,12 @@ function __AbClassBuilderBucket(_name) constructor
         
         if (_subchunk2Size == 0)
         {
-            __AbError($"Audio file is empty\nPath was \"{_sourcePath}\"");
+            __AbError($"Audio file is empty\nSource was \"{_source}\"");
         }
         
         if (_chunkFormat != 0x45564157) //WAVE, or 1163280727 in decimal‬
         {
-            __AbError($"Chunk format not recognised\nPath was \"{_sourcePath}\"");
+            __AbError($"Chunk format not recognised\nSource was \"{_source}\"");
         }
     
         if (_bitsPerSample == 8)
@@ -142,12 +180,12 @@ function __AbClassBuilderBucket(_name) constructor
         }
         else
         {
-            __AbError($"{_bitsPerSample} bits per sample is unsupported\nPath was \"{_sourcePath}\"");
+            __AbError($"{_bitsPerSample} bits per sample is unsupported\nSource was \"{_source}\"");
         }
         
         if ((_channels != 1) && (_channels != 2))
         {
-            __AbError($"Unsupported number of channels {_channels}\nPath was \"{_sourcePath}\"");
+            __AbError($"Unsupported number of channels {_channels}\nSource was \"{_source}\"");
         }
     
         if (_blockAlignment != _channels*buffer_sizeof(_dataFormat))
@@ -180,6 +218,15 @@ function __AbClassBuilderBucket(_name) constructor
         });
         
         buffer_seek(_accumulationBuffer, buffer_seek_relative, _bucketSize);
+        
+        if (_cleanUpBuffer)
+        {
+            buffer_delete(_buffer);
+        }
+        else
+        {
+            buffer_seek(_buffer, buffer_seek_start, _oldTell);
+        }
     }
     
     
@@ -201,15 +248,51 @@ function __AbClassBuilderBucket(_name) constructor
         repeat(array_length(_queuedOGGArray))
         {
             var _oggInfo = _queuedOGGArray[_i];
+            var _oggSource = _oggInfo.__source;
             
-            var _filename = __NewExportFilename();
-            file_copy(_oggInfo.__path, _directory + _filename);
+            var _oggFilename = __NewExportFilename();
+            var _oggPath = _directory + _oggFilename;
+            
+            if (is_string(_oggSource))
+            {
+                file_copy(_oggSource, _oggPath);
+            }
+            else if (is_handle(_oggSource))
+            {
+                if (buffer_exists(_oggSource))
+                {
+                    buffer_save(_oggSource, _oggPath);
+                }
+                else
+                {
+                    __AbError($"Source type not supported as a .wav file (expecting buffer, was \"{typeof(_oggSource)}\")");
+                }
+            }
+            else if (is_struct(_oggSource))
+            {
+                if (is_instanceof(_oggSource, AbFileDescription))
+                {
+                    file_copy(_oggSource.absolutePath, _oggPath);
+                }
+                else if (is_instanceof(_oggSource, AbBufferDescription))
+                {
+                    buffer_save_ext(_oggSource.buffer, _oggPath, _oggSource.offset, _oggSource.size);
+                }
+                else
+                {
+                    __AbError($"Source struct not supported ({instanceof(_oggSource)})");
+                }
+            }
+            else
+            {
+                __AbError($"Source type not supported ({typeof(_oggSource)})");
+            }
             
             array_push(_soundsArray, {
                 type:     "sound v1",
                 format:   AB_AUDIO_FORMAT_OGG,
                 alias:    _oggInfo.__alias,
-                filename: _filename,
+                filename: _oggFilename,
             });
             
             ++_i;
