@@ -1,5 +1,7 @@
 function __AbClassProjectSprite(_projectStruct, _assetName) constructor
 {
+    _assetName = AsciiTransliterateNoSymbols(_assetName);
+    
     __projectStruct = _projectStruct;
     __yyPath        = $"{_projectStruct.__directory}sprites/{_assetName}/{_assetName}.yy";
     
@@ -185,11 +187,11 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
     
     static AddToCommandList = function(_commandList)
     {
-        _commandList.AddSpriteToProject(self);
+        _commandList.__AddSpriteToProject(self);
         return self;
     }
     
-    static Save = function()
+    static __Save = function()
     {
         if (array_length(framesArray) <= 0)
         {

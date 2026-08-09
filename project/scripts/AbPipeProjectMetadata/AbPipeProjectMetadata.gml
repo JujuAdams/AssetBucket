@@ -11,5 +11,5 @@ function AbPipeProjectMetadata(_key, _value)
         __AbError($"Pipeline has not been started with `AbPipeBegin()`");
     }
     
-    _builder.SetProjectMetadata(_key, _value);
+    _builder.__SetProjectMetadata(_key, _value);
 }

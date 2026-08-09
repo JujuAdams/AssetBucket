@@ -190,16 +190,6 @@ function AbProject(_path) constructor
         return _folder;
     }
     
-    static MakeSound = function(_assetName)
-    {
-        return new __AbClassProjectSound(self, AsciiTransliterateNoSymbols(_assetName));
-    }
-    
-    static MakeSprite = function(_assetName)
-    {
-        return new __AbClassProjectSprite(self, AsciiTransliterateNoSymbols(_assetName));
-    }
-    
     static __Save = function(_newAudioGroupDict, _newFolderDict, _newDatafileDict, _newResourceDict, _newTextureGroupDict)
     {
         //Skip .yyp modification if we have nothing to add

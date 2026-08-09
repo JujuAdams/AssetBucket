@@ -13,14 +13,14 @@ function AbPipeProjectSound(_source, _assetName, _defaultFolder = undefined, _co
         __AbError($"Pipeline has not been started with `AbPipeBegin()`");
     }
     
-    var _sound = _builder.__projectStruct.MakeSound(_assetName).SetSource(_source, _compression);
+    var _sound = (new __AbClassProjectSound(_builder.__projectStruct, _assetName)).SetSource(_source, _compression);
     
     if (_defaultFolder != undefined)
     {
         _sound.SetFolderIfRoot(_defaultFolder)
     }
     
-    _builder.AddSoundToProject(_sound);
+    _builder.__AddSoundToProject(_sound);
     
     return _sound;
 }

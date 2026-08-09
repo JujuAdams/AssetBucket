@@ -1,5 +1,7 @@
 function __AbClassProjectSound(_projectStruct, _assetName) constructor
 {
+    _assetName = AsciiTransliterateNoSymbols(_assetName);
+    
     __projectStruct        = _projectStruct;
     __yyPath               = $"{_projectStruct.__directory}sounds/{_assetName}/{_assetName}.yy";
     __destinationSoundPath = undefined;
@@ -83,11 +85,11 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
     
     static AddToCommandList = function(_commandList)
     {
-        _commandList.AddSoundToProject(self);
+        _commandList.__AddSoundToProject(self);
         return self;
     }
     
-    static Save = function()
+    static __Save = function()
     {
         if (__sourceFilePath == undefined)
         {

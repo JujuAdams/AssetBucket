@@ -12,5 +12,5 @@ function AbPipeBucketDatafile(_bucketName, _alias, _source)
         __AbError($"Pipeline has not been started with `AbPipeBegin()`");
     }
     
-    _builder.AddDatafileToBucket(_bucketName, _alias, _source);
+    _builder.__AddDatafileToBucket(_bucketName, _alias, _source);
 }

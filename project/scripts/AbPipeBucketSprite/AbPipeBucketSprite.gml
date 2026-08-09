@@ -15,7 +15,7 @@ function AbPipeBucketSprite(_bucketName, _assetName, _sourceOrArray, _width = un
     }
     
     var _bucketSprite = new __AbClassBuilderSprite(_assetName, _sourceOrArray, _width, _height);
-    _builder.AddSpriteToBucket(_bucketName, _bucketSprite);
+    _builder.__AddSpriteToBucket(_bucketName, _bucketSprite);
     
     return _bucketSprite;
 }

@@ -38,12 +38,12 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         return _bucketStruct;
     }
     
-    static SetBucketMetadata = function(_bucketName, _key, _value)
+    static __SetBucketMetadata = function(_bucketName, _key, _value)
     {
         __EnsureBucket(_bucketName).__SetMetadata(_key, _value);
     }
     
-    static AddDatafileToBucket = function(_bucketName, _alias, _source)
+    static __AddDatafileToBucket = function(_bucketName, _alias, _source)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetDatafileAsModified(_alias);
@@ -108,7 +108,7 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         }));
     }
     
-    static AddSpriteToBucket = function(_bucketName, _bucketSprite, _textureGroup = _bucketName)
+    static __AddSpriteToBucket = function(_bucketName, _bucketSprite, _textureGroup = _bucketName)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_bucketSprite.assetName);
@@ -123,7 +123,7 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         }));
     }
     
-    static AddSoundToBucket = function(_bucketName, _alias, _source, _forceFormat = undefined)
+    static __AddSoundToBucket = function(_bucketName, _alias, _source, _forceFormat = undefined)
     {
         var _bucket = __EnsureBucket(_bucketName);
         _bucket.__SetAliasAsModified(_alias);
@@ -201,7 +201,7 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         __projectAssetModified[$ _assetName] = true;
     }
     
-    static SetProjectMetadata = function(_key, _value)
+    static __SetProjectMetadata = function(_key, _value)
     {
         __hasProjectCommands = true;
         if (_value == undefined)
@@ -214,7 +214,7 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         }
     }
     
-    static AddDatafileToProject = function(_datafilesPath, _source)
+    static __AddDatafileToProject = function(_datafilesPath, _source)
     {
         __hasProjectCommands = true;
         __SetProjectDatafileAsModified(_datafilesPath);
@@ -274,7 +274,7 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         }));
     }
     
-    static AddSpriteToProject = function(_projectSprite)
+    static __AddSpriteToProject = function(_projectSprite)
     {
         __hasProjectCommands = true;
         __SetProjectAssetAsModified(_projectSprite.assetName);
@@ -288,11 +288,11 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __projectSprite.Save();
+            __projectSprite.__Save();
         }));
     }
     
-    static AddSoundToProject = function(_projectSound)
+    static __AddSoundToProject = function(_projectSound)
     {
         __hasProjectCommands = true;
         __SetProjectAssetAsModified(_projectSound.assetName);
@@ -306,7 +306,7 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __projectSound.Save();
+            __projectSound.__Save();
         }));
     }
     

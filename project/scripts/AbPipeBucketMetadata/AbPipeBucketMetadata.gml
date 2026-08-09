@@ -12,5 +12,5 @@ function AbPipeBucketMetadata(_bucketName, _key, _value)
         __AbError($"Pipeline has not been started with `AbPipeBegin()`");
     }
     
-    _builder.SetBucketMetadata(_bucketName, _key, _value);
+    _builder.__SetBucketMetadata(_bucketName, _key, _value);
 }

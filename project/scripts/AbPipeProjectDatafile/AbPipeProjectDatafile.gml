@@ -19,5 +19,5 @@ function AbPipeProjectDatafile(_source, _datafilesPath)
         __AbError($"Pipeline has not been started with `AbPipeBegin()`");
     }
     
-    _builder.AddDatafileToProject(_datafilesPath, _source);
+    _builder.__AddDatafileToProject(_datafilesPath, _source);
 }
