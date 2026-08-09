@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbFileListEmpty",
+  "%Name":"AbForeachFile",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbFileListEmpty",
+  "name":"AbForeachFile",
   "parent":{
-    "name":"File Lists",
-    "path":"folders/Asset Bucket/Pipeline/File Lists.yy",
+    "name":"Pipeline",
+    "path":"folders/Asset Bucket/Pipeline.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

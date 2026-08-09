@@ -100,6 +100,11 @@ function AbFileListCustom(_rootDirectory = undefined, _subDirectory = "") constr
     
     static IncludeLocalPaths = function(_maskOrArray)
     {
+        if (_maskOrArray == undefined)
+        {
+            return self;
+        }
+        
         var _fileDescArray = __fileDataArray;
         
         var _i = array_length(_fileDescArray)-1;
@@ -118,6 +123,11 @@ function AbFileListCustom(_rootDirectory = undefined, _subDirectory = "") constr
     
     static ExcludeLocalPaths = function(_maskOrArray)
     {
+        if (_maskOrArray == undefined)
+        {
+            return self;
+        }
+        
         var _fileDescArray = __fileDataArray;
         
         var _i = array_length(_fileDescArray)-1;
