@@ -27,6 +27,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
     sequence           = (new __AbClassProjectSpriteSequence()).__Template(_assetName);
     swatchColours      = undefined;
     swfPrecision       = 0.5;
+    tagsArray          = [];
     textureGroupName   = "Default";
     type               = 0;
     vTile              = false;
@@ -65,6 +66,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         swatchColours      = _yyData.swatchColours;
         swfPrecision       = _yyData.swfPrecision;
         textureGroupName   = _yyData.textureGroupId.name;
+        tagsArray          = _yyData[$ "tags"] ?? [];
         type               = _yyData.type;
         vTile              = _yyData.VTile;
         width              = _yyData.width;
@@ -260,6 +262,21 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         __AbBufferWriteLine(_buffer, $"    \"name\":\"{textureGroupName}\",");
         __AbBufferWriteLine(_buffer, $"    \"path\":\"texturegroups/{textureGroupName}\",");
         __AbBufferWriteLine(_buffer, "  },");
+        
+        if (array_length(tagsArray) > 0)
+        {
+            __AbBufferWriteLine(_buffer, "  \"tags\":[");
+            
+            var _i = 0;
+            repeat(array_length(tagsArray))
+            {
+                __AbBufferWriteLine(_buffer, $"    \"{tagsArray[_i]}\",");
+                ++_i;
+            }
+            
+            __AbBufferWriteLine(_buffer, "  ],");
+        }
+        
         __AbBufferWritePair(_buffer, 2, "type",  type);
         __AbBufferWritePair(_buffer, 2, "VTile", bool(vTile));
         __AbBufferWritePair(_buffer, 2, "width", width);
