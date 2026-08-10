@@ -13,6 +13,7 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
     bboxTop            = 0;
     collisionKind      = 1;
     collisionTolerance = 0;
+    configValues       = undefined;
     dynamicTexturePage = false;
     edgeFiltering      = false;
     for3D              = false;
@@ -37,12 +38,31 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
     
     if (_projectStruct.GetAssetExists(_assetName) && file_exists(__yyPath))
     {
-        var _yyData = __AbLoadJSON(__yyPath);
+        var _yyString = __AbLoadString(__yyPath);
+        var _data = undefined;
+    
+        try
+        {
+            _yyData = json_parse(_yyString);
+        }
+        catch(_error)
+        {
+            show_debug_message(_error);
+            __AbError($"Failed to parse JSON from \"{__yyPath}\"");
+        }
+        
         var _yyDirectory = AbFilenameDir(__yyPath) + "/";
         
         if (array_length(_yyData.layers) > 1)
         {
             __AbError($"More than one layer not supported");
+        }
+        
+        var _startPos = string_pos("\n  \"ConfigValues\":{\n", _yyString);
+        if (_startPos > 0)
+        {
+            var _endPos = string_pos("\n  \"DynamicTexturePage\":", _yyString);
+            configValues = string_copy(_yyString, _startPos+1, _endPos - _startPos);
         }
         
         assetName          = _yyData.name;
@@ -213,6 +233,12 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         __AbBufferWritePair(_buffer, 2, "bbox_top",           bboxTop);
         __AbBufferWritePair(_buffer, 2, "collisionKind",      collisionKind);
         __AbBufferWritePair(_buffer, 2, "collisionTolerance", collisionTolerance);
+        
+        if (configValues != undefined)
+        {
+            buffer_write(_buffer, buffer_text, configValues);
+        }
+        
         __AbBufferWritePair(_buffer, 2, "DynamicTexturePage", bool(dynamicTexturePage));
         __AbBufferWritePair(_buffer, 2, "edgeFiltering",      bool(edgeFiltering));
         __AbBufferWritePair(_buffer, 2, "For3D",              bool(for3D));

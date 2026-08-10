@@ -5,7 +5,9 @@
     {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
   "configs":{
-    "children":[],
+    "children":[
+      {"children":[],"name":"NewConfig1",},
+    ],
     "name":"Default",
   },
   "defaultScriptType":1,
@@ -39,7 +41,6 @@
     {"$GMIncludedFile":"","%Name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_0.bin","CopyToMask":-1,"filePath":"datafiles","name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_0.bin","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_1.bin","CopyToMask":-1,"filePath":"datafiles","name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_1.bin","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_2.bin","CopyToMask":-1,"filePath":"datafiles","name":"ab_e1494b4a3adab2347ba26c6dcc6d929a_2.bin","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"ab_manifest.json","CopyToMask":-1,"filePath":"datafiles","name":"ab_manifest.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ascii_translit_no_symbols.bin","CopyToMask":-1,"filePath":"datafiles","name":"ascii_translit_no_symbols.bin","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ascii_translit.bin","CopyToMask":-1,"filePath":"datafiles","name":"ascii_translit.bin","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"english.txt","CopyToMask":-1,"filePath":"datafiles/localization","name":"english.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -187,6 +188,7 @@
     {"id":{"name":"AsepriteRead","path":"scripts/AsepriteRead/AsepriteRead.yy",},},
     {"id":{"name":"CustomPipeBucketAseprite","path":"scripts/CustomPipeBucketAseprite/CustomPipeBucketAseprite.yy",},},
     {"id":{"name":"CustomPipeProjectAseprite","path":"scripts/CustomPipeProjectAseprite/CustomPipeProjectAseprite.yy",},},
+    {"id":{"name":"sConfigTest","path":"sprites/sConfigTest/sConfigTest.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
@@ -197,5 +199,6 @@
   "TextureGroups":[
     {"$GMTextureGroup":"","%Name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"Default","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
     {"$GMTextureGroup":"","%Name":"tgBackground","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"tgBackground","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMTextureGroup":"","%Name":"texgroup1","autocrop":true,"border":2,"compressFormat":"bz2","customOptions":"","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"name":"texgroup1","resourceType":"GMTextureGroup","resourceVersion":"2.0","targets":-1,},
   ],
 }
