@@ -127,7 +127,7 @@ function __AsepriteClassFrame() constructor
             ++_i;
         }
         
-        buffer = __AbSurfaceGetBuffer(__surface);
+        buffer = __AbSurfaceGetBuffer(_surface);
         
         if (_keepSurfaces)
         {
