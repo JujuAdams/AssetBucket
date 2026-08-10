@@ -162,6 +162,7 @@ function __AsepriteClassTilemap() constructor
         }
         
         tileBuffer = __AsepriteBufferDecompressExt(_fileBuffer, buffer_tell(_fileBuffer), _chunkEnd);
+        buffer_seek(_fileBuffer, buffer_seek_start, _chunkEnd);
         
         return self;
     }

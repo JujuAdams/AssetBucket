@@ -114,7 +114,7 @@ function __AsepriteClassTileset() constructor
             __tempBufferDirty = (_colorDepth == 8);
             buffer_delete(_decompressedBuffer);
             
-            buffer_seek(_buffer, buffer_seek_start, _length);
+            buffer_seek(_buffer, buffer_seek_relative, _length);
         }
         
         return self;

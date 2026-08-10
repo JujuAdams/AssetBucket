@@ -115,8 +115,8 @@ function __AbClassBuilderTextureGroup(_parent, _name) constructor
                     tilemode_left:   _nineslice.tilemodeLeft,
                     tilemode_top:    _nineslice.tilemodeTop,
                     tilemode_right:  _nineslice.tilemodeRight,
-                    tilemode_bpttom: _nineslice.tilemodeBottom,
-                    tilemode_center: _nineslice.tilemodeCenter,
+                    tilemode_bottom: _nineslice.tilemodeBottom,
+                    tilemode_centre: _nineslice.tilemodeCenter,
                 };
             }
                         
