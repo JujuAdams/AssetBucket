@@ -43,25 +43,47 @@ function AbPackSprites(_spriteDescArray, _textureSize = 2048, _imageBorder = 2)
         
         var _boxArray = [];
         
-        var _spriteDesc = { frames: [] };
-        _spritesDict[$ _assetName] = _spriteDesc;
-        
-        if (is_struct(_nineslice))
+        with(_inputSpriteDesc)
         {
-            _spriteDesc.nineslice = {
-                left:   _nineslice.left,
-                top:    _nineslice.top,
-                right:  _nineslice.right,
-                bottom: _nineslice.bottom,
-                
-                tilemode_left:   _nineslice.tilemodeLeft,
-                tilemode_top:    _nineslice.tilemodeTop,
-                tilemode_right:  _nineslice.tilemodeRight,
-                tilemode_bottom: _nineslice.tilemodeBottom,
-                tilemode_centre: _nineslice.tilemodeCenter,
+            var _spriteDesc = {
+                frames:         [],
+                width:          width,
+                height:         height,
+                xoffset:        xOffset,
+                yoffset:        yOffset,
+                bbox_kind:      bboxKind,
+                frame_speed:    frameSpeed,
+                frame_type:     frameType,
+                rotated_bounds: rotatedBounds,
             };
+            
+            if (bboxKind == bboxmode_manual)
+            {
+                _spriteDesc.bbox_left   = bboxLeft;
+                _spriteDesc.bbox_top    = bboxTop;
+                _spriteDesc.bbox_right  = bboxRight;
+                _spriteDesc.bbox_bottom = bboxBottom;
+            }
+            
+            if (is_struct(_nineslice))
+            {
+                _spriteDesc.nineslice = {
+                    left:   _nineslice.left,
+                    top:    _nineslice.top,
+                    right:  _nineslice.right,
+                    bottom: _nineslice.bottom,
+                    
+                    tilemode_left:   _nineslice.tilemodeLeft,
+                    tilemode_top:    _nineslice.tilemodeTop,
+                    tilemode_right:  _nineslice.tilemodeRight,
+                    tilemode_bottom: _nineslice.tilemodeBottom,
+                    tilemode_centre: _nineslice.tilemodeCenter,
+                };
+            }
+            
+            _spritesDict[$ _assetName] = _spriteDesc;
         }
-                
+             
         var _frameDescArray = _spriteDesc.frames;
         var _j = 0;
         repeat(array_length(_sourcesArray))
@@ -75,12 +97,6 @@ function AbPackSprites(_spriteDescArray, _textureSize = 2048, _imageBorder = 2)
             var _bboxBottom = sprite_get_bbox_bottom(_sprite);
             var _bboxWidth  = 1 + _bboxRight - _bboxLeft;
             var _bboxHeight = 1 + _bboxBottom - _bboxTop;
-            
-            if (_j == 0)
-            {
-                _spriteDesc.width  = int64(sprite_get_width(_sprite));
-                _spriteDesc.height = int64(sprite_get_height(_sprite));
-            }
             
             _smallestWidth  = min(_smallestWidth,  _bboxWidth );
             _smallestHeight = min(_smallestHeight, _bboxHeight);

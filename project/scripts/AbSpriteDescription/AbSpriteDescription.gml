@@ -23,8 +23,8 @@ function AbSpriteDescription(_assetName, _sourcesArray, _width = undefined, _hei
     
     bboxKind = bboxmode_automatic;
     
-    frameSpeed = 1;
-    frameType  = spritespeed_framespergameframe;
+    frameSpeed = 15;
+    frameType  = spritespeed_framespersecond;
     
     rotatedBounds = true;
     nineslice = undefined;
