@@ -74,9 +74,9 @@ function __AbClassBuilderBucket(_name) constructor
         buffer_write(_accumulationBuffer, buffer_u8, 0x00);
     }
     
-    static __AddSprite = function(_bucketSprite)
+    static __AddSprite = function(_spriteDesc)
     {
-        var _textureGroupName = _bucketSprite.textureGroupName ?? __name;
+        var _textureGroupName = _spriteDesc.textureGroupName ?? __name;
         
         var _textureGroup = __textureGroupDict[$ _textureGroupName];
         if (not is_struct(_textureGroup))
@@ -85,7 +85,7 @@ function __AbClassBuilderBucket(_name) constructor
             __textureGroupDict[$ _textureGroupName] = _textureGroup;
         }
         
-        _textureGroup.__AddSprite(_bucketSprite);
+        _textureGroup.__AddSprite(_spriteDesc);
     }
     
     static __AddOGG = function(_alias, _source)

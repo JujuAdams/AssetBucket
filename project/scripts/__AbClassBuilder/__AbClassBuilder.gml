@@ -108,18 +108,18 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
         }));
     }
     
-    static __AddSpriteToBucket = function(_bucketName, _bucketSprite, _textureGroup = _bucketName)
+    static __AddSpriteToBucket = function(_bucketName, _spriteDesc, _textureGroup = _bucketName)
     {
         var _bucket = __EnsureBucket(_bucketName);
-        _bucket.__SetAliasAsModified(_bucketSprite.assetName);
+        _bucket.__SetAliasAsModified(_spriteDesc.assetName);
         
         array_push(__commandArray, method({
-            __bucket:       _bucket,
-            __bucketSprite: _bucketSprite,
+            __bucket:     _bucket,
+            __spriteDesc: _spriteDesc,
         },
         function(_projectStruct, _datafilesDirectory)
         {
-            __bucket.__AddSprite(__bucketSprite);
+            __bucket.__AddSprite(__spriteDesc);
         }));
     }
     

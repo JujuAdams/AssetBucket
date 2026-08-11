@@ -2,15 +2,15 @@
 /// @param [textureSize=2048]
 /// @param [imageBorder=2]
 
-function AbPackSprites(_bucketSpriteArray, _textureSize = 2048, _imageBorder = 2)
+function AbPackSprites(_spriteDescArray, _textureSize = 2048, _imageBorder = 2)
 {
     static _system = __AbSystem();
     
-    if (array_length(_bucketSpriteArray) <= 0)
+    if (array_length(_spriteDescArray) <= 0)
     {
         return {
             surfaceArray: [],
-            description:  {},
+            description: {},
         };
     }
     
@@ -32,21 +32,20 @@ function AbPackSprites(_bucketSpriteArray, _textureSize = 2048, _imageBorder = 2
     var _spritesDict = _textureGroupDesc.sprites;
     
     var _i = 0;
-    repeat(array_length(_bucketSpriteArray))
+    repeat(array_length(_spriteDescArray))
     {
-        var _bucketSprite = _bucketSpriteArray[_i];
-        
-        var _assetName    = _bucketSprite.assetName;
-        var _spriteWidth  = _bucketSprite.width;
-        var _spriteHeight = _bucketSprite.height;
-        var _sourcesArray = _bucketSprite.sourcesArray;
+        var _inputSpriteDesc = _spriteDescArray[_i];
+        var _assetName    = _inputSpriteDesc.assetName;
+        var _spriteWidth  = _inputSpriteDesc.width;
+        var _spriteHeight = _inputSpriteDesc.height;
+        var _sourcesArray = _inputSpriteDesc.sourcesArray;
+        var _nineslice    = _inputSpriteDesc.nineslice;
         
         var _boxArray = [];
         
         var _spriteDesc = { frames: [] };
         _spritesDict[$ _assetName] = _spriteDesc;
         
-        var _nineslice = _bucketSprite.nineslice;
         if (is_struct(_nineslice))
         {
             _spriteDesc.nineslice = {
@@ -273,6 +272,6 @@ function AbPackSprites(_bucketSpriteArray, _textureSize = 2048, _imageBorder = 2
     
     return {
         surfaceArray: _surfaceArray,
-        description:  _textureGroupDesc,
+        description: _textureGroupDesc,
     };
 }

@@ -16,9 +16,9 @@ function __AbClassBuilderTextureGroup(_parent, _name) constructor
     
     
     
-    static __AddSprite = function(_bucketSprite)
+    static __AddSprite = function(_spriteDesc)
     {
-        array_push(__queuedSprites, _bucketSprite);
+        array_push(__queuedSprites, _spriteDesc);
     }
     
     static __PackTextures = function(_directory)

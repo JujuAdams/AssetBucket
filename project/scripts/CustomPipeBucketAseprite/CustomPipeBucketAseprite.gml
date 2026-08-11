@@ -31,13 +31,13 @@ function CustomPipeBucketAseprite(_bucketName, _assetName, _fileDesc)
                 var _sliceStruct = _sliceArray[_i];
                 var _keyStruct = _sliceStruct.keyArray[0];
                 
-                var _bucketSprite = AbPipeBucketSprite(_bucketName, $"{_assetName}_{_sliceStruct.name}", _sliceStruct.GetBuffer(0), _keyStruct.width, _keyStruct.height);
+                var _spriteDesc = AbPipeBucketSprite(_bucketName, $"{_assetName}_{_sliceStruct.name}", _sliceStruct.GetBuffer(0), _keyStruct.width, _keyStruct.height);
                 
                 if (_sliceStruct.flags & 0b01)
                 {
-                    _bucketSprite.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
-                                               _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
-                                               _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
+                    _spriteDesc.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
+                                             _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
+                                             _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
                 }
                 
                 ++_i;
@@ -70,13 +70,13 @@ function CustomPipeBucketAseprite(_bucketName, _assetName, _fileDesc)
                         ++_tagFrame;
                     }
                     
-                    var _bucketSprite = AbPipeBucketSprite(_bucketName, $"{_assetName}_{_sliceStruct.name}_{_tagStruct.name}", _sourcesArray, _keyStruct.width, _keyStruct.height);
+                    var _spriteDesc = AbPipeBucketSprite(_bucketName, $"{_assetName}_{_sliceStruct.name}_{_tagStruct.name}", _sourcesArray, _keyStruct.width, _keyStruct.height);
                     
                     if (_sliceStruct.flags & 0b01)
                     {
-                        _bucketSprite.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
-                                                   _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
-                                                   _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
+                        _spriteDesc.SetNineslice(_keyStruct.xCenter, _keyStruct.yCenter,
+                                                 _keyStruct.width  - (_keyStruct.xCenter + _keyStruct.centerWidth ),
+                                                 _keyStruct.height - (_keyStruct.yCenter + _keyStruct.centerHeight));
                     }
                     
                     ++_j;
