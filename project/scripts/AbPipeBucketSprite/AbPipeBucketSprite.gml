@@ -14,7 +14,7 @@ function AbPipeBucketSprite(_bucketName, _assetName, _sourceOrArray, _width = un
         __AbError($"Pipeline has not been started with `AbPipeBegin()`");
     }
     
-    var _bucketSprite = new __AbClassBuilderSprite(_assetName, _sourceOrArray, _width, _height);
+    var _bucketSprite = new AbSpriteDescription(_assetName, _sourceOrArray, _width, _height);
     _builder.__AddSpriteToBucket(_bucketName, _bucketSprite);
     
     return _bucketSprite;
