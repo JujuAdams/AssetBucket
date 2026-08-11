@@ -35,7 +35,7 @@ function __AbClassBuilderSprite(_assetName, _sourcesArray, _width = undefined, _
     // mask
     // masks
     // messages
-    // frame_infp
+    // frame_info
     
     
     

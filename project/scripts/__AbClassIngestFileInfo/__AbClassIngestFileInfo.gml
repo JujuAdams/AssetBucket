@@ -18,10 +18,8 @@ function __AbClassIngestFileInfo(_absolutePath) constructor
     
     static __ResetVariables = function()
     {
-        __bytes  = undefined;
         __width  = undefined;
         __height = undefined;
-        __length = undefined;
     }
     
     static __CheckHash = function()
@@ -32,23 +30,6 @@ function __AbClassIngestFileInfo(_absolutePath) constructor
             __hash = _foundHash;
             __ResetVariables();
         }
-    }
-    
-    static __GetBytes = function()
-    {
-        if (__bytes == undefined)
-        {
-            var _buffer = buffer_load(__absolutePath);
-            if (not buffer_exists(_buffer))
-            {
-                __AbError($"Failed to load \"{__absolutePath}\"");
-            }
-            
-            __bytes = buffer_get_size(_buffer);
-            buffer_delete(_buffer);
-        }
-        
-        return __bytes;
     }
     
     static __GetWidth = function()
@@ -69,16 +50,6 @@ function __AbClassIngestFileInfo(_absolutePath) constructor
         }
         
         return __height;
-    }
-    
-    static __GetLength = function()
-    {
-        if (__length == undefined)
-        {
-            
-        }
-        
-        return __length;
     }
     
     static __GetSpriteDimensions = function()
