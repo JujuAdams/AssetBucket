@@ -1,7 +1,7 @@
 /// @param bucketName
 /// @param [outputArray]
 
-function AbBucketDatafileGetArray(_bucketName, _outputArray = undefined)
+function AbBucketGetSounds(_bucketName, _outputArray = undefined)
 {
     static _projectBucketMap = __AbSystem().__projectBucketMap
     
@@ -21,12 +21,12 @@ function AbBucketDatafileGetArray(_bucketName, _outputArray = undefined)
     {
         if (_outputArray == undefined)
         {
-            _outputArray = variable_clone(_bucket.__datafileAliasArray);
+            _outputArray = variable_clone(_bucket.__soundArray);
         }
         else
         {
             array_resize(_outputArray, 0);
-            array_copy(_outputArray, 0, _bucket.__datafileAliasArray, 0, array_length(_bucket.__datafileAliasArray));
+            array_copy(_outputArray, 0, _bucket.__soundArray, 0, array_length(_bucket.__soundArray));
         }
     }
     

@@ -1,7 +1,7 @@
 /// @param bucketName
 /// @param [outputArray]
 
-function AbBucketSoundGetArray(_bucketName, _outputArray = undefined)
+function AbBucketGetSpriteNames(_bucketName, _outputArray = undefined)
 {
     static _projectBucketMap = __AbSystem().__projectBucketMap
     
@@ -21,12 +21,12 @@ function AbBucketSoundGetArray(_bucketName, _outputArray = undefined)
     {
         if (_outputArray == undefined)
         {
-            _outputArray = variable_clone(_bucket.__soundNameArray);
+            _outputArray = variable_clone(_bucket.__spriteNameArray);
         }
         else
         {
             array_resize(_outputArray, 0);
-            array_copy(_outputArray, 0, _bucket.__soundNameArray, 0, array_length(_bucket.__soundNameArray));
+            array_copy(_outputArray, 0, _bucket.__spriteNameArray, 0, array_length(_bucket.__spriteNameArray));
         }
     }
     

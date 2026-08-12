@@ -1,7 +1,7 @@
 /// @param bucketName
 /// @param [outputArray]
 
-function AbBucketDatafileGetArray(_bucketName, _outputArray = undefined)
+function AbBucketGetDatafileAliases(_bucketName, _outputArray = undefined)
 {
     static _projectBucketMap = __AbSystem().__projectBucketMap
     

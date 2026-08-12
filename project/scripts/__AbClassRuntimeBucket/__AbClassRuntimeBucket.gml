@@ -44,17 +44,54 @@ function __AbClassRuntimeBucket(_headerPath) constructor
     __coreBuffer = -1;
     
     __datafileDict = {};
-    __soundsDict   = {};
+    __soundDict    = {};
+    __soundArray   = [];
     __spriteArray  = [];
     __spriteDict   = {};
     
     __ownedBufferArray  = [];
     __wavArray          = [];
     __oggArray          = [];
-    __datafileNameArray = [];
-    __soundNameArray    = [];
     
     __fetched = false;
+    
+    __soundAliasArray  = [];
+    __spriteNameArray = [];
+    
+    var _datafileDict = __header[$ "datafiles"];
+    __datafileAliasArray = is_struct(_datafileDict)? struct_get_names(_datafileDict) : [];
+    
+    var _soundsDefinitionArray = __header[$ "sounds"];
+    if (not is_array(_soundsDefinitionArray))
+    {
+        __soundAliasArray = [];
+    }
+    else
+    {
+        __soundAliasArray = array_create(array_length(_soundsDefinitionArray));
+        
+        var _soundAliasArray = __soundAliasArray;
+        var _i = 0;
+        repeat(array_length(_soundsDefinitionArray))
+        {
+            _soundAliasArray[@ _i] = _soundsDefinitionArray[_i].alias;
+            ++_i;
+        }
+    }
+    
+    __spriteNameArray = [];
+    
+    var _textureGroupArray = __header[$ "textureGroups"];
+    if (is_array(_soundsDefinitionArray))
+    {
+        var _i = 0;
+        repeat(array_length(_textureGroupArray))
+        {
+            var _spritesName = struct_get_names(_textureGroupArray[_i].description.sprites);
+            array_copy(__spriteNameArray, array_length(__spriteNameArray), _spritesName, 0, array_length(_spritesName));
+            ++_i;
+        }
+    }
     
     
     
@@ -96,15 +133,14 @@ function __AbClassRuntimeBucket(_headerPath) constructor
         }
         
         __datafileDict = {};
-        __soundsDict   = {};
+        __soundDict    = {};
+        __soundArray   = [];
         __spriteArray  = [];
         __spriteDict   = {};
         
-        __ownedBufferArray  = [];
-        __wavArray          = [];
-        __oggArray          = [];
-        __datafileNameArray = [];
-        __soundNameArray    = [];
+        __ownedBufferArray = [];
+        __wavArray         = [];
+        __oggArray         = [];
         
         __fetched = false;
     }
@@ -152,9 +188,10 @@ function __AbClassRuntimeBucket(_headerPath) constructor
         
         //Set up sounds
         var _runtimeBucketSoundMap = _system.__runtimeBucketSoundMap;
-        var _wavArray = __wavArray;
-        var _oggArray = __oggArray;
-        var _soundsDict = __soundsDict;
+        var _wavArray   = __wavArray;
+        var _oggArray   = __oggArray;
+        var _soundArray = __soundArray;
+        var _soundDict  = __soundDict;
         var _i = 0;
         repeat(array_length(_soundsDefinitionArray))
         {
@@ -182,8 +219,9 @@ function __AbClassRuntimeBucket(_headerPath) constructor
                     array_push(_oggArray, _sound);
                 }
                 
-                _soundsDict[$ alias] = _sound;
+                _soundDict[$ alias] = _sound;
                 _runtimeBucketSoundMap[? alias] = _sound;
+                array_push(_soundArray, _sound);
             }
             
             ++_i;
@@ -275,8 +313,5 @@ function __AbClassRuntimeBucket(_headerPath) constructor
                 ++_i;
             }
         }
-        
-        __datafileNameArray = struct_get_names(__datafileDict);
-        __soundNameArray    = struct_get_names(__soundsDict);
     }
 }

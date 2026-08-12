@@ -27,8 +27,17 @@ AbForeachFileFiltered($"{AB_PROJECT_DIRECTORY}../asset_bucket/sprites", true, ["
 
 AbPipeEnd();
 
+show_debug_message(json_stringify(AbBucketGetAllLoaded()));
+AbBucketLoadFromManifest(AbGetIncludedFilesPath(AB_MANIFEST_FILENAME));
+show_debug_message(json_stringify(AbBucketGetAllLoaded()));
 
+show_debug_message(json_stringify(AbBucketGetSpriteNames("bucketDefault"), true));
+show_debug_message(json_stringify(AbBucketGetSoundAliases("bucketDefault"), true));
+show_debug_message(json_stringify(AbBucketGetDatafileAliases("bucketDefault"), true));
 
-AbBucketLoadAndFetchFromManifest(AbGetIncludedFilesPath(AB_MANIFEST_FILENAME));
+show_debug_message(json_stringify(AbBucketGetAllFetched()));
+AbBucketFetch("bucketDefault");
+show_debug_message(json_stringify(AbBucketGetAllFetched()));
+
 AbBucketTextureGroupsFetch("bucketDefault");
 AbBucketSoundPlay("sndChickenNuggets", true);
