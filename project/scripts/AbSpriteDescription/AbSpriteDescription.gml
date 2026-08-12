@@ -48,8 +48,9 @@ function AbSpriteDescription(_assetName, _sourcesArray, _width = undefined, _hei
         
         if ((_width == undefined) || (_height == undefined))
         {
-            _width  ??= __AbGetSourceWidth(_sourcesArray[0]);
-            _height ??= __AbGetSourceHeight(_sourcesArray[0]);
+            var _sprite = __AbAddSprite(_sourcesArray[0]);
+            _width  ??= sprite_get_width(_sprite);
+            _height ??= sprite_get_height(_sprite);
         }
         
         width  = _width;

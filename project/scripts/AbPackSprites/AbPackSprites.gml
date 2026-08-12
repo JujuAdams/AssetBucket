@@ -89,7 +89,7 @@ function AbPackSprites(_spriteDescArray, _textureSize = 2048, _imageBorder = 2)
         repeat(array_length(_sourcesArray))
         {
             var _source = _sourcesArray[_j];
-            var _sprite = __AbAddSprite(_source, _spriteWidth, _spriteHeight);
+            var _sprite = __AbAddSprite(_source, _spriteWidth, _spriteHeight, false);
             
             var _bboxLeft   = sprite_get_bbox_left(_sprite);
             var _bboxTop    = sprite_get_bbox_top(_sprite);

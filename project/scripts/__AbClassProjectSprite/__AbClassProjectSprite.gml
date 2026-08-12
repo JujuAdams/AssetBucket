@@ -129,19 +129,19 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         return self;
     }
     
-    static SetSource = function(_sourcePathArray, _width = undefined, _height = undefined)
+    static SetSource = function(_sourceArray, _width = undefined, _height = undefined)
     {
-        _sourcePathArray = __AbEnsureArray(_sourcePathArray);
+        _sourceArray = __AbEnsureArray(_sourceArray);
         
         //Overwrite existing frame data
         var _i = 0;
-        repeat(min(array_length(_sourcePathArray), array_length(framesArray)))
+        repeat(min(array_length(_sourceArray), array_length(framesArray)))
         {
-            framesArray[_i].__SetSource(_sourcePathArray[_i]);
+            framesArray[_i].__SetSource(_sourceArray[_i]);
             ++_i;
         }
         
-        if (array_length(_sourcePathArray) <= array_length(framesArray))
+        if (array_length(_sourceArray) <= array_length(framesArray))
         {
             //If the incoming frame count is lower than the existing number of frames, trim some off
             array_resize(framesArray, _i);
@@ -149,17 +149,18 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         else
         {
             //Pad out the frame array with incoming source paths
-            repeat(array_length(_sourcePathArray) - _i)
+            repeat(array_length(_sourceArray) - _i)
             {
-                array_push(framesArray, (new __AbClassProjectSpriteFrame()).__Template(_sourcePathArray[_i]));
+                array_push(framesArray, (new __AbClassProjectSpriteFrame()).__Template(_sourceArray[_i]));
                 ++_i;
             }
         }
         
         if ((_width == undefined) || (_height == undefined))
         {
-            _width  ??= __AbGetSourceWidth(_sourcePathArray[0]);
-            _height ??= __AbGetSourceHeight(_sourcePathArray[0]);
+            var _sprite = __AbAddSprite(_sourceArray[0]);
+            _width  ??= sprite_get_width(_sprite);
+            _height ??= sprite_get_height(_sprite);
         }
         
         if (width != _width)

@@ -10,7 +10,8 @@ AbForeachFile($"{AB_PROJECT_DIRECTORY}../asset_bucket/datafiles", false, functio
 
 AbForeachFileFiltered($"{AB_PROJECT_DIRECTORY}../asset_bucket/sounds", false, ["*.wav", "*.ogg"], [], function(_fileDesc)
 {
-    //Spin up a project sprite using the suggested asset name and try to place it in the "Sounds" folder
+    //Spin up a project sprite using the suggested asset name and place it in the "Sounds"
+    //folder (so long as the audio isn't already in a different folder)
     AbPipeProjectSound(_fileDesc.absolutePath, _fileDesc.suggestedName, "Sounds");
 });
 

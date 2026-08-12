@@ -1,4 +1,6 @@
-function AbPipeEnd()
+/// @param [clearSpriteCache=true]
+
+function AbPipeEnd(_clearSpriteCache = true)
 {
     static _builderStack = __AbSystem().__builderStack;
     
@@ -9,4 +11,9 @@ function AbPipeEnd()
     }
     
     _builder.__End();
+    
+    if (_clearSpriteCache)
+    {
+        AbClearSpriteCache();
+    }
 }

@@ -1,8 +1,21 @@
-function __AbGetSourceWidth(_source)
+/// @param source
+/// @param [cacheSprite=false]
+
+function __AbGetSourceWidth(_source, _cacheSprite = false)
 {
     if (is_string(_source))
     {
-        return __AbEnsureIngestFileInfo(_source).__GetWidth();
+        var _spriteWidthCacheDict  = __AbSystem().__spriteWidthCacheDict;
+        var _spriteHeightCacheDict = __AbSystem().__spriteHeightCacheDict;
+        
+        var _width = _spriteWidthCacheDict[$ _source];
+        if (is_numeric(_width)) return _width;
+        
+        var _sprite = __AbAddSprite(_source, undefined, undefined, _cacheSprite);
+        _spriteWidthCacheDict[$  _source] = sprite_get_width(_sprite);
+        _spriteHeightCacheDict[$ _source] = sprite_get_height(_sprite);
+        
+        return sprite_get_width(_sprite);
     }
     else if (is_handle(_source))
     {

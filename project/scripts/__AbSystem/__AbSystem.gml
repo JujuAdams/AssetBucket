@@ -28,6 +28,12 @@ function __AbSystem()
             __runtimeBucketDatafileMap = ds_map_create();
             __runtimeBucketSoundMap    = ds_map_create();
             
+            __spriteFormatDict = {};
+            
+            __spriteCacheDict       = {};
+            __spriteWidthCacheDict  = {};
+            __spriteHeightCacheDict = {};
+            
             return self;
         }
     })();
