@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbGetProjectFolder",
+  "%Name":"AbGetSpriteIsCached",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbGetProjectFolder",
+  "name":"AbGetSpriteIsCached",
   "parent":{
     "name":"Miscellaneous",
     "path":"folders/Asset Bucket/Miscellaneous.yy",

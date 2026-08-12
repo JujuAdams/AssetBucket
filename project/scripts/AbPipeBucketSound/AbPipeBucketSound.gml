@@ -1,3 +1,9 @@
+/// The source can be one of the following:
+/// - File path as a string (absolute path)
+/// - Buffer. The entire buffer will be saved
+/// - Struct constructed by `AbFileDescription()`
+/// - Struct constructed by `AbBufferDescription()`
+/// 
 /// @param bucketName
 /// @param alias
 /// @param source

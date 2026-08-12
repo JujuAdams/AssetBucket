@@ -1,6 +1,6 @@
 {
   "$GMExtension":"",
-  "%Name":"__AbExecuteShell",
+  "%Name":"__PSDReaderExecuteShell",
   "androidactivityinject":null,
   "androidclassname":"",
   "androidcodeinjection":"",
@@ -17,8 +17,8 @@
   "extensionVersion":"0.0.1",
   "files":[
     {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":-1,"filename":"ExecuteShell.dll","final":"","functions":[
-        {"$GMExtensionFunction":"","%Name":"__AbExecuteShell","argCount":0,"args":[1,1,],"documentation":"","externalName":"executeShell","help":"","hidden":false,"kind":1,"name":"__AbExecuteShell","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-        {"$GMExtensionFunction":"","%Name":"__AbExecuteShellElevated","argCount":0,"args":[1,1,],"documentation":"","externalName":"executeShellElevated","help":"","hidden":false,"kind":1,"name":"__AbExecuteShellElevated","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+        {"$GMExtensionFunction":"","%Name":"__PSDReaderExecuteShell","argCount":0,"args":[1,1,],"documentation":"","externalName":"executeShell","help":"","hidden":false,"kind":1,"name":"__PSDReaderExecuteShell","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+        {"$GMExtensionFunction":"","%Name":"__PSDReaderExecuteShellElevated","argCount":0,"args":[1,1,],"documentation":"","externalName":"executeShellElevated","help":"","hidden":false,"kind":1,"name":"__PSDReaderExecuteShellElevated","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":1,"name":"","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":null,
@@ -40,13 +40,13 @@
   "maccompilerflags":"",
   "maclinkerflags":"",
   "macsourcedir":"",
-  "name":"__AbExecuteShell",
+  "name":"__PSDReaderExecuteShell",
   "options":[],
   "optionsFile":"options.json",
   "packageId":"",
   "parent":{
-    "name":"I've kicked the bucket",
-    "path":"folders/Asset Bucket/(System)/I've kicked the bucket.yy",
+    "name":"PSD Reader",
+    "path":"folders/PSD Reader.yy",
   },
   "productId":"",
   "resourceType":"GMExtension",

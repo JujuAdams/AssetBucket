@@ -155,7 +155,7 @@ function AbFileListCustom(_rootDirectory = undefined, _subDirectory = "") constr
             var _fileDesc = _fileDescArray[_i];
             
             var _filenameStripped = _fileDesc.suggestedName;
-            var _substringPos = string_pos("_frame", _filenameStripped);
+            var _substringPos = string_pos("_image", _filenameStripped);
             if (_substringPos > 0)
             {
                 var _nextChar = ord(string_char_at(_filenameStripped, _substringPos + 6));

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__AbGetSourceHeight",
   "parent":{
-    "name":"Sprite",
-    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Sprite.yy",
+    "name":"Sources",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Sources.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

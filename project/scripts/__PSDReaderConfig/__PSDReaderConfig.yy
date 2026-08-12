@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbPackSprites",
+  "%Name":"__PSDReaderConfig",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbPackSprites",
+  "name":"__PSDReaderConfig",
   "parent":{
-    "name":"Texture Packer",
-    "path":"folders/Asset Bucket/Texture Packer.yy",
+    "name":"PSD Reader",
+    "path":"folders/PSD Reader.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

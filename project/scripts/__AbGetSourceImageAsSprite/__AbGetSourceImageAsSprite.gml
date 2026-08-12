@@ -3,10 +3,11 @@
 /// @param [hintHeight]
 /// @param [cacheSprite=false]
 
-function __AbAddSprite(_source, _hintWidth = undefined, _hintHeight = undefined, _cacheSprite = false)
+function __AbGetSourceImageAsSprite(_source, _hintWidth = undefined, _hintHeight = undefined, _cacheSprite = false)
 {
-    static _spriteFormatDict = __AbSystem().__spriteFormatDict;
-    var _spriteCacheDict = __AbSystem().__spriteCacheDict;
+    static _system = __AbSystem();
+    static _spriteFormatDict = _system.__spriteFormatDict;
+    var _spriteCacheDict = _system.__spriteCacheDict;
     
     var _sprite = -1;
     
@@ -30,9 +31,13 @@ function __AbAddSprite(_source, _hintWidth = undefined, _hintHeight = undefined,
         {
             var _sprite = sprite_create_from_surface(_surface, 0, 0, surface_get_width(_source), surface_get_height(_source), false, false, 0, 0);
         }
+        else if (sprite_exists(_source))
+        {
+            var _sprite = _source;
+        }
         else
         {
-            __AbError($"Source type not supported ({typeof(_source)})");
+            __AbError($"Datatype unsupported as a source ({typeof(_source)})");
         }
     }
     else if (is_struct(_source))
@@ -48,9 +53,17 @@ function __AbAddSprite(_source, _hintWidth = undefined, _hintHeight = undefined,
         {
             var _sprite = sprite_create_from_surface(_source.surface, _source.left, _source.top, _source.width, _source.height, false, false, 0, 0);
         }
+        else if (is_instanceof(_source, AbFileDescription))
+        {
+            var _sprite = sprite_add(_source.absolutePath, 1, false, false, 0, 0);
+        }
+        else if (is_instanceof(_source, __AbClassSpriteImage))
+        {
+            var _sprite = _source.__sprite;
+        }
         else
         {
-            __AbError($"Source struct not supported ({instanceof(_source)})");
+            __AbError($"Struct type not supported as a source ({instanceof(_source)})");
         }
     }
     else if (is_string(_source))
@@ -76,7 +89,7 @@ function __AbAddSprite(_source, _hintWidth = undefined, _hintHeight = undefined,
     }
     else
     {
-        __AbError($"Source type not supported ({typeof(_source)})");
+        __AbError($"Datatype unsupported as a source ({typeof(_source)})");
     }
     
     if (not sprite_exists(_sprite))

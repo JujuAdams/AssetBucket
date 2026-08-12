@@ -1,9 +1,27 @@
+/// Constructor that creates a packable sprite for use with `AbPackSprites()`. The asset name is
+/// the name of the sprite downstream when `texturegroup_add()` is eventually called. If you know
+/// the size of the sprite beforehand, you should try to specify a width and height when calling
+/// this constructor to avoid performance problems. However, the `width` and `height` are optional
+/// and the sprite's size will be automatically determined either is unspecified.
+/// 
+/// The `sourceOrArray` parameter may be any of the following sources. If an array of sources is
+/// provided then each source will be treated as an individual image in the sprite animation. A
+/// source may be either:
+/// - File path as a string (absolute path)
+/// - Buffer. The entire buffer will be saved
+/// - Surface. The entire surface will be saved
+/// - Struct constructed by `AbFileDescription()`
+/// - Struct constructed by `AbBufferDescription()`
+/// - Struct constructed by `AbSurfaceDescription()`
+/// - Sprite. Only the images of the sprite will be used and other information (frame speed etc.)
+///   will be ignored in favour of the values set in the packable sprite struct
+/// 
 /// @param assetName
-/// @param sourcesArray
+/// @param sourceOrArray
 /// @param [width]
 /// @param [height]
 
-function AbSpriteDescription(_assetName, _sourcesArray, _width = undefined, _height = undefined) constructor
+function AbPackableSprite(_assetName, _sourceOrArray, _width = undefined, _height = undefined) constructor
 {
     assetName = _assetName;
     
@@ -29,7 +47,7 @@ function AbSpriteDescription(_assetName, _sourcesArray, _width = undefined, _hei
     rotatedBounds = true;
     nineslice = undefined;
     
-    SetSource(_sourcesArray, _width, _height);
+    SetSource(_sourceOrArray, _width, _height);
     
     //Not included:
     // mask
@@ -41,16 +59,16 @@ function AbSpriteDescription(_assetName, _sourcesArray, _width = undefined, _hei
     
     
     
-    static SetSource = function(_sourcesArray, _width = undefined, _height = undefined)
+    static SetSource = function(_sourceOrArray, _width = undefined, _height = undefined)
     {
-        _sourcesArray = __AbEnsureArray(_sourcesArray);
-        array_copy(sourcesArray, 0, _sourcesArray, 0, array_length(_sourcesArray));
+        sourcesArray = variable_clone(__AbSourceIngest(_sourceOrArray));
         
         if ((_width == undefined) || (_height == undefined))
         {
-            var _sprite = __AbAddSprite(_sourcesArray[0]);
+            var _sprite = __AbGetSourceImageAsSprite(sourcesArray[0]);
             _width  ??= sprite_get_width(_sprite);
             _height ??= sprite_get_height(_sprite);
+            if (not AbGetSpriteIsCached(_sprite)) sprite_delete(_sprite);
         }
         
         width  = _width;

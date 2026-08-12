@@ -60,8 +60,6 @@ function __AbClassProjectSound(_projectStruct, _assetName) constructor
             __AbError($"Audio file extension \"{_extension}\" not supported (must be .wav or .ogg)\nPath was \"{_sourcePath}\"");
         }
         
-        //TODO - Set duration
-        
         __sourceFilePath = _sourcePath;
         __destinationSoundPath = $"{AbFilenameDir(__yyPath)}/{assetName}{_extension}";
         

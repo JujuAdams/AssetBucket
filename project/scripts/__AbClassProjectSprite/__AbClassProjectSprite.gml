@@ -39,8 +39,6 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
     if (_projectStruct.GetAssetExists(_assetName) && file_exists(__yyPath))
     {
         var _yyString = __AbLoadString(__yyPath);
-        var _data = undefined;
-    
         try
         {
             _yyData = json_parse(_yyString);
@@ -131,7 +129,9 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
     
     static SetSource = function(_sourceArray, _width = undefined, _height = undefined)
     {
-        _sourceArray = __AbEnsureArray(_sourceArray);
+        _sourceArray = __AbSourceIngest(_sourceArray);
+        
+        //TODO - Unpack sprite frames
         
         //Overwrite existing frame data
         var _i = 0;
@@ -158,9 +158,10 @@ function __AbClassProjectSprite(_projectStruct, _assetName) constructor
         
         if ((_width == undefined) || (_height == undefined))
         {
-            var _sprite = __AbAddSprite(_sourceArray[0]);
+            var _sprite = __AbGetSourceImageAsSprite(_sourceArray[0]);
             _width  ??= sprite_get_width(_sprite);
             _height ??= sprite_get_height(_sprite);
+            if (not AbGetSpriteIsCached(_sprite)) sprite_delete(_sprite);
         }
         
         if (width != _width)

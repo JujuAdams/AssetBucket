@@ -1,12 +1,12 @@
-/// @param spriteDescriptionArray
+/// @param packableSpriteArray
 /// @param [textureSize=2048]
 /// @param [imageBorder=2]
 
-function __AbPackSpritesInner(_spriteDescArray, _textureSize = 2048, _imageBorder = 2)
+function __AbPackSpritesInner(_packableSpriteArray, _textureSize = 2048, _imageBorder = 2)
 {
     static _system = __AbSystem();
     
-    if (array_length(_spriteDescArray) <= 0)
+    if (array_length(_packableSpriteArray) <= 0)
     {
         return {
             surfaceArray: [],
@@ -32,18 +32,18 @@ function __AbPackSpritesInner(_spriteDescArray, _textureSize = 2048, _imageBorde
     var _spritesDict = _textureGroupDesc.sprites;
     
     var _i = 0;
-    repeat(array_length(_spriteDescArray))
+    repeat(array_length(_packableSpriteArray))
     {
-        var _inputSpriteDesc = _spriteDescArray[_i];
-        var _assetName    = _inputSpriteDesc.assetName;
-        var _spriteWidth  = _inputSpriteDesc.width;
-        var _spriteHeight = _inputSpriteDesc.height;
-        var _sourcesArray = _inputSpriteDesc.sourcesArray;
-        var _nineslice    = _inputSpriteDesc.nineslice;
+        var _packableSprite = _packableSpriteArray[_i];
+        var _assetName    = _packableSprite.assetName;
+        var _spriteWidth  = _packableSprite.width;
+        var _spriteHeight = _packableSprite.height;
+        var _sourcesArray = _packableSprite.sourcesArray;
+        var _nineslice    = _packableSprite.nineslice;
         
         var _boxArray = [];
         
-        with(_inputSpriteDesc)
+        with(_packableSprite)
         {
             var _spriteDesc = {
                 frames:         [],
@@ -89,7 +89,9 @@ function __AbPackSpritesInner(_spriteDescArray, _textureSize = 2048, _imageBorde
         repeat(array_length(_sourcesArray))
         {
             var _source = _sourcesArray[_j];
-            var _sprite = __AbAddSprite(_source, _spriteWidth, _spriteHeight, false);
+            var _sprite = __AbGetSourceImageAsSprite(_source, _spriteWidth, _spriteHeight, false);
+            
+            //TODO - Unpack sprite handles
             
             var _bboxLeft   = sprite_get_bbox_left(_sprite);
             var _bboxTop    = sprite_get_bbox_top(_sprite);

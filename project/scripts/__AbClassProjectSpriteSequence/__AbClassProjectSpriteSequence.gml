@@ -104,7 +104,7 @@ function __AbClassProjectSpriteSequence() constructor
         __AbBufferWriteLine(_buffer, "    },");
         
         __AbBufferWritePair(_buffer, 4, "eventStubScript", eventStubScript);
-        __AbBufferWriteLine(_buffer, "    \"eventToFunction\":{},"); //TODO
+        __AbBufferWriteLine(_buffer, "    \"eventToFunction\":{},");
         __AbBufferWriteDecimal(_buffer, 4, "length", array_length(_framesArray));
         __AbBufferWritePair(_buffer, 4, "lockOrigin", bool(lockOrigin));
         

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbPackSprites",
+  "%Name":"AbPackableSprite",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbPackSprites",
+  "name":"AbPackableSprite",
   "parent":{
     "name":"Texture Packer",
     "path":"folders/Asset Bucket/Texture Packer.yy",

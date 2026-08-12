@@ -1,10 +1,11 @@
 /// The source can be one of the following:
 /// - File path as a string (absolute path)
-/// - Struct constructed by `AbFileDescription()`
 /// - Buffer. The entire buffer will be saved
-/// - Instance constructed by `AbBufferDescription()`
 /// - Surface. The entire surface will be saved
-/// - Instance constructed by `AbSurfaceDescription()`
+/// - Sprite. Each image in the sprite will be saved as a separate file
+/// - Struct constructed by `AbFileDescription()`
+/// - Struct constructed by `AbBufferDescription()`
+/// - Struct constructed by `AbSurfaceDescription()`
 /// 
 /// @param source
 /// @param datafilesPath

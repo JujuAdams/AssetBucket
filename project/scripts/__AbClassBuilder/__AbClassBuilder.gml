@@ -73,6 +73,26 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
                     __bucket.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
                     buffer_delete(_buffer);
                 }
+                else if (sprite_exists(__source))
+                {
+                    if (sprite_get_number(__source) == 1)
+                    {
+                        var _buffer = __AbSpriteGetBuffer(__source, 0);
+                        __bucket.__AddBuffer(__alias, _buffer, 0, buffer_get_size(_buffer));
+                        buffer_delete(_buffer);
+                    }
+                    else
+                    {
+                        var _i = 0;
+                        repeat(sprite_get_number(__source))
+                        {
+                            var _buffer = __AbSpriteGetBuffer(__source, _i);
+                            __bucket.__AddBuffer($"{__alias}_image{_i}", _buffer, 0, buffer_get_size(_buffer));
+                            buffer_delete(_buffer);
+                            ++_i;
+                        }
+                    }
+                }
                 else
                 {
                     __AbError($"Source type not supported ({typeof(__source)})");
@@ -242,6 +262,25 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
                 else if (surface_exists(__source))
                 {
                     surface_save(__source, _absolutePath);
+                }
+                else if (sprite_exists(__source))
+                {
+                    if (sprite_get_number(__source) == 1)
+                    {
+                        sprite_save(__source, 0, _absolutePath);
+                    }
+                    else
+                    {
+                        var _extension = filename_ext(_absolutePath);
+                        var _basePath = filename_change_ext(_absolutePath, "");
+                        
+                        var _i = 0;
+                        repeat(sprite_get_number(__source))
+                        {
+                            sprite_save(__source, 0, $"{_basePath}_image{_i}{_extension}");
+                            ++_i;
+                        }
+                    }
                 }
                 else
                 {

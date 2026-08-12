@@ -1,3 +1,12 @@
+/// The source can be one of the following:
+/// - File path as a string (absolute path)
+/// - Buffer. The entire buffer will be added
+/// - Surface. The entire surface will be added
+/// - Sprite. Each image will be added separately
+/// - Struct constructed by `AbFileDescription()`
+/// - Struct constructed by `AbBufferDescription()`
+/// - Struct constructed by `AbSurfaceDescription()`
+/// 
 /// @param bucketName
 /// @param alias
 /// @param source

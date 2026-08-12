@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__AbSaveSourceAsImage",
+  "%Name":"__AbSourceIngest",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__AbSaveSourceAsImage",
+  "name":"__AbSourceIngest",
   "parent":{
     "name":"Sources",
     "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Sources.yy",

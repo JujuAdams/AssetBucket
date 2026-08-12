@@ -11,11 +11,18 @@ function __AbGetSourceHeight(_source, _cacheSprite = false)
         var _height = _spriteHeightCacheDict[$ _source];
         if (is_numeric(_height)) return _height;
         
-        var _sprite = __AbAddSprite(_source, undefined, undefined, _cacheSprite);
-        _spriteWidthCacheDict[$  _source] = sprite_get_width(_sprite);
-        _spriteHeightCacheDict[$ _source] = sprite_get_height(_sprite);
+        var _sprite = __AbGetSourceImageAsSprite(_source, undefined, undefined, _cacheSprite);
+        var _height = sprite_get_height(_sprite);
         
-        return sprite_get_height(_sprite);
+        _spriteWidthCacheDict[$  _source] = sprite_get_width(_sprite);
+        _spriteHeightCacheDict[$ _source] = _height;
+        
+        if (not AbGetSpriteIsCached(_sprite))
+        {
+            sprite_delete(_sprite);
+        }
+        
+        return _height;
     }
     else if (is_handle(_source))
     {
@@ -26,6 +33,14 @@ function __AbGetSourceHeight(_source, _cacheSprite = false)
         else if (buffer_exists(_source))
         {
             __AbError($"Buffer source type not supported. Please pass a `AbBufferDescription()`");
+        }
+        else if (sprite_exists(_source))
+        {
+            return sprite_get_height(_source);
+        }
+        else
+        {
+            __AbError($"Datatype unsupported as a source ({typeof(_source)})");
         }
     }
     else if (is_struct(_source))
@@ -44,6 +59,14 @@ function __AbGetSourceHeight(_source, _cacheSprite = false)
         else if (is_instanceof(_source, AbSurfaceDescription))
         {
             return _source.height;
+        }
+        else if (is_instanceof(_source, __AbClassSpriteImage))
+        {
+            return sprite_get_height(_source.__sprite);
+        }
+        else
+        {
+            __AbError($"Source type unsupported as a source ({instanceof(_source)})");
         }
     }
     else
