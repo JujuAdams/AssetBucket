@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__AbAddSprite",
   "parent":{
-    "name":"I've kicked the bucket",
-    "path":"folders/Asset Bucket/(System)/I've kicked the bucket.yy",
+    "name":"Sprite",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Sprite.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

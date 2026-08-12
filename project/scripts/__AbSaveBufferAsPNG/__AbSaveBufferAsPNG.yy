@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__AbSaveBufferAsPNG",
   "parent":{
-    "name":"I've kicked the bucket",
-    "path":"folders/Asset Bucket/(System)/I've kicked the bucket.yy",
+    "name":"Surfaces",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Surfaces.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

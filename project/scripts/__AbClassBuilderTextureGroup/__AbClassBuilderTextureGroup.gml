@@ -23,7 +23,7 @@ function __AbClassBuilderTextureGroup(_parent, _name) constructor
     
     static __PackTextures = function(_directory)
     {
-        var _packResult = AbPackSprites(__queuedSprites, __textureSize, __imageBorder);
+        var _packResult = __AbPackSpritesInner(__queuedSprites, __textureSize, __imageBorder);
         
         var _pathArray = [];
         
@@ -38,14 +38,9 @@ function __AbClassBuilderTextureGroup(_parent, _name) constructor
             
             if ((__textureFormat == AB_TEXTURE_FORMAT_RAW) || (__textureFormat == AB_TEXTURE_FORMAT_ZLIB))
             {
-                var _buffer = buffer_create(16 + 4*surface_get_width(_surface)*surface_get_height(_surface), buffer_fixed, 1);
-                buffer_write(_buffer, buffer_text, "RAW ");
-                buffer_write(_buffer, buffer_s32,  surface_get_width(_surface));
-                buffer_write(_buffer, buffer_s32,  surface_get_height(_surface));
-                buffer_write(_buffer, buffer_s32,  0x00);
-                buffer_get_surface(_buffer, _surface, 16);
+                var _buffer = __AbSurfaceGetRAW(_surface);
                 
-                if (__textureFormat == AB_TEXTURE_FORMAT_RAW)
+                if (__textureFormat == AB_TEXTURE_FORMAT_ZLIB)
                 {
                     var _compressedBuffer = buffer_compress(_buffer, 0, buffer_get_size(_buffer));
                     buffer_delete(_buffer);

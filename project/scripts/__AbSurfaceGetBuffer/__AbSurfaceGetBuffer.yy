@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__AbSurfaceGetBuffer",
   "parent":{
-    "name":"Helper",
-    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Helper.yy",
+    "name":"Surfaces",
+    "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Surfaces.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

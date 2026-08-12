@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__AbSurfacePartGetBuffer",
+  "%Name":"__AbSurfaceGetRAW",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__AbSurfacePartGetBuffer",
+  "name":"__AbSurfaceGetRAW",
   "parent":{
     "name":"Surfaces",
     "path":"folders/Asset Bucket/(System)/I've kicked the bucket/Surfaces.yy",
