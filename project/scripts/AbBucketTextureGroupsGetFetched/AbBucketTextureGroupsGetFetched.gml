@@ -1,3 +1,5 @@
+/// Returns whether all texture groups for a bucket have been fetched.
+/// 
 /// @param bucketName
 
 function AbBucketTextureGroupsGetFetched(_bucketName)

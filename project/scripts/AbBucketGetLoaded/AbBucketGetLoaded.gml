@@ -1,3 +1,5 @@
+/// Returns if a bucket has been loaded.
+/// 
 /// @param bucketName
 
 function AbBucketGetLoaded(_bucketName)

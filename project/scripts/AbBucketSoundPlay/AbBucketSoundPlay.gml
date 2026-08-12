@@ -1,3 +1,5 @@
+/// Plays a sound from a bucket. The bucket must first have been both loaded and fetched.
+/// 
 /// @param soundAlias
 /// @param [loop=false]
 

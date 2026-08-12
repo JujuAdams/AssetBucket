@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbBucketDatafileGetArray",
+  "%Name":"AbBucketDatafileExists",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbBucketDatafileGetArray",
+  "name":"AbBucketDatafileExists",
   "parent":{
     "name":"Datafiles",
     "path":"folders/Asset Bucket/Buckets/Datafiles.yy",

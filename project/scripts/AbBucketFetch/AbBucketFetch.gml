@@ -1,3 +1,5 @@
+/// Unpacks assets from a bucket.
+/// 
 /// @param bucketName
 
 function AbBucketFetch(_bucketName)

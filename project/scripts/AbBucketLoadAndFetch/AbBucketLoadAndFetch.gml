@@ -1,3 +1,5 @@
+/// Loads and fetches a bucket.
+/// 
 /// @param path
 
 function AbBucketLoadAndFetch(_path)

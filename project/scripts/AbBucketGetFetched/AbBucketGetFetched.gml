@@ -1,3 +1,5 @@
+/// Returns if a bucket has been fetched.
+/// 
 /// @param bucketName
 
 function AbBucketGetFetched(_bucketName)

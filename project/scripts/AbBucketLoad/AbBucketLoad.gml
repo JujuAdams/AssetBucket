@@ -1,3 +1,5 @@
+/// Loads data from disk. You must fetch this bucket before its assets are available for use.
+/// 
 /// @param path
 
 function AbBucketLoad(_path)

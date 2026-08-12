@@ -1,3 +1,6 @@
+/// Loads all buckets described in the target manifest file. You must fetch these buckets before
+/// its assets are available for use.
+/// 
 /// @param [path=AB_MANIFEST_FILENAME]
 
 function AbBucketLoadFromManifest(_path = AB_MANIFEST_FILENAME)

@@ -1,3 +1,6 @@
+/// Fetches all texture groups for a bucket. This is not instant and may take a few frames. Please
+/// call `AbBucketTextureGroupsGetFetched()` to check when texture groups have been loaded.
+/// 
 /// @param bucketName
 
 function AbBucketTextureGroupsFetch(_bucketName)

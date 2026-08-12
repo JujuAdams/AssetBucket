@@ -1,3 +1,5 @@
+/// Returns an array of texture group names for the given bucket.
+/// 
 /// @param bucketName
 /// @param [outputArray]
 

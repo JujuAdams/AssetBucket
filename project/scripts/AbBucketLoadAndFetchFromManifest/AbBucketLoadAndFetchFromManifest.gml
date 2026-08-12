@@ -1,3 +1,5 @@
+/// Loads and fetches all buckets described in the target manifest file.
+/// 
 /// @param [path=AB_MANIFEST_FILENAME]
 
 function AbBucketLoadAndFetchFromManifest(_path = AB_MANIFEST_FILENAME)

@@ -1,3 +1,6 @@
+/// Returns an array of strings which are the names for sprites in the bucket. This function will
+/// return an empty array is a bucket is not loaded.
+/// 
 /// @param bucketName
 /// @param [outputArray]
 

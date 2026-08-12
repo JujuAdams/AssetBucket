@@ -1,3 +1,5 @@
+/// Returns an array of names of buckets that have been both loadead and fetched.
+
 function AbBucketGetAllFetched()
 {
     static _projectBucketMap = __AbSystem().__projectBucketMap

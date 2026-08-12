@@ -1,3 +1,6 @@
+/// Flushes a bucket, freeing up some memory used by its assets. This is the opposite of fetching.
+/// A flushed bucket remains partially in memory and may later be re-fetched.
+/// 
 /// @param bucketName
 
 function AbBucketFlush(_bucketName)

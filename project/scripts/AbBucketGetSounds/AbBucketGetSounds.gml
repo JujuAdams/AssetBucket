@@ -1,3 +1,5 @@
+/// This function will return an empty array until a bucket has been both loaded and fetched.
+/// 
 /// @param bucketName
 /// @param [outputArray]
 
