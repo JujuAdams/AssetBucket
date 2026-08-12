@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"AbFileDescription",
+  "%Name":"AbPipeCallbackOnEnd",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"AbFileDescription",
+  "name":"AbPipeCallbackOnEnd",
   "parent":{
-    "name":"Constructors",
-    "path":"folders/Asset Bucket/Constructors.yy",
+    "name":"Pipeline",
+    "path":"folders/Asset Bucket/Pipeline.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

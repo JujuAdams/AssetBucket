@@ -23,7 +23,26 @@ function __AsepriteClassTileset() constructor
     
     
     
-    
+    static __Destroy = function()
+    {
+        if (buffer_exists(buffer))
+        {
+            buffer_delete(buffer);
+            buffer = undefined;
+        }
+        
+        if (buffer_exists(__tempBuffer))
+        {
+            buffer_delete(__tempBuffer);
+            __tempBuffer = undefined;
+        }
+        
+        if (surface_exists(__surface))
+        {
+            surface_free(__surface);
+            __surface = -1;
+        }
+    }
     
     static DrawTile = function(_index, _x, _y)
     {

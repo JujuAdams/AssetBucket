@@ -6,7 +6,7 @@
   "name":"AbBufferDescription",
   "parent":{
     "name":"Constructors",
-    "path":"folders/Asset Bucket/Pipeline/Constructors.yy",
+    "path":"folders/Asset Bucket/Constructors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

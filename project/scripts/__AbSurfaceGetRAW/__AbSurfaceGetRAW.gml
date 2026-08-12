@@ -8,5 +8,5 @@ function __AbSurfaceGetRAW(_surface)
     buffer_write(_buffer, buffer_s32,  surface_get_height(_surface));
     buffer_write(_buffer, buffer_s32,  0x00);
     buffer_get_surface(_buffer, _surface, 16);
-    return _surface;
+    return _buffer;
 }

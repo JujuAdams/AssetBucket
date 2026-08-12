@@ -148,5 +148,9 @@ function AsepriteRead(_filename)
         __AsepriteError($"Failed to load \"{_filename}\"");
     }
     
-    return (new __AsepriteClassFile()).__Deserialize(_buffer);
+    var _fileStruct = (new __AsepriteClassFile()).__Deserialize(_buffer);
+    
+    buffer_delete(_buffer);
+    
+    return _fileStruct;
 }

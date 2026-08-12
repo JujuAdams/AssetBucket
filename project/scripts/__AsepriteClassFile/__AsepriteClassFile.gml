@@ -380,6 +380,13 @@ function __AsepriteClassFile() constructor
             sliceArray[_i].__Destroy();
             ++_i;
         }
+        
+        var _i = 0;
+        repeat(array_length(tilesetArray))
+        {
+            tilesetArray[_i].__Destroy();
+            ++_i;
+        }
     }
     
     

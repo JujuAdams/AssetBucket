@@ -1,4 +1,4 @@
-AbDefineSpriteFormat(".psd", function(_path)
+AbPipeDefineSpriteFormat(".psd", function(_path)
 {
     if (AB_IMAGEMAGICK_PATH == undefined)
     {

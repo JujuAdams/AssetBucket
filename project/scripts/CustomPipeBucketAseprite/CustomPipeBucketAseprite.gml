@@ -8,6 +8,13 @@ function CustomPipeBucketAseprite(_bucketName, _assetName, _fileDesc)
     //Load the Aseprite file
     var _aseStruct = AsepriteRead(_fileDesc.absolutePath);
     
+    //Clean up the Aseprite file when the pipeline ends
+    AbPipeCallbackOnEnd(function(_aseStruct)
+    {
+        _aseStruct.Destroy();
+    },
+    _aseStruct);
+    
     //Remove any layers and tags that we want to ignore
     _aseStruct.HideLayersByMask("*[ignore]").DeleteTagsByMask("*[ignore]");
     

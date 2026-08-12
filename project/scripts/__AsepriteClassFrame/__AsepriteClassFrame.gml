@@ -77,7 +77,7 @@ function __AsepriteClassFrame() constructor
     static __Destroy = function()
     {
         var _i = 0;
-        repeat(array_length(frameArray))
+        repeat(array_length(celArray))
         {
             celArray[_i].__Destroy();
             ++_i;

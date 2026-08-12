@@ -20,13 +20,22 @@ function __AsepriteClassTilemap() constructor
     bitmaskDiag  = undefined;
     tileBuffer   = undefined;
     
-    __surface       = undefined;
+    __surface       = -1;
     __tilesetStruct = undefined;
     
     static __Destroy = function()
     {
-        buffer_delete(tileBuffer);
-        tileBuffer = undefined;
+        if (buffer_exists(tileBuffer))
+        {
+            buffer_delete(tileBuffer);
+            tileBuffer = undefined;
+        }
+        
+        if (surface_exists(__surface))
+        {
+            surface_free(__surface);
+            __surface = -1;
+        }
     }
     
     static __GetSurface = function()
@@ -137,6 +146,8 @@ function __AsepriteClassTilemap() constructor
         
         surface_reset_target();
         gpu_set_blendmode(bm_normal);
+        
+        surface_free(_diagSurface);
     }
     
     static __Render = function(_tilesetStruct)

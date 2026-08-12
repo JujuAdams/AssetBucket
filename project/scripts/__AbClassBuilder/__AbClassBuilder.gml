@@ -12,6 +12,9 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
     __bucketArray  = [];
     __bucketDict   = {};
     
+    __callbackOnEndArray = [];
+    __destroySourceOnEndArray = [];
+    
     __projectDatafileModified = {};
     __projectAssetModified    = {};
     __projectMetadata         = {};
@@ -23,6 +26,19 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
     __ensureTextureGroupDict = {};
     
     
+    
+    static __AddCallbackOnEnd = function(_callback, _callbackMetadata)
+    {
+        array_push(__callbackOnEndArray, {
+            __callback: _callback,
+            __callbackMetadata: _callbackMetadata,
+        });
+    }
+    
+    static __DestroySourceOnEnd = function(_source)
+    {
+        array_push(__destroySourceOnEndArray, _source);
+    }
     
     static __EnsureBucket = function(_bucketName)
     {
@@ -417,7 +433,6 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
     static __End = function()
     {
         var _projectStruct = __projectStruct;
-        
         if (_projectStruct == undefined)
         {
             if (__hasProjectCommands)
@@ -489,6 +504,71 @@ function __AbClassBuilder(_projectStruct, _bucketDirectory) constructor
                                   __ensureResourceDict,
                                   __ensureTextureGroupDict);
             _projectStruct.__Destroy();
+        }
+        
+        var _callbackOnEndArray = __callbackOnEndArray;
+        var _i = 0;
+        repeat(array_length(_callbackOnEndArray))
+        {
+            var _callbackInfo = _callbackOnEndArray[_i];
+            _callbackInfo.__callback(_callbackInfo.__callbackMetadata);
+            ++_i;
+        }
+        
+        var _ownedSourceArray = __destroySourceOnEndArray;
+        var _i = 0;
+        repeat(array_length(_ownedSourceArray))
+        {
+            var _source = _ownedSourceArray[_i];
+            
+            if (is_string(_source))
+            {
+                //Do nothing
+            }
+            else if (is_handle(_source))
+            {
+                if (buffer_exists(_source))
+                {
+                    buffer_delete(_source);
+                }
+                else if (surface_exists(_source))
+                {
+                    surface_free(_source);
+                }
+                else if (sprite_exists(_source))
+                {
+                    sprite_delete(_source);
+                }
+                else
+                {
+                    __AbWarning($"Source type cannot be destroyed ({typeof(_source)})");
+                }
+            }
+            else if (is_struct(_source))
+            {
+                if (is_instanceof(_source, AbFileDescription))
+                {
+                    //Do nothing
+                }
+                else if (is_instanceof(_source, AbBufferDescription))
+                {
+                    buffer_delete(_source.buffer);
+                }
+                else if (is_instanceof(_source, AbSurfaceDescription))
+                {
+                    surface_free(_source.surface);
+                }
+                else
+                {
+                    __AbWarning($"Source struct type cannot be destroyed ({instanceof(_source)})");
+                }
+            }
+            else
+            {
+                __AbWarning($"Source type cannot be destroyed ({typeof(_source)})");
+            }
+            
+            ++_i;
         }
     }
 }

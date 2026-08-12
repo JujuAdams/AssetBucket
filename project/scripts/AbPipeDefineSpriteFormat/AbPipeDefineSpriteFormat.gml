@@ -1,7 +1,7 @@
 /// @param extensionOrArray
 /// @param loadFunction
 
-function AbDefineSpriteFormat(_extensionOrArray, _loadFunction)
+function AbPipeDefineSpriteFormat(_extensionOrArray, _loadFunction)
 {
     static _spriteFormatDict = __AbSystem().__spriteFormatDict;
     
