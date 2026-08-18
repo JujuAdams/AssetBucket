@@ -56,6 +56,10 @@ Please see notes in documentation for `AbPackableSprite` `AbPackSprites` for mor
 > [!NOTE]
 > This section will be filled out at a later date.
 
+When compiling assets, GameMaker builds a file that the game executable reads. If you look at a compiled Windows game made with GameMaker you'll see a `data.win` file which is where most game content is stored.  AssetBucket has its own data storage format that's optimised for fast loading. These are called "buckets".
+
+Buckets can store sprites, .wav sounds, .ogg sounds, and generic datafiles.
+
 1. Create a project struct by calling `new AbProject(...)`
 2. Call `AbPipeBeginForProject()`
 3. Call `AbPipeBucketSprite()` or `AbPipeBucketSound()` or `AbPipeBucketDatafile()` to add content to a bucket in your project
@@ -63,3 +67,15 @@ Please see notes in documentation for `AbPackableSprite` `AbPackSprites` for mor
 5. Call `AbPipeEnd()`. This will finalise the changes and start saving content to the project files on disk
 
 See `oTestBuckets` in the repo project for an example of use.
+
+### Bucket Structure
+
+Buckets are made from a single "header" JSON file that describes the bucket's contents and then one or more binary blob files that contains the raw data. There will always be one binary blob file which is called the "core" file.
+
+- The header contains the contents of the bucket as a plaintext JSON. This includes the names of datafiles, the names of sounds and their format (.wav or .ogg), and the names and properites of sprites
+
+- The core binary blob contains all datafiles and .wav sounds. The core blob itself contains no layout information and is pure appended data. The blob layout is stored in the header JSON
+
+- Separate binary blob files will be created for each sprite texture page and for each .ogg sound
+
+The name of the header JSON is named `ab_<xyz>.json` where `<xyz>` is the name of the bucket specified when calling `AbPipeBucketSprite()` etc.  Each binary blob file will be called `ab_<hash>_<index>.json` where `<hash>` is the MD5 hash of the bucket name and `<index>` is the zero-indexed ordinal number of the blob.
