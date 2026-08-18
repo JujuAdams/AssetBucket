@@ -1,6 +1,6 @@
 function __AbClassProjectSound(_projectStruct, _assetName) constructor
 {
-    _assetName = AsciiTransliterateNoSymbols(_assetName);
+    _assetName = AbTransliterateNoSymbols(_assetName);
     
     __projectStruct        = _projectStruct;
     __yyPath               = $"{_projectStruct.__directory}sounds/{_assetName}/{_assetName}.yy";

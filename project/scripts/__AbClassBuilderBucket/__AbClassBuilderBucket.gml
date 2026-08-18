@@ -7,7 +7,7 @@ function __AbClassBuilderBucket(_name) constructor
     __name = _name;
     
     __hash          = md5_string_utf8(__name);
-    __headerFilename = $"ab_{string_lower(string_replace_all(AsciiTransliterateNoSymbols(__name), " ", "_"))}.json";
+    __headerFilename = $"ab_{string_lower(string_replace_all(AbTransliterateNoSymbols(__name), " ", "_"))}.json";
     __coreFilename   = $"ab_{__hash}_0.bin";
     
     __coreBuffer = buffer_create(1024*1024, buffer_grow, 1);
@@ -76,7 +76,7 @@ function __AbClassBuilderBucket(_name) constructor
     
     static __AddSprite = function(_spriteDesc)
     {
-        var _textureGroupName = _spriteDesc.textureGroupName ?? __name;
+        var _textureGroupName = _spriteDesc[$ "textureGroupName"] ?? __name;
         
         var _textureGroup = __textureGroupDict[$ _textureGroupName];
         if (not is_struct(_textureGroup))

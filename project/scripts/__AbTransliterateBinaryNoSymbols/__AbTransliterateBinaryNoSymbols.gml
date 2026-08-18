@@ -1,4 +1,4 @@
-function __AsciiTransliterateBinaryNoSymbols()
+function __AbTransliterateBinaryNoSymbols()
 {
     static _buffer = (function()
     {

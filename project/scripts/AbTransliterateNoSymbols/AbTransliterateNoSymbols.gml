@@ -20,11 +20,11 @@
 /// 
 /// @param string
 
-function AsciiTransliterateNoSymbols(_string)
+function AbTransliterateNoSymbols(_string)
 {
     static _inBufferStatic  = buffer_create(1024, buffer_grow, 1);
     static _outBufferStatic = buffer_create(1024, buffer_grow, 1);
-    static _transliterateBufferStatic = __AsciiTransliterateBinaryNoSymbols();
+    static _transliterateBufferStatic = __AbTransliterateBinaryNoSymbols();
     
     var _inBuffer            = _inBufferStatic;
     var _outBuffer           = _outBufferStatic;
@@ -60,7 +60,7 @@ function AsciiTransliterateNoSymbols(_string)
         }
         
         buffer_seek(_transliterateBuffer, buffer_seek_start, 0);
-        buffer_write(_outBuffer, buffer_text, __AsciiTransliterateSearchBinaryTree(_transliterateBuffer, 0x80000, _value) ?? ""); //Hardcoded to a depth of 20
+        buffer_write(_outBuffer, buffer_text, __AbTransliterateSearchBinaryTree(_transliterateBuffer, 0x80000, _value) ?? ""); //Hardcoded to a depth of 20
     }
     
     buffer_write(_outBuffer, buffer_u8, 0x00);
