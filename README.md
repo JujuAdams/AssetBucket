@@ -65,7 +65,7 @@ Buckets can store sprites, WAV sounds, OGG sounds, and generic datafiles. Bucket
 1. Call `AbPipeBeginForProject()` using a project struct created by `new AbProject(...)`, or call `AbPipeBeginForLoose()` to save buckets into a directory
 2. Call `AbPipeBucketSprite()` or `AbPipeBucketSound()` or `AbPipeBucketDatafile()` to add content to a bucket
 3. To make it easier in ingest files from disk, use `AbForeachFile()` or `AbForeachFileFiltered()` to iterate over particular directories
-4. Call `AbPipeEnd()`. This will finalise the changes and start saving content to the project files on disk
+4. Call `AbPipeEnd()`. This will finalise the changes and start saving content to disk
 
 See `oTestBuckets` in the repo project for an example of use.
 
