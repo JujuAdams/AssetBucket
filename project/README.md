@@ -23,7 +23,7 @@ GameMaker's asset management is clumsy. AssetBucket seeks to fix these problems.
 
 &nbsp;
 
-## Runtime Texture Packing
+## Automated Asset Importer
 
 > [!NOTE]
 > This section will be filled out at a later date.
@@ -38,7 +38,7 @@ See `oTestImport` in the repo project for an example of use.
 
 &nbsp;
 
-## Automated Asset Importer
+## Runtime Texture Packing
 
 > [!NOTE]
 > This section will be filled out at a later date.
@@ -53,29 +53,33 @@ Please see notes in documentation for `AbPackableSprite` `AbPackSprites` for mor
 
 ## Custom Asset Compiler
 
-> [!NOTE]
-> This section will be filled out at a later date.
-
 When compiling assets, GameMaker builds a file that the game executable reads. If you look at a compiled Windows game made with GameMaker you'll see a `data.win` file which is where most game content is stored.  AssetBucket has its own data storage format that's optimised for fast loading. These are called "buckets".
 
-Buckets can store sprites, .wav sounds, .ogg sounds, and generic datafiles.
+Buckets can store sprites, WAV sounds, OGG sounds, and generic datafiles. Buckets can either be created for a project or as a separate collection of files (helpful for DLC or a mod). The distinction is mostly only relevant if you're looking to use buckets alongside automated asset importing (see above).
 
-1. Create a project struct by calling `new AbProject(...)`
-2. Call `AbPipeBeginForProject()`
-3. Call `AbPipeBucketSprite()` or `AbPipeBucketSound()` or `AbPipeBucketDatafile()` to add content to a bucket in your project
-4. To make it easier in ingest files from disk, use `AbForeachFile()` or `AbForeachFileFiltered()` to iterate over particular directories
-5. Call `AbPipeEnd()`. This will finalise the changes and start saving content to the project files on disk
+### Making Buckets
+
+1. Call `AbPipeBeginForProject()` using a project struct created by `new AbProject(...)`, or call `AbPipeBeginForLoose()` to save buckets into a directory
+2. Call `AbPipeBucketSprite()` or `AbPipeBucketSound()` or `AbPipeBucketDatafile()` to add content to a bucket in your project
+3. To make it easier in ingest files from disk, use `AbForeachFile()` or `AbForeachFileFiltered()` to iterate over particular directories
+4. Call `AbPipeEnd()`. This will finalise the changes and start saving content to the project files on disk
 
 See `oTestBuckets` in the repo project for an example of use.
+
+### Loading Buckets
+
+Bucket loading operates in a similar way to GameMaker's native dynamic texture pages. A bucket can be in one of three states: unloaded, loaded but not fetched, loaded and fetched. You can think of "loaded but not fetched" as a state where you have access to a bucket's metadata but not the data itself. Fetching a bucket will load content from disk and will create sounds and sprites. As a result, fetching a bucket will consume a lot of memory.
+
+Buckets can be loaded from a manifest. Manifests are created whenever buckets are saved. A manifest will contain an array of bucket names and associated filenames. If you load a manifest then all buckets in that manifest will be loaded.
 
 ### Bucket Structure
 
 Buckets are made from a single "header" JSON file that describes the bucket's contents and then one or more binary blob files that contains the raw data. There will always be one binary blob file which is called the "core" file.
 
-- The header contains the contents of the bucket as a plaintext JSON. This includes the names of datafiles, the names of sounds and their format (.wav or .ogg), and the names and properites of sprites
+- The header contains the contents of the bucket as a plaintext JSON. This includes the names of datafiles, the names and properites of sounds, and the names and properites of sprites. None of this information is obfuscated
 
-- The core binary blob contains all datafiles and .wav sounds. The core blob itself contains no layout information and is pure appended data. The blob layout is stored in the header JSON
+- The core binary blob contains all datafiles and WAV sounds. The core blob itself contains no layout information and is pure appended data. The blob layout is stored in the header JSON
 
-- Separate binary blob files will be created for each sprite texture page and for each .ogg sound
+- Separate binary blob files will be created for each sprite texture page and for each OGG sound
 
 The name of the header JSON is named `ab_<xyz>.json` where `<xyz>` is the name of the bucket specified when calling `AbPipeBucketSprite()` etc.  Each binary blob file will be called `ab_<hash>_<index>.json` where `<hash>` is the MD5 hash of the bucket name and `<index>` is the zero-indexed ordinal number of the blob.
