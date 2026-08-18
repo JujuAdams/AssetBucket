@@ -19,7 +19,7 @@ Project assets must be added to the GameMaker project via the IDE, creating a co
 
 GameMaker also doesn't support "asset packs" where a player can download additional assets that are displayable in the game. This is important for DLC and modding sprites and sounds. The mentality of GameMaker developers is typically to pack all that content in the project and then turn it off and on using DLC checks. This has a lot of downsides. It leads to inflated file sizes, poor management of patch sizes, and isn't helpful for modding sprites and sounds.
 
-GameMaker's asset management is clumsy. AssetBucket seeks to fix these problems.
+GameMaker's asset management is clumsy and requires a lot of compromises. AssetBucket seeks to fix these problems.
 
 &nbsp;
 
