@@ -8,13 +8,69 @@
 /// provided then each source will be treated as an individual image in the sprite animation. A
 /// source may be either:
 /// - File path as a string (absolute path)
-/// - Buffer. The entire buffer will be saved
+/// - Buffer that contains raw ABGR data. You must provide the image width & height if using a buffer
 /// - Surface. The entire surface will be saved
 /// - Struct constructed by `AbFileDescription()`
 /// - Struct constructed by `AbBufferDescription()`
 /// - Struct constructed by `AbSurfaceDescription()`
 /// - Sprite. Only the images of the sprite will be used and other information (frame speed etc.)
-///   will be ignored in favour of the values set in the packable sprite struct
+///   will be ignored in favour of the values set in the packable sprite struct,` see below
+/// 
+/// The packable sprite struct that is created contains the following variables:
+/// 
+/// `.assetName`
+///   Name of the asset once packed. This is set when creating the packable sprite.
+/// 
+/// `.sourcesArray`
+///   The array of sources that have been tied to the packable sprite, see above for permitted
+///   datatypes for this array. You can replace this array by calling the `.SetSource()` method.
+/// 
+/// `.width` `.height`
+///   The width and height of the sprite. These will be set when the packable sprite is created or
+///   the source(s) is set by `.SetSource()`. You will probably not need to change these values
+///   manually
+/// 
+/// `.xOffset` `.yOffset`
+///   The position of the "origin" of the sprite, as you would set in the IDE sprite editor. This
+///   defaults to `0, 0` which is the top left of the sprite.
+/// 
+/// `.bboxKind`
+///   The kind of bounding box as a native GameMaker `bboxmode_*` constant. This defaults to
+///   `bboxmode_automatic`.
+/// 
+/// `.rotatedBounds`
+///   Whether the bounding box is allowed to rotate. This defaults to `true`.
+/// 
+/// `.bboxLeft` `.bboxTop` `.bboxRight` `.bboxBottom`
+///   The bounding box for the sprite. These values will be ignored unless `.bboxKind` is set to
+///   `bboxmode_manual` (this means these values will be ignored by default).
+/// 
+/// `.frameType`
+///   What animation timing type to use. This is one of the native `spritespeed_*` constants. This
+///   defaults to `spritespeed_framespersecond` in keeping with the GameMaker IDE.
+/// 
+/// `.frameSpeed`
+///   The animation speed, mindful of the setting above. This defaults to `15` (and thus 15 FPS).
+/// 
+/// `.nineslice`
+///   An optional struct that contains nineslice information for the sprite. To apply no nineslice
+///   settings this variable should be set to `undefined`. This is also the default. If you would
+///   like to define nineslicing for a sprite then the struct used for this variable must contain
+///   the following variables:
+///   
+///     `.left`
+///     `.top`
+///     `.right`
+///     `.bottom`
+///     `.tilemodeLeft`
+///     `.tilemodeTop`
+///     `.tilemodeRight`
+///     `.tilemodeBottom`
+///     `.tilemodeCenter`
+///   
+///   You can set this struct manually or by calling `.SetNineslice()` or `.SetNinesliceExt()`.
+/// 
+/// 
 /// 
 /// @param assetName
 /// @param sourceOrArray
@@ -26,7 +82,6 @@ function AbPackableSprite(_assetName, _sourceOrArray, _width = undefined, _heigh
     assetName = _assetName;
     
     sourcesArray = [];
-    textureGroupName = undefined;
     
     width  = undefined;
     height = undefined;
@@ -34,20 +89,20 @@ function AbPackableSprite(_assetName, _sourceOrArray, _width = undefined, _heigh
     xOffset = 0;
     yOffset = 0;
     
-    bboxLeft   = 0;
-    bboxTop    = 0;
-    bboxRight  = 0;
-    bboxBottom = 0;
-    
     bboxKind = bboxmode_automatic;
+    rotatedBounds = true;
     
     frameSpeed = 15;
     frameType  = spritespeed_framespersecond;
     
-    rotatedBounds = true;
     nineslice = undefined;
     
     SetSource(_sourceOrArray, _width, _height);
+    
+    bboxLeft   = 0;
+    bboxTop    = 0;
+    bboxRight  = width-1;
+    bboxBottom = height-1;
     
     //Not included:
     // mask
