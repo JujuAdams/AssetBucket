@@ -1,5 +1,5 @@
-#macro AB_VERSION  "0.0.0"
-#macro AB_DATE     "2026-07-19"
+#macro AB_VERSION  "0.1.0-alpha"
+#macro AB_DATE     "2026-08-18"
 
 #macro AB_RUNNING_FROM_IDE  (GM_build_type == "run")
 
