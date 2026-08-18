@@ -32,7 +32,7 @@ GameMaker's asset management is clumsy. AssetBucket seeks to fix these problems.
 2. Call `AbPipeBeginForProject()`
 3. Call `AbPipeProjectSprite()` or `AbPipeProjectSound()` or `AbPipeProjectDatafile()` to add content to your project
 4. To make it easier in ingest files from disk, use `AbForeachFile()` or `AbForeachFileFiltered()` to iterate over particular directories
-5. Call `AbPipeEnd()`. This will finalise the changes and start saving content to the project files on disk
+5. Call `AbPipeEnd()`. This will finalise the changes and start saving content to the project files on disk. This function will also create a manifest called `ab_manifest.json` that contains project metadata if you have added any
 
 See `oTestImport` in the repo project for an example of use.
 
@@ -65,7 +65,7 @@ Buckets can store sprites, WAV sounds, OGG sounds, and generic datafiles. Bucket
 1. Call `AbPipeBeginForProject()` using a project struct created by `new AbProject(...)`, or call `AbPipeBeginForLoose()` to save buckets into a directory
 2. Call `AbPipeBucketSprite()` or `AbPipeBucketSound()` or `AbPipeBucketDatafile()` to add content to a bucket
 3. To make it easier in ingest files from disk, use `AbForeachFile()` or `AbForeachFileFiltered()` to iterate over particular directories
-4. Call `AbPipeEnd()`. This will finalise the changes and start saving content to disk
+4. Call `AbPipeEnd()`. This will finalise the changes and start saving content to disk. This function will also create a manifest called `ab_manifest.json` that contains information about all the buckets that were created
 
 See `oTestBuckets` in the repo project for an example of use.
 
