@@ -36,6 +36,9 @@ GameMaker's asset management is clumsy. AssetBucket seeks to fix these problems.
 
 See `oTestImport` in the repo project for an example of use.
 
+> [!IMPORTANT]
+> Datafile paths will be transliterated for maximum compatibility cross-platform (lower case ASCII). Asset names will be transliterated for compatibility with GameMaker (ASCII with no spaces and no leading number).
+
 &nbsp;
 
 ## Runtime Texture Packing
@@ -82,4 +85,4 @@ Buckets are made from a single "header" JSON file that describes the bucket's co
 
 - Separate binary blob files will be created for each sprite texture page and for each OGG sound
 
-The name of the header JSON is named `ab_<xyz>.json` where `<xyz>` is the name of the bucket specified when calling `AbPipeBucketSprite()` etc.  Each binary blob file will be called `ab_<hash>_<index>.json` where `<hash>` is the MD5 hash of the bucket name and `<index>` is the zero-indexed ordinal number of the blob.
+The name of the header JSON is named `ab_<xyz>.json` where `<xyz>` is the name of the bucket specified when calling `AbPipeBucketSprite()` etc.  Please note that the exact filename that is created will not necessarily contain the **exact** bucket name specified so you should check the filename that is actually being used to save a bucket. Each binary blob file will be called `ab_<hash>_<index>.json` where `<hash>` is the MD5 hash of the bucket name and `<index>` is the zero-indexed ordinal number of the blob.
