@@ -24,13 +24,7 @@ function AsciiTransliterateNoSymbols(_string)
 {
     static _inBufferStatic  = buffer_create(1024, buffer_grow, 1);
     static _outBufferStatic = buffer_create(1024, buffer_grow, 1);
-    static _transliterateBufferStatic = (function()
-    {
-        var _compressedBuffer = buffer_load("ascii_translit_no_symbols.bin");
-        var _buffer = buffer_decompress(_compressedBuffer);
-        buffer_delete(_compressedBuffer);
-        return _buffer;
-    })();
+    static _transliterateBufferStatic = __AsciiTransliterateBinaryNoSymbols();
     
     var _inBuffer            = _inBufferStatic;
     var _outBuffer           = _outBufferStatic;
