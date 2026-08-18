@@ -1,4 +1,5 @@
-/// Loads data from disk. You must fetch this bucket before its assets are available for use.
+/// Loads data from disk. You must fetch this bucket before its assets are available for use. The
+/// path should be a bucket "header" JSON file, for example `ab_bucketname.json`.
 /// 
 /// @param path
 
