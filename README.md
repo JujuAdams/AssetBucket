@@ -13,7 +13,7 @@ AssetBucket is a scriptable asset manager for GameMaker. It has three modes whic
 
 ## Existing Flaws in GameMaker
 
-When a GameMaker game is built, the majority of the time taken is reviewing and repacking assets. Sounds and sprites take the most time. Sounds generally have large filesizes and may need recompressing. Sprites are often numerous and require repacking onto textures (repacking is a variation of the knapsack problem and is thus computationally expensive).
+When a GameMaker game is built, the majority of the time taken is reviewing and repacking assets. Sounds and sprites take the most time. Sounds generally have large filesizes and may need recompressing. Sprites are often numerous and require repacking onto textures (repacking is a variation of the knapsack problem and is thus computationally expensive). As developers, we don't have much control over this process. GameMaker errs on the side of safety and will decide to recompile assets when even insignificant changes are made.
 
 Furthermore, GameMaker assets must exist in the project directory itself. Project assets must be added to the GameMaker project via the IDE. For example, to add audio to your game you must add the audio file as a "sound asset" which causes GameMaker to create a copy of the source audio file in the project alongside some metadata (compression settings, mono/stereo, etc.). Manually adding files to the IDE is time-consuming especially when you are unconcerned with tuning fine details as is often the case for sound effects and textures for use in 3D.
 
